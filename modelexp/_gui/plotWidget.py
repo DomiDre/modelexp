@@ -13,7 +13,7 @@ class PlotWidget(FigureCanvasQTAgg):
     """
     self.parent = parent
 
-    self.fig = Figure()
+    self.fig = Figure()#figsize=(4,3))
 
     # Following needed to integrate figure into QT
     FigureCanvasQTAgg.__init__(self, self.fig)
@@ -32,12 +32,13 @@ class PlotWidget(FigureCanvasQTAgg):
     self.ax.set_xlabel(r"$\mathit{x}$")
     self.ax.set_ylabel(r"$\mathit{y}$")
     self.fig.tight_layout()
+    self.draw()
 
   def updatedDataAx(self):
-    pass
+    self.draw()
 
   def getDataAx(self):
-    pass
+    return self.ax
 
   def getFig(self):
-    pass
+    return self.fig

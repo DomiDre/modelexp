@@ -4,4 +4,13 @@ from ._app import App
 from ._gui.gui import Gui
 
 # Data classes
-from ._data.xyeData import XyeData
+# from .data.xyeData import XyeData
+
+# Model classes
+from . import models
+from . import experiments
+# from ._model.model import Model
+# from ._model.linear import Linear
+
+# Fit classes
+# from ._fit.
