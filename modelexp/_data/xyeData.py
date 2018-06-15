@@ -22,4 +22,3 @@ class XyeData:
     ax = ptrGui.plotWidget.getDataAx()
     ax.errorbar(self.x, self.y, self.e)
     ptrGui.plotWidget.updatedDataAx()
-    
