@@ -11,15 +11,7 @@ from .plotWidget import PlotWidget
 # remove some annoying deprecation warnings
 warnings.filterwarnings("ignore", category=UserWarning, module='matplotlib')
 
-class Gui:
-  def __init__(self):
-    app = qt5w.QApplication(sys.argv)
-    mainWindow = GuiMainWindow()
-    mainWindow.setWindowTitle("ModelExp")
-    mainWindow.show()
-    app.exec_()
-
-class GuiMainWindow(qt5w.QMainWindow):
+class Gui(qt5w.QMainWindow):
   def __init__(self, plotWidget = None):
     super().__init__()
 
@@ -79,7 +71,3 @@ class GuiMainWindow(qt5w.QMainWindow):
 
         General purpose gui for usage in model.py
         """)
-
-
-if __name__ == '__main__':
-  Gui()

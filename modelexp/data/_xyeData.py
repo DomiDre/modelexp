@@ -1,5 +1,7 @@
 import numpy as np
-class XyeData:
+from ._data import Data
+
+class XyeData(Data):
   def __init__(self):
     self.x = None
     self.y = None
@@ -10,7 +12,7 @@ class XyeData:
     self.y = y
     self.e = e
 
-  def loadColFile(self, filename):
+  def loadFromFile(self, filename):
     fileData = np.genfromtxt(filename)
     x = fileData[:,0]
     y = fileData[:,1]
@@ -18,7 +20,6 @@ class XyeData:
     self.setData(x, y, e)
 
   def plotData(self, ptrGui):
-    fig = ptrGui.plotWidget.getFig()
-    ax = ptrGui.plotWidget.getDataAx()
-    ax.errorbar(self.x, self.y, self.e)
+    super().plotData(ptrGui)
+    self.ax.errorbar(self.x, self.y, self.e)
     ptrGui.plotWidget.updatedDataAx()

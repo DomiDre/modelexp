@@ -18,16 +18,18 @@ setup(
   long_description=readme,
   install_requires=[
     'numpy',
-    'matplotlib'
+    'matplotlib',
+    'lmfit'
   ],
   python_requires='>2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
   platforms=['Linux'],
   package_dir={'modelexp': 'modelexp'},
   packages=[
     'modelexp',
-    'modelexp._data',
+    'modelexp.data',
+    'modelexp.models',
+    'modelexp.experiments',
     'modelexp._gui',
-    'modelexp._experiment',
     'modelexp._fit',
   ],
   keywords='model data experiment science'

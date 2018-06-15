@@ -1,5 +1,8 @@
-from ._gui.gui import Gui
+import inspect, sys
+import PyQt5.QtWidgets as qt5w
 
+from ._gui.gui import Gui
+from .models._model import Model
 class App():
   """
   Container class for everything. A model.py program consists of four submodules
@@ -11,34 +14,40 @@ class App():
   The four submodules know of each other and can communicate with each other via the Modelpy class
   """
 
-  def __init__(self):
+  def __init__(self, _gui=None):
     """
     Initializes Modelpy. Called as first function when starting the program
     """
+    self.app = qt5w.QApplication(sys.argv)
+
+    self._experiment = None
     self._data = None
     self._model = None
     self._fit = None
-    self._gui = None
+
+    self._gui = Gui if _gui is None else _gui
+    self._gui = self._gui()
+
+  def setExperiment(self, _experiment):
+    if inspect.isclass(_experiment):
+      _experiment = _experiment()
+    self._experiment = _experiment
+    self._experiment.setAxProps(self._gui)
 
   def setData(self, _data):
+    assert(self._experiment), "Set an Experiment first before setting data."
     self._data = _data
 
   def setModel(self, _model):
+    assert(self._experiment), "Set an Experiment first before setting a model."
+    assert issubclass(_model, Model), 'Your model must be a subclass of Model'
     self._model = _model
+    # self._gui.
 
   def setFit(self, _fit):
     self._fit = _fit
 
-  def setGui(self, _gui):
-    self._gui = _gui
-
-  def initGui(self):
-    if not self._gui:
-      self._gui = Gui
-
-    if self._gui:
-      self._gui()
-
-# if __name__ == '__main__':
-#   model = modelexp()
-#   model.initGui()
+  def show(self):
+    self._gui.setWindowTitle("ModelExp")
+    self._gui.show()
+    self.app.exec_()
