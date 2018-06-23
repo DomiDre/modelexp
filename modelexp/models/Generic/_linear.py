@@ -1,24 +1,23 @@
-from ._model import Model
+from .._model import Model
 from lmfit import Parameters
 
-class Parabola(Model):
+class Linear(Model):
   def defineDomain(self, x):
     '''
     On which space should the model be evaluated
     '''
     self.x = x
 
-  def defineParameters(self, a0, x0, c0):
-    self.p = Parameters()
-    self.p.add('a', a0) # Amplitude of parabola
-    self.p.add('x0', x0) # center of parabola
-    self.p.add('c', c0) # y value at x=x0
+  def defineParameters(self, a0, b0):
+    self.params = Parameters()
+    self.params.add('a', a0) # slope
+    self.params.add('b', b0) # y value at x=0
 
   def calcModel(self):
     '''
     How to calculate the model on the defined domain
     '''
-    self.y = self.p['a']*(self.x - self.p['x0'])**2 + self.p['c']
+    self.y = self.params['a']*self.x + self.params['b']
 
   def plotModel(self, ptrGui):
     super().plotModel(ptrGui)

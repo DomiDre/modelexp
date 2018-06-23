@@ -9,13 +9,10 @@ class SAXS(Experiment):
   def setModel(self, model):
     self.model = model
 
-  def setAxProps(self, ptrGui):
-    self.fig = ptrGui.plotWidget.getFig()
-    self.ax = ptrGui.plotWidget.getDataAx()
-
+  def setAxProps(self):
     self.ax.set_xlabel(r'$\mathit{q} \, / \, \AA^{-1}$')
     self.ax.set_ylabel(r'$\mathit{I} \, / \, cm^{-1}$')
     self.ax.set_xscale('log')
     self.ax.set_yscale('log')
-    ptrGui.plotWidget.draw_idle()# .tight_layout()
+    self.ptrGui.plotWidget.draw_idle()# .tight_layout()
 

@@ -13,7 +13,7 @@ class PlotWidget(FigureCanvasQTAgg):
     """
     self.parent = parent
 
-    self.fig = Figure()#figsize=(4,3))
+    self.fig = Figure(figsize=(4,3))
 
     # Following needed to integrate figure into QT
     FigureCanvasQTAgg.__init__(self, self.fig)
