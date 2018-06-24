@@ -11,10 +11,10 @@ class Parabola(GenericModel1d):
     self.params.add('x0', 1) # center of parabola
     self.params.add('c', 1) # y value at x=x0
 
-  def setParameters(self, a0, x0, c0):
-    self.params['a'].value = a0 # Amplitude of parabola
+  def setParameters(self, a, x0, c):
+    self.params['a'].value = a # Amplitude of parabola
     self.params['x0'].value = x0 # center of parabola
-    self.params['c'].value = c0 # y value at x=x0
+    self.params['c'].value = c # y value at x=x0
 
   def calcModel(self):
     self.y = self.params['a']*(self.x - self.params['x0'])**2 + self.params['c']
