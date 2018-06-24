@@ -1,23 +1,28 @@
 from abc import ABCMeta, abstractmethod
 from lmfit import Parameters
-from ..experiments import Experiment
+
+try:
+  from ..experiments import Experiment
+except ImportError:
+  pass
 
 class Model(metaclass=ABCMeta):
   """Abstract class to describe a model.
   Specific models are defined by classes that have to implemented the defined functions here.
   """
-  def __init__(self, gui, experiment):
-    self.ptrGui = gui
-    self.ptrExperiment: Experiment = experiment
-
-    self.fig = self.ptrGui.plotWidget.getFig()
-    self.ax = self.ptrGui.plotWidget.getDataAx()
+  def __init__(self, experiment):
+    self.ptrExperiment = experiment
 
     self.params = Parameters()
     self.initParameters()
 
   def getParameters(self):
     return self.params
+
+  def connectGui(self, gui):
+    self.ptrGui = gui
+    self.fig = self.ptrGui.plotWidget.getFig()
+    self.ax = self.ptrGui.plotWidget.getDataAx()
 
   @abstractmethod
   def initParameters(self):

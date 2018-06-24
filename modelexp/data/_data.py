@@ -1,15 +1,19 @@
 from abc import ABCMeta, abstractmethod
-from ..experiments import Experiment
+try:
+  from ..experiments import Experiment
+except ImportError:
+  pass
 
 class Data(metaclass=ABCMeta):
   '''
   Abstract class to describe a model.
   Specific models are defined by classes that have to implemented the defined functions here.
   '''
-  def __init__(self, gui, experiment):
-    self.ptrGui = gui
+  def __init__(self, experiment):
     self.ptrExperiment: Experiment = experiment
 
+  def connectGui(self, gui):
+    self.ptrGui = gui
     self.fig = self.ptrGui.plotWidget.getFig()
     self.ax = self.ptrGui.plotWidget.getDataAx()
 

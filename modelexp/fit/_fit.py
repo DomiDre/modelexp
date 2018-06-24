@@ -9,11 +9,13 @@ class Fit(metaclass=ABCMeta):
   Specifi fit rountines are defined by a class that has to implement
   the defined functions here.
   '''
-  def __init__(self, gui, experiment, data, model):
-    self.ptrGui = gui
+  def __init__(self, experiment, data, model):
     self.ptrExperiment: Experiment = experiment
     self.ptrData: Data = data
     self.ptrModel: Model = model
+
+  def connectGui(self, gui):
+    self.ptrGui = gui
 
   @abstractmethod
   def fit(self):

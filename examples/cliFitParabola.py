@@ -6,20 +6,17 @@ from modelexp.fit import LevenbergMarquardt
 import numpy as np
 import random
 
-app = modelexp.App()
+app = modelexp.Cli()
 
 app.setExperiment(Generic)
-app.setModel(Parabola)
-modelRef = app.model
+
+modelRef = app.setModel(Parabola)
 modelRef.defineDomain(np.linspace(-3, 3, 100))
 modelRef.setParameters(1.5, 0.3, 2)
 
-app.setData(XyeData)
-dataRef = app.data
+dataRef = app.setData(XyeData)
 dataRef.loadFromFile('./parabolaData.xye')
-dataRef.plotData()
-dataRef.draw()
 
-app.setFit(LevenbergMarquardt)
+fitRef = app.setFit(LevenbergMarquardt)
 
-app.show()
+fitRef.fit()

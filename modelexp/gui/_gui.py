@@ -104,6 +104,8 @@ class Gui(qt5w.QMainWindow):
     self.parameterLayout = qt5w.QGridLayout(self.parameterWidget)
     self.sliders = {}
     self.checkboxes = {}
+
+    self.sliderNumPts = 1000
     parameters = self.ptrModel.getParameters()
     for i, parameter in enumerate(parameters):
       sliderLabel = qt5w.QLabel(parameter)
@@ -112,7 +114,7 @@ class Gui(qt5w.QMainWindow):
 
       currentParameter = parameters[parameter]
 
-      sliderBar.setRange(0, 1000)
+      sliderBar.setRange(0, self.sliderNumPts)
       sliderBar.setTickInterval(5)
       sliderBar.setSingleStep(1)
       sliderBar.setPageStep(10)
@@ -139,7 +141,7 @@ class Gui(qt5w.QMainWindow):
           minval = 1
         currentParameter.max = maxval
 
-      delta = (maxval - minval)/1000.
+      delta = (maxval - minval)/self.sliderNumPts
       checkbox.setChecked(currentParameter.vary)
       sliderValue = int((curval-minval)/delta)
       sliderBar.setValue(sliderValue)
@@ -168,7 +170,7 @@ class Gui(qt5w.QMainWindow):
 
     minval = currentParameter.min
     maxval = currentParameter.max
-    delta = (maxval - minval)/1000.
+    delta = (maxval - minval)/self.sliderNumPts
     newValue = minval + changedSlider.value()*delta
     if newValue > 1e3 or newValue < 1e-3:
         prec = '{:.3e}'
@@ -185,6 +187,16 @@ class Gui(qt5w.QMainWindow):
     '''
     self.plotWidget.updatedDataAx()
 
+  def updateSlidersValueFromParams(self):
+    for parameter in self.ptrModel.params:
+        currentParam = self.ptrModel.params[parameter]
+        sliderBar = self.sliders[parameter]
+        minval = currentParam.min
+        maxval = currentParam.max
+        delta = (maxval - minval)/self.sliderNumPts
+        sliderValue = int((currentParam.value-minval)/delta)
+        sliderBar.setValue(sliderValue)
+
   def setFitButtons(self):
     def addButton(buttonLabel, buttonTooltip, buttonFunction):
         newButton = qt5w.QPushButton(buttonLabel, self)
@@ -192,11 +204,16 @@ class Gui(qt5w.QMainWindow):
         newButton.clicked.connect(buttonFunction)
         return newButton
 
+    def guiFit():
+      self.ptrFit.fit()
+      self.updateSlidersValueFromParams()
+      self.update()
+
     self.buttonLayout = qt5w.QVBoxLayout(self.buttonWidget)
     self.buttonLayout.addWidget(
       addButton(
         'Fit',
         'Fit parameters of the model to the data',
-        self.ptrFit.fit
+        guiFit
       )
     )
