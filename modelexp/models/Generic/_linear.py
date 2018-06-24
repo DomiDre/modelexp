@@ -1,24 +1,17 @@
-from .._model import Model
+from ._genericModel1d import GenericModel1d
 from lmfit import Parameters
 
-class Linear(Model):
-  def defineDomain(self, x):
-    '''
-    On which space should the model be evaluated
-    '''
-    self.x = x
+class Linear(GenericModel1d):
+  '''
+  Model to describe a linear function
+  '''
+  def initParameters(self):
+    self.params.add('m', 1) # Slope
+    self.params.add('y0', 1) # y-intercept
 
-  def defineParameters(self, a0, b0):
-    self.params = Parameters()
-    self.params.add('a', a0) # slope
-    self.params.add('b', b0) # y value at x=0
+  def setParameters(self, m, y0):
+    self.params['m'].value = m # Slope
+    self.params['y0'].value = y0 # y-intercept
 
   def calcModel(self):
-    '''
-    How to calculate the model on the defined domain
-    '''
-    self.y = self.params['a']*self.x + self.params['b']
-
-  def plotModel(self, ptrGui):
-    super().plotModel(ptrGui)
-    self.ax.plot(self.x, self.y)
+    self.y = self.params['m']*self.x + self.params['y0']

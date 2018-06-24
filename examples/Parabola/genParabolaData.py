@@ -1,5 +1,5 @@
 import modelexp
-from modelexp.experiments import Generic, SAXS
+from modelexp.experiments import Generic
 from modelexp.models.Generic import Parabola
 import numpy as np
 import random
@@ -7,10 +7,10 @@ import random
 app = modelexp.App()
 
 app.setExperiment(Generic)
-app.setModel(Parabola)
-modelRef = app.model
+
+modelRef = app.setModel(Parabola)
 modelRef.defineDomain(np.linspace(-3, 3, 100))
-modelRef.setParameters(1.12, 0.89, 3)
+modelRef.setParameters(1.3, 0.3, -0.2)
 modelRef.calcModel()
 
 sig_y = 0.05*modelRef.y

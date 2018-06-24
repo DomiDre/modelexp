@@ -172,10 +172,10 @@ class Gui(qt5w.QMainWindow):
     maxval = currentParameter.max
     delta = (maxval - minval)/self.sliderNumPts
     newValue = minval + changedSlider.value()*delta
-    if newValue > 1e3 or newValue < 1e-3:
-        prec = '{:.3e}'
+    if abs(newValue) > 1e3 or (abs(newValue) < 1e-3):
+      prec = '{:.3e}'
     else:
-        prec = '{:.3f}'
+      prec = '{:.3f}'
     changedSlider.label.setText(prec.format(newValue))
     currentParameter.value = newValue
     self.ptrModel.updateModel()
@@ -189,13 +189,16 @@ class Gui(qt5w.QMainWindow):
 
   def updateSlidersValueFromParams(self):
     for parameter in self.ptrModel.params:
-        currentParam = self.ptrModel.params[parameter]
-        sliderBar = self.sliders[parameter]
-        minval = currentParam.min
-        maxval = currentParam.max
-        delta = (maxval - minval)/self.sliderNumPts
-        sliderValue = int((currentParam.value-minval)/delta)
-        sliderBar.setValue(sliderValue)
+      self.updateSlider(parameter)
+
+  def updateSlider(self, parameter):
+    currentParam = self.ptrModel.params[parameter]
+    sliderBar = self.sliders[parameter]
+    minval = currentParam.min
+    maxval = currentParam.max
+    delta = (maxval - minval)/self.sliderNumPts
+    sliderValue = int((currentParam.value-minval)/delta)
+    sliderBar.setValue(sliderValue)
 
   def setFitButtons(self):
     def addButton(buttonLabel, buttonTooltip, buttonFunction):

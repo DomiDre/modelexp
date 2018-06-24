@@ -1,13 +1,7 @@
-from ._experiment import Experiment
-# from ..data._xyeData import XyeData
-# from ..models._model import Model
+from .._experiment import Experiment
+import numpy as np
 
 class SAXS(Experiment):
-  def setData(self, data):
-    self.data = data
-
-  def setModel(self, model):
-    self.model = model
 
   def setAxProps(self):
     self.ax.set_xlabel(r'$\mathit{q} \, / \, \AA^{-1}$')
@@ -16,3 +10,10 @@ class SAXS(Experiment):
     self.ax.set_yscale('log')
     self.ptrGui.plotWidget.draw_idle()# .tight_layout()
 
+  def residuum(self, p):
+    Idata = self.data.getValues()
+    Ierror = self.data.getErrors()
+    Imodel = self.model.getValues(p)
+    return (
+      (np.log(Idata) - np.log(Imodel)) * Idata / Ierror
+    )

@@ -16,6 +16,9 @@ class Model(metaclass=ABCMeta):
     self.params = Parameters()
     self.initParameters()
 
+    if (hasattr(self.ptrExperiment, 'data')):
+      self.defineDomain(self.ptrExperiment.data.getDomain())
+
   def getParameters(self):
     return self.params
 
@@ -23,6 +26,12 @@ class Model(metaclass=ABCMeta):
     self.ptrGui = gui
     self.fig = self.ptrGui.plotWidget.getFig()
     self.ax = self.ptrGui.plotWidget.getDataAx()
+
+  def setParamLimits(self, paramName, minVal, maxVal):
+    self.params[paramName].min = minVal
+    self.params[paramName].max = maxVal
+    if (hasattr(self, 'ptrGui')):
+      self.ptrGui.updateSlider(paramName)
 
   @abstractmethod
   def initParameters(self):
