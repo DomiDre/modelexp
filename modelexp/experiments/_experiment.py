@@ -7,7 +7,10 @@ class Experiment(metaclass=ABCMeta):
   A complete experiment consists of experimental data and/or a model of it
   """
   def __init__(self):
-    pass
+    """Set plotWidgetClass here to change it before it's initialized in between
+    initialization of Experiment and connectGui
+    """
+    self.plotWidgetClass = None
 
   def connectGui(self, gui):
     self.ptrGui = gui
@@ -26,8 +29,21 @@ class Experiment(metaclass=ABCMeta):
 
   @abstractmethod
   def residuum(self):
-    """
-    Returns the distance between data and model
-    Should take the parameter of the model as argument and update the model values
+    """Returns the distance between data and model. Should take the parameter
+    of the model as argument and update the model values
     on call according to the given parameters
     """
+
+  @abstractmethod
+  def adjustAxToAddedData(self):
+    """Called when Data is added to the experiment for a GUI App,
+    to adjust that the data is displayed accordingly.
+    """
+    pass
+
+  @abstractmethod
+  def adjustAxToAddedModel(self):
+    """Called when Model is added to the experiment for a GUI App,
+    to adjust that the model is displayed accordingly.
+    """
+    pass

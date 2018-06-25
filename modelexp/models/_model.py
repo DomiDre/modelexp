@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from lmfit import Parameters
-
+import numpy as np
 try:
   from ..experiments import Experiment
 except ImportError:
@@ -26,6 +26,19 @@ class Model(metaclass=ABCMeta):
     self.ptrGui = gui
     self.fig = self.ptrGui.plotWidget.getFig()
     self.ax = self.ptrGui.plotWidget.getDataAx()
+
+  def setParam(self, paramName, paramVal, minVal=-np.inf, maxVal=np.inf, vary=True):
+    assert((paramName in self.params),
+      'Tried to add a parameter that is not defined in the model. '+
+      'Please define a new extended model if you wish to add parameters.'
+    )
+    self.params[paramName].value = paramVal
+    self.params[paramName].min = minVal
+    self.params[paramName].max = maxVal
+    self.params[paramName].vary = vary
+    if (hasattr(self, 'ptrGui')):
+      self.ptrGui.updateSlider(paramName)
+
 
   def setParamLimits(self, paramName, minVal, maxVal):
     self.params[paramName].min = minVal
@@ -64,13 +77,6 @@ class Model(metaclass=ABCMeta):
   @abstractmethod
   def calcModel(self):
     """How to calculate the model on the defined domain
-
-    """
-    pass
-
-  @abstractmethod
-  def setParameters(self):
-    """Update the parameters
 
     """
     pass

@@ -40,5 +40,8 @@ class PlotWidget(FigureCanvasQTAgg):
   def getDataAx(self):
     return self.ax
 
+  def getAllAx(self):
+    return self.ax
+
   def getFig(self):
     return self.fig

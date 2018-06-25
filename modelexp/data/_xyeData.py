@@ -36,4 +36,5 @@ class XyeData(Data):
     self.setData(x, y, e)
 
   def plotData(self):
-    self.ax.errorbar(self.x, self.y, self.e)
+    self.ax.errorbar(self.x, self.y, self.e, ls='None', marker='.', zorder=5)
+    self.ptrExperiment.adjustAxToAddedData()

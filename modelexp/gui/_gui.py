@@ -17,7 +17,7 @@ from ..data import Data
 warnings.filterwarnings("ignore", category=UserWarning, module='matplotlib')
 
 class Gui(qt5w.QMainWindow):
-  def __init__(self, plotWidget = None):
+  def __init__(self):
     '''
     Defines the main layout of the page. Where is the canvas, where the buttons.
     Define the menu.
@@ -57,7 +57,9 @@ class Gui(qt5w.QMainWindow):
     self.setCentralWidget(self.mainContainer)
     self.statusBar().showMessage("model.py gui")
 
-    # initialize plotWidget, either the passed by argument or the default
+  def initPlot(self, plotWidget=None):
+    # initialize plotWidget (after experiment is set)
+    # either passed by argument or the default
     self.plotWidget = plotWidget(self) if plotWidget else PlotWidget(self)
 
     self.layoutPlot = qt5w.QVBoxLayout(self.plotContainer)
@@ -119,33 +121,33 @@ class Gui(qt5w.QMainWindow):
       sliderBar.setSingleStep(1)
       sliderBar.setPageStep(10)
 
-      curval = currentParameter.value
-      minval = currentParameter.min
-      maxval = currentParameter.max
+      curVal = currentParameter.value
+      minVal = currentParameter.min
+      maxVal = currentParameter.max
 
-      if minval == -np.inf:
-        if curval > 0:
-          minval = 0
-        elif curval < 0:
-          minval = 10*curval
+      if minVal == -np.inf:
+        if curVal > 0:
+          minVal = 0
+        elif curVal < 0:
+          minVal = 10*curVal
         else:
-          minval = -1
-        currentParameter.min = minval
+          minVal = -1
+        currentParameter.min = minVal
 
-      if maxval == np.inf:
-        if curval > 0:
-          maxval = 10*curval
-        elif curval < 0:
-          minval = 0
+      if maxVal == np.inf:
+        if curVal > 0:
+          maxVal = 10*curVal
+        elif curVal < 0:
+          maxVal = 0
         else:
-          minval = 1
-        currentParameter.max = maxval
+          maxVal = 1
+        currentParameter.max = maxVal
 
-      delta = (maxval - minval)/self.sliderNumPts
+      delta = (maxVal - minVal)/self.sliderNumPts
       checkbox.setChecked(currentParameter.vary)
-      sliderValue = int((curval-minval)/delta)
+      sliderValue = int((curVal-minVal)/delta)
       sliderBar.setValue(sliderValue)
-      newValue = minval + sliderBar.value()*delta
+      newValue = minVal + sliderBar.value()*delta
       if newValue > 1e3 or newValue < 1e-3:
         prec = '{:.3e}'
       else:
@@ -168,10 +170,10 @@ class Gui(qt5w.QMainWindow):
     changedSlider = self.sender()
     currentParameter = self.ptrModel.getParameters()[self.sliderInverseDict[changedSlider]]
 
-    minval = currentParameter.min
-    maxval = currentParameter.max
-    delta = (maxval - minval)/self.sliderNumPts
-    newValue = minval + changedSlider.value()*delta
+    minVal = currentParameter.min
+    maxVal = currentParameter.max
+    delta = (maxVal - minVal)/self.sliderNumPts
+    newValue = minVal + changedSlider.value()*delta
     if abs(newValue) > 1e3 or (abs(newValue) < 1e-3):
       prec = '{:.3e}'
     else:
@@ -194,11 +196,31 @@ class Gui(qt5w.QMainWindow):
   def updateSlider(self, parameter):
     currentParam = self.ptrModel.params[parameter]
     sliderBar = self.sliders[parameter]
-    minval = currentParam.min
-    maxval = currentParam.max
-    delta = (maxval - minval)/self.sliderNumPts
-    sliderValue = int((currentParam.value-minval)/delta)
+
+    curVal = currentParam.value
+    minVal = currentParam.min
+    maxVal = currentParam.max
+    if minVal == -np.inf:
+      if curVal > 0:
+        minVal = 0
+      elif curVal < 0:
+        minVal = 10*curVal
+      else:
+        minVal = -1
+      currentParam.min = minVal
+
+    if maxVal == np.inf:
+      if curVal > 0:
+        maxVal = 10*curVal
+      elif curVal < 0:
+        maxVal = 0
+      else:
+        maxVal = 1
+      currentParam.max = maxVal
+    delta = (maxVal - minVal)/self.sliderNumPts
+    sliderValue = int((curVal-minVal)/delta)
     sliderBar.setValue(sliderValue)
+    self.checkboxes[parameter].setChecked(currentParam.vary)
 
   def setFitButtons(self):
     def addButton(buttonLabel, buttonTooltip, buttonFunction):

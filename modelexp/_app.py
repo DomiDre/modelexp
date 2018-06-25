@@ -50,6 +50,8 @@ class App():
     assert issubclass(_experiment, Experiment), 'Your experiment must be a subclass of Experiment (and not initialized)'
     self._experiment: Experiment = _experiment()
 
+    self._gui.initPlot(self._experiment.plotWidgetClass)
+
     self._experiment.connectGui(self._gui)
     self._experiment.setAxProps()
     self._gui.connectExperiment(self._experiment)

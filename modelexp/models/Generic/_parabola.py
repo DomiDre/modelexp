@@ -1,5 +1,4 @@
 from ._genericModel1d import GenericModel1d
-from lmfit import Parameters
 
 class Parabola(GenericModel1d):
   '''
