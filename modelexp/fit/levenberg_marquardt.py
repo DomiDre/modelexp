@@ -3,7 +3,6 @@ import lmfit, datetime, pkg_resources
 
 class LevenbergMarquardt(Fit):
   def fit(self):
-    self.ptrGui.updateParamsVaryFromCheckbox()
     self.startedFit = datetime.datetime.now()
     self.fit_result = lmfit.minimize(
       self.ptrExperiment.residuum, self.ptrModel.params, method='leastsq'

@@ -10,7 +10,9 @@ app.setExperiment(Generic)
 
 modelRef = app.setModel(Parabola)
 modelRef.defineDomain(np.linspace(-3, 3, 100))
-modelRef.setParameters(1.3, 0.3, -0.2)
+modelRef.setParam('a', 1.3)
+modelRef.setParam('x0', 0.3)
+modelRef.setParam('c', -0.2)
 modelRef.calcModel()
 
 sig_y = 0.05*modelRef.y

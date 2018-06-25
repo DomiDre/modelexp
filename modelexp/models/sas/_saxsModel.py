@@ -31,9 +31,10 @@ class SAXSModel(Model):
   def getDomain(self):
     return self.q
 
-  def getValues(self, p):
-    self.params = p
-    self.calcModel()
+  def getValues(self, p=None):
+    if p is not None:
+      self.params = p
+      self.calcModel()
     return self.I
 
   def getSld(self):

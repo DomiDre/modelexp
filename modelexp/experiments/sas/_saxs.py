@@ -40,7 +40,7 @@ class Saxs(Experiment):
   def adjustAxToAddedModel(self):
     if not hasattr(self, 'data'):
       q_model = self.model.getDomain()
-      I_model = self.model.I
+      I_model = self.model.getValues()
       self.ax.set_xlim(min(q_model), max(q_model))
       self.ax.set_ylim(min(I_model), max(I_model))
 
@@ -55,9 +55,9 @@ class Saxs(Experiment):
       I_data = self.data.getValues()
       sI_data = self.data.getErrors()
       q_model = self.model.getDomain()
-      I_model = self.model.I
+      I_model = self.model.getValues()
       assert(len(q_data) == len(q_model), 'Data and Model do not have the same length.')
-      f.write('#q / A-1\tI / cm-1\tsI / cm-1\t Imodel / cm-1\n')
+      f.write('#q / A-1\tI / cm-1\tsI / cm-1\tImodel / cm-1\n')
       for i in range(len(q_data)):
         assert(np.isclose(q_data[i], q_model[i]), 'Data and Model arrays are not defined on same domain' )
         f.write(f'{q_data[i]}\t{I_data[i]}\t{sI_data[i]}\t{I_model[i]}\n')
@@ -70,7 +70,7 @@ class Saxs(Experiment):
         f.write(f'{q_data[i]}\t{I_data[i]}\t{sI_data[i]}\n')
     elif hasattr(self, 'model'):
       q_model = self.model.getDomain()
-      I_model = self.model.I
+      I_model = self.model.getValues()
       f.write('#q / A-1\tImodel / cm-1\n')
       for i in range(len(q_model)):
         f.write(f'{q_model[i]}\t{I_model[i]}\n')

@@ -1,6 +1,6 @@
 import modelexp
 from modelexp.experiments import Generic
-from modelexp.models.Generic import Linear
+from modelexp.models.generic import Linear
 from modelexp.data import XyeData
 from modelexp.fit import LevenbergMarquardt
 
@@ -13,9 +13,8 @@ dataRef.loadFromFile('./linearData.xye')
 dataRef.plotData()
 
 modelRef = app.setModel(Linear)
-modelRef.setParameters(1.5, 1)
-modelRef.setParamLimits('m', -5, 5)
-modelRef.setParamLimits('y0', -10, 10)
+modelRef.setParam("m", 2.1000000000000005,  minVal = -5, maxVal = 5, vary = True)
+modelRef.setParam("y0", 0.3000000000000007,  minVal = -10, maxVal = 10, vary = True)
 
 app.setFit(LevenbergMarquardt)
 

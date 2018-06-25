@@ -236,6 +236,7 @@ class Gui(qt5w.QMainWindow):
     self.buttonLayout = qt5w.QVBoxLayout(self.buttonWidget)
 
     def guiFit():
+      self.updateParamsVaryFromCheckbox()
       self.ptrFit.fit()
       self.updateSlidersValueFromParams()
       self.update()

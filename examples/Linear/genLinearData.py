@@ -1,6 +1,6 @@
 import modelexp
 from modelexp.experiments import Generic
-from modelexp.models.Generic import Linear
+from modelexp.models.generic import Linear
 import numpy as np
 import random
 
@@ -10,7 +10,8 @@ app.setExperiment(Generic)
 app.setModel(Linear)
 modelRef = app.model
 modelRef.defineDomain(np.linspace(-3, 3, 100))
-modelRef.setParameters(2.1, 0.3)
+modelRef.setParam('m', 2.1)
+modelRef.setParam('y0', 0.3)
 modelRef.calcModel()
 
 sig_y = 0.05*modelRef.y
