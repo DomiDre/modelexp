@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 class PlotWidgetInset(PlotWidget):
   def defineAx(self):
-    x0, y0 = 0.15, 0.15
+    x0, y0 = 0.15, 0.17
     self.ax = self.fig.add_axes([x0, y0, 1-x0-0.02, 1-y0-0.02])
     self.ax.set_xlabel(r"$\mathit{x}$")
     self.ax.set_ylabel(r"$\mathit{y}$")

@@ -193,6 +193,11 @@ class Gui(qt5w.QMainWindow):
     for parameter in self.ptrModel.params:
       self.updateSlider(parameter)
 
+  def updateParamsVaryFromCheckbox(self):
+    for parameter in self.ptrModel.params:
+      self.ptrModel.params[parameter].vary =\
+        self.checkboxes[parameter].isChecked()
+
   def updateSlider(self, parameter):
     currentParam = self.ptrModel.params[parameter]
     sliderBar = self.sliders[parameter]
@@ -228,17 +233,39 @@ class Gui(qt5w.QMainWindow):
         newButton.setToolTip(buttonTooltip)
         newButton.clicked.connect(buttonFunction)
         return newButton
+    self.buttonLayout = qt5w.QVBoxLayout(self.buttonWidget)
 
     def guiFit():
       self.ptrFit.fit()
       self.updateSlidersValueFromParams()
       self.update()
 
-    self.buttonLayout = qt5w.QVBoxLayout(self.buttonWidget)
     self.buttonLayout.addWidget(
       addButton(
         'Fit',
         'Fit parameters of the model to the data',
         guiFit
+      )
+    )
+
+    def exportFit():
+      self.ptrFit.exportResult('fit_result.dat')
+
+    self.buttonLayout.addWidget(
+      addButton(
+        'Export Fit Result',
+        'Save fit result of model & data to file',
+        exportFit
+      )
+    )
+
+    def updateParamsInFile():
+      self.ptrModel.updateParamsToFile()
+
+    self.buttonLayout.addWidget(
+      addButton(
+        'Update Parameters in File',
+        'Set values in fit file to current parameter values',
+        updateParamsInFile
       )
     )

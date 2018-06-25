@@ -47,6 +47,7 @@ class SAXSModel(Model):
       self.modelPlot.set_ydata(self.I)
       self.sldPlot.set_xdata(self.r / 10)
       self.sldPlot.set_ydata(self.sld / 1e-6)
+      self.axInset.set_xlim(0, max(self.r)/10)
     else:
       self.modelPlot, = self.ax.plot(
         self.q, self.I, marker='None', color='black', zorder=10

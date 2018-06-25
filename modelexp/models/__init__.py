@@ -1,4 +1,4 @@
 from ._model import Model
 
-from . import Generic
-from . import SAS
+from . import generic
+from . import sas

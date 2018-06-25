@@ -1,6 +1,6 @@
 import modelexp
-from modelexp.experiments.Sas import Saxs
-from modelexp.models.Sas import Sphere
+from modelexp.experiments.sas import Saxs
+from modelexp.models.sas import Sphere
 from modelexp.data import XyeData
 from modelexp.fit import LevenbergMarquardt
 
@@ -13,12 +13,12 @@ dataRef.loadFromFile('./saxsSphereData.xye')
 dataRef.plotData()
 
 modelRef = app.setModel(Sphere)
-modelRef.setParam('R', 62.5, minVal=0, maxVal=100)
-modelRef.setParam('SLDsphere', 45e-6, vary=False)
-modelRef.setParam('SLDsolvent', 10e-6, vary=False)
-modelRef.setParam('sigR', 0.07, minVal=0, maxVal=0.2)
-modelRef.setParam('I0', 0.4, minVal=0, maxVal=10)
-modelRef.setParam('bg', 0, vary=False)
+modelRef.setParam("R", 49.98878725705755,  minVal = 0, maxVal = 100, vary = True)
+modelRef.setParam("SLDsphere", 4.5e-05,  minVal = 0, maxVal = 0.00045000000000000004, vary = False)
+modelRef.setParam("SLDsolvent", 1e-05,  minVal = 0, maxVal = 0.0001, vary = False)
+modelRef.setParam("sigR", 0.04981009930177371,  minVal = 0, maxVal = 0.2, vary = True)
+modelRef.setParam("I0", 1.0213980076018698,  minVal = 0, maxVal = 10, vary = True)
+modelRef.setParam("bg", 0.0,  minVal = 0, maxVal = 1, vary = False)
 
 app.setFit(LevenbergMarquardt)
 

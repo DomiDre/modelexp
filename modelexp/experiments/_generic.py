@@ -24,3 +24,6 @@ class Generic(Experiment):
       y_model = self.model.getValues()
       self.ax.set_xlim(min(x_model), max(x_model))
       self.ax.set_xlim(min(y_model), max(y_model))
+
+  def saveModelDataToFile(self, f):
+    pass

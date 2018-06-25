@@ -47,3 +47,9 @@ class Experiment(metaclass=ABCMeta):
     to adjust that the model is displayed accordingly.
     """
     pass
+
+  @abstractmethod
+  def saveModelDataToFile(self):
+    """Define how data and model is stored to file
+    """
+    pass
