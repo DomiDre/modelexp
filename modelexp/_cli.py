@@ -18,12 +18,13 @@ class Cli():
 
   def __init__(self):
     """
-    Initializes Modelpy. Called as first function when starting the program
+    Initializes Modelexp. Called as first function when starting the program
     """
-    self._experiment: Experiment = None
-    self.data: Data = None
-    self.model: Model = None
-    self.fit: Fit = None
+
+    self._experiment = Experiment
+    self.data = Data
+    self.model = Model
+    self.fit = Fit
 
   def setExperiment(self, _experiment):
     """Tell the app which kind of experiment it should treat
@@ -39,7 +40,7 @@ class Cli():
       Reference to the Experiment object
     """
     assert issubclass(_experiment, Experiment), 'Your experiment must be a subclass of Experiment (and not initialized)'
-    self._experiment: Experiment = _experiment()
+    self._experiment = _experiment()
     return self._experiment
 
   def setData(self, _data):
@@ -55,7 +56,7 @@ class Cli():
     data
       Reference to the Data object
     """
-    assert(self._experiment), "Set an Experiment first before setting data."
+    assert isinstance(self._experiment, Experiment), "Set an Experiment first before setting data."
     assert issubclass(_data, Data), 'Your data must be a subclass of Data (and not initialized)'
 
     self.data = _data(self._experiment)
@@ -75,7 +76,7 @@ class Cli():
     model
       Reference to the Model object
     """
-    assert(self._experiment), "Set an Experiment first before setting a model."
+    assert isinstance(self._experiment, Experiment), "Set an Experiment first before setting data."
     assert issubclass(_model, Model), 'Your model must be a subclass of Model (and not initialized)'
 
     # initialize the model and connect it to the gui and the experiment
@@ -96,9 +97,9 @@ class Cli():
     fit
       Reference to the Fit object
     """
-    assert(self._experiment), 'Set the Experiment before setting the Fit routine'
-    assert(self.data), 'Set the data before setting the Fit routine'
-    assert(self.model), 'Set the model before setting the Fit routine'
+    assert isinstance(self._experiment, Experiment), "Set an Experiment first before setting data."
+    assert isinstance(self.data, Data), 'Set the data before setting the Fit routine'
+    assert isinstance(self.model, Model), 'Set the model before setting the Fit routine'
     assert issubclass(_fit, Fit), 'Your fit routine must be a subclass of Fit (and not initialized)'
     self.fit = _fit(self._experiment, self.data, self.model)
     return self.fit
