@@ -107,4 +107,3 @@ class Cli():
   def run(self):
     if(self.model):
       self.model.calcModel()
-      self.model.plotModel()
