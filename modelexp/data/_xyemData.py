@@ -50,3 +50,14 @@ class XyemData(Data):
       self.x, self.y, self.e, ls='None', marker='.', zorder=5
     )
     self.ptrExperiment.adjustAxToAddedData()
+
+  def sliceDomain(self, minX=-np.inf, maxX=np.inf):
+    slicedDomain = np.logical_and(minX < self.x, self.x < maxX)
+    self.xMask = self.x[~slicedDomain]
+    self.yMask = self.y[~slicedDomain]
+    self.eMask = self.e[~slicedDomain]
+    self.mMask = self.m[~slicedDomain]
+    self.x = self.x[slicedDomain]
+    self.y = self.y[slicedDomain]
+    self.e = self.e[slicedDomain]
+    self.m = self.m[slicedDomain]

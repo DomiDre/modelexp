@@ -55,3 +55,7 @@ class Data(metaclass=ABCMeta):
 
   def draw(self):
     self.ptrGui.update()
+
+  @abstractmethod
+  def sliceDomain(self):
+    pass

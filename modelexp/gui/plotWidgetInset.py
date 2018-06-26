@@ -8,10 +8,13 @@ class PlotWidgetInset(PlotWidget):
     self.ax.set_xlabel(r"$\mathit{x}$")
     self.ax.set_ylabel(r"$\mathit{y}$")
 
-    x0In, y0In = 0.7, 0.7
-    self.axInset = self.fig.add_axes([x0In, y0In, 1-x0In-0.02, 1-y0In-0.02])
-    self.axInset.set_xlabel(r"$\mathit{x}_{in}$")
-    self.axInset.set_ylabel(r"$\mathit{y}_{in}$")
+    x0In, y0In = 0.75, 0.75
+    self.axInset = self.fig.add_axes([x0In, y0In, 1 - x0In - 0.02, 1 - y0In - 0.02])
+    self.axInset.set_xlabel(r"$\mathit{x}_{in}$", fontsize=9)
+    self.axInset.set_ylabel(r"$\mathit{y}_{in}$", fontsize=9)
+
+    self.axInset.xaxis.set_tick_params(labelsize=9)
+    self.axInset.yaxis.set_tick_params(labelsize=9)
 
     self.fig.tight_layout()
     self.draw()
