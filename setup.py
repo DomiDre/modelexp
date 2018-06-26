@@ -9,7 +9,7 @@ with open('LICENSE') as f:
 
 setup(
   name='modelexp',
-  version='0.1.2',
+  version='0.1.3',
   description='General purpose package to fit models to experimental data',
   url='https://github.com/DomiDre/modelexp',
   author='Dominique Dresen',
