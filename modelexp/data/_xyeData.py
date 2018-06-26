@@ -19,6 +19,9 @@ class XyeData(Data):
     self.y = np.array(y)
     self.e = np.array(e)
 
+  def getData(self):
+    return self.x, self.y, self.e
+
   def getDomain(self):
     return self.x
 

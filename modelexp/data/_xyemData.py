@@ -22,6 +22,9 @@ class XyemData(Data):
     self.e = np.array(e)
     self.m = np.array(m)
 
+  def getData(self):
+    return self.x, self.y, self.e, self.m
+
   def getDomain(self):
     return self.x
 
