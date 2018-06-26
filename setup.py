@@ -9,7 +9,7 @@ with open('LICENSE') as f:
 
 setup(
   name='modelexp',
-  version='0.1.0',
+  version='0.1.1',
   description='General purpose package to fit models to experimental data',
   url='https://github.com/DomiDre/modelexp',
   author='Dominique Dresen',
@@ -24,22 +24,23 @@ setup(
   python_requires='>2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
   platforms=['Linux'],
   package_dir={'modelexp': 'modelexp'},
-  packages=[
-    'modelexp',
-    'modelexp.data',
-    'modelexp.models',
-    'modelexp.experiments',
-    'modelexp._gui',
-    'modelexp._fit',
-  ],
+  packages=find_packages(
+    exclude=(
+      '_build',
+      'docs',
+      '_static',
+      '_templates'
+      'tests',
+      'examples'
+      )
+  ),
   keywords='model data experiment science'
 )
-  # packages=find_packages(
-  #   exclude=(
-  #     '_build',
-  #     'docs',
-  #     '_static',
-  #     '_templates'
-  #     'tests',
-  #     )
-  # )
+  # packages=[
+  #   'modelexp',
+  #   'modelexp.data',
+  #   'modelexp.models',
+  #   'modelexp.experiments',
+  #   'modelexp._gui',
+  #   'modelexp._fit',
+  # ]

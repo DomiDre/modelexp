@@ -1,37 +1,29 @@
 import inspect, sys
-import PyQt5.QtWidgets as qt5w
-from .gui._gui import Gui
 from .models._model import Model
 from .data._data import Data
 from .experiments._experiment import Experiment
 from .fit._fit import Fit
 
-class App():
+class Cli():
   """
-  Container class for everything. A modelexp app consists of five submodules
+  Reduced container class to run modelexp without Qt5
   The submodules are initialized in the following order
-  gui - the interface for the user to see data, model and call the fit
   experiment - defines the general display and structure of the data to expect
   data - the experimental data, how the data looks, how it can be loaded and how visualized
   model - the means to calculate a model for the data, how to visualize it and how to store it
   fit - the code to find parameters of a model such that it fits to the data best
 
-  The five submodules know of each other and can communicate with each other
+  The four submodules know of each other and can communicate with each other
   """
 
-  def __init__(self, _gui=None):
+  def __init__(self):
     """
     Initializes Modelpy. Called as first function when starting the program
     """
-    self._app = qt5w.QApplication(sys.argv)
-
-    self._experiment = Experiment
-    self.data = Data
-    self.model = Model
-    self.fit = Fit
-
-    self._gui = Gui if _gui is None else _gui
-    self._gui = self._gui()
+    self._experiment: Experiment = None
+    self.data: Data = None
+    self.model: Model = None
+    self.fit: Fit = None
 
   def setExperiment(self, _experiment):
     """Tell the app which kind of experiment it should treat
@@ -46,15 +38,8 @@ class App():
     _experiment
       Reference to the Experiment object
     """
-    assert isinstance(self._gui, Gui), "The gui must be set and initialized before setting the Experiment"
     assert issubclass(_experiment, Experiment), 'Your experiment must be a subclass of Experiment (and not initialized)'
-    self._experiment = _experiment()
-
-    self._gui.initPlot(self._experiment.plotWidgetClass)
-
-    self._experiment.connectGui(self._gui)
-    self._experiment.setAxProps()
-    self._gui.connectExperiment(self._experiment)
+    self._experiment: Experiment = _experiment()
     return self._experiment
 
   def setData(self, _data):
@@ -70,13 +55,10 @@ class App():
     data
       Reference to the Data object
     """
-    assert isinstance(self._gui, Gui), "The GUI must be set and initialized."
-    assert isinstance(self._experiment, Experiment), "Set an Experiment first before setting data."
+    assert(self._experiment), "Set an Experiment first before setting data."
     assert issubclass(_data, Data), 'Your data must be a subclass of Data (and not initialized)'
 
     self.data = _data(self._experiment)
-    self.data.connectGui(self._gui)
-    self._gui.connectData(self.data)
     self._experiment.connectData(self.data)
     return self.data
 
@@ -93,16 +75,12 @@ class App():
     model
       Reference to the Model object
     """
-    assert isinstance(self._gui, Gui), "The GUI must be set and initialized."
-    assert isinstance(self._experiment, Experiment), "Set an Experiment first before setting a model."
+    assert(self._experiment), "Set an Experiment first before setting a model."
     assert issubclass(_model, Model), 'Your model must be a subclass of Model (and not initialized)'
 
     # initialize the model and connect it to the gui and the experiment
     self.model = _model(self._experiment)
-    self.model.connectGui(self._gui)
-    self._gui.connectModel(self.model)
     self._experiment.connectModel(self.model)
-
     return self.model
 
   def setFit(self, _fit):
@@ -118,21 +96,14 @@ class App():
     fit
       Reference to the Fit object
     """
-    assert isinstance(self._gui, Gui), 'The GUI must be set and initialized'
-    assert isinstance(self._experiment, Experiment), 'Set the Experiment before setting the Fit routine'
-    assert isinstance(self.data, Data), 'Set the data before setting the Fit routine'
-    assert isinstance(self.model, Model), 'Set the model before setting the Fit routine'
+    assert(self._experiment), 'Set the Experiment before setting the Fit routine'
+    assert(self.data), 'Set the data before setting the Fit routine'
+    assert(self.model), 'Set the model before setting the Fit routine'
     assert issubclass(_fit, Fit), 'Your fit routine must be a subclass of Fit (and not initialized)'
     self.fit = _fit(self._experiment, self.data, self.model)
-    self.fit.connectGui(self._gui)
-    self._gui.connectFit(self.fit)
-
     return self.fit
 
-  def show(self):
+  def run(self):
     if(self.model):
       self.model.calcModel()
       self.model.plotModel()
-    self._gui.setWindowTitle("ModelExp")
-    self._gui.show()
-    self._app.exec_()

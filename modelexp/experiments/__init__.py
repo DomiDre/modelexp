@@ -1,2 +1,4 @@
 from ._experiment import Experiment
-from ._saxs import SAXS
+from ._generic import Generic
+
+from . import sas
