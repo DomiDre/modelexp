@@ -29,7 +29,7 @@ class Model(metaclass=ABCMeta):
     self.ax = self.ptrGui.plotWidget.getDataAx()
 
   def setParam(self, paramName, paramVal, minVal=-np.inf, maxVal=np.inf, vary=True):
-    assert((paramName in self.params),
+    assert paramName in self.params, (
       'Tried to add a parameter that is not defined in the model. '+
       'Please define a new extended model if you wish to add parameters.'
     )
