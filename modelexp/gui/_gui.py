@@ -22,6 +22,13 @@ class Gui(qt5w.QMainWindow):
     Defines the main layout of the page. Where is the canvas, where the buttons.
     Define the menu.
     '''
+    self.ptrExperiment = Experiment
+    self.ptrModel = Model
+    self.ptrData = Data
+    self.ptrFit = Fit
+
+
+
     super().__init__()
 
     self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
@@ -84,17 +91,17 @@ class Gui(qt5w.QMainWindow):
         """)
 
   def connectExperiment(self, ptrExperiment):
-    self.ptrExperiment: Experiment = ptrExperiment
+    self.ptrExperiment = ptrExperiment
 
   def connectModel(self, ptrModel):
-    self.ptrModel: Model = ptrModel
+    self.ptrModel = ptrModel
     self.initializeParameterSliders()
 
   def connectData(self, ptrData):
-    self.ptrData: Data = ptrData
+    self.ptrData = ptrData
 
   def connectFit(self, ptrFit):
-    self.ptrFit: Fit = ptrFit
+    self.ptrFit = ptrFit
     self.setFitButtons()
 
   def initializeParameterSliders(self):

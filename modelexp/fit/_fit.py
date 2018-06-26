@@ -10,9 +10,9 @@ class Fit(metaclass=ABCMeta):
   the defined functions here.
   '''
   def __init__(self, experiment, data, model):
-    self.ptrExperiment: Experiment = experiment
-    self.ptrData: Data = data
-    self.ptrModel: Model = model
+    self.ptrExperiment = experiment
+    self.ptrData = data
+    self.ptrModel = model
 
     self.fit_result = None
 

@@ -7,9 +7,8 @@ Welcome to modelexp's documentation!
 ====================================
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
 
+.. automodule:: modelexp.App
 
 
 Indices and tables

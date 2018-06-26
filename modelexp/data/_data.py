@@ -1,8 +1,4 @@
 from abc import ABCMeta, abstractmethod
-try:
-  from ..experiments import Experiment
-except ImportError:
-  pass
 
 class Data(metaclass=ABCMeta):
   '''
@@ -10,7 +6,7 @@ class Data(metaclass=ABCMeta):
   Specific models are defined by classes that have to implemented the defined functions here.
   '''
   def __init__(self, experiment):
-    self.ptrExperiment: Experiment = experiment
+    self.ptrExperiment = experiment
 
   def connectGui(self, gui):
     self.ptrGui = gui

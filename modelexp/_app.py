@@ -25,12 +25,12 @@ class App():
     """
     self._app = qt5w.QApplication(sys.argv)
 
-    self._experiment: Experiment = None
-    self.data: Data = None
-    self.model: Model = None
-    self.fit: Fit = None
+    self._experiment = Experiment
+    self.data = Data
+    self.model = Model
+    self.fit = Fit
 
-    self._gui:Gui = Gui if _gui is None else _gui
+    self._gui = Gui if _gui is None else _gui
     self._gui = self._gui()
 
   def setExperiment(self, _experiment):
@@ -46,9 +46,9 @@ class App():
     _experiment
       Reference to the Experiment object
     """
-    assert(self._gui), "The gui must be set before setting the Experiment"
+    assert isinstance(self._gui, Gui), "The gui must be set and initialized before setting the Experiment"
     assert issubclass(_experiment, Experiment), 'Your experiment must be a subclass of Experiment (and not initialized)'
-    self._experiment: Experiment = _experiment()
+    self._experiment = _experiment()
 
     self._gui.initPlot(self._experiment.plotWidgetClass)
 
@@ -70,8 +70,8 @@ class App():
     data
       Reference to the Data object
     """
-    assert(self._gui), "The GUI must be set and initialized."
-    assert(self._experiment), "Set an Experiment first before setting data."
+    assert isinstance(self._gui, Gui), "The GUI must be set and initialized."
+    assert isinstance(self._experiment, Experiment), "Set an Experiment first before setting data."
     assert issubclass(_data, Data), 'Your data must be a subclass of Data (and not initialized)'
 
     self.data = _data(self._experiment)
@@ -93,8 +93,8 @@ class App():
     model
       Reference to the Model object
     """
-    assert(self._gui), "The GUI must be set and initialized."
-    assert(self._experiment), "Set an Experiment first before setting a model."
+    assert isinstance(self._gui, Gui), "The GUI must be set and initialized."
+    assert isinstance(self._experiment, Experiment), "Set an Experiment first before setting a model."
     assert issubclass(_model, Model), 'Your model must be a subclass of Model (and not initialized)'
 
     # initialize the model and connect it to the gui and the experiment
@@ -118,10 +118,10 @@ class App():
     fit
       Reference to the Fit object
     """
-    assert(self._gui), 'The GUI must be set and initialized'
-    assert(self._experiment), 'Set the Experiment before setting the Fit routine'
-    assert(self.data), 'Set the data before setting the Fit routine'
-    assert(self.model), 'Set the model before setting the Fit routine'
+    assert isinstance(self._gui, Gui), 'The GUI must be set and initialized'
+    assert isinstance(self._experiment, Experiment), 'Set the Experiment before setting the Fit routine'
+    assert isinstance(self.data, Data), 'Set the data before setting the Fit routine'
+    assert isinstance(self.model, Model), 'Set the model before setting the Fit routine'
     assert issubclass(_fit, Fit), 'Your fit routine must be a subclass of Fit (and not initialized)'
     self.fit = _fit(self._experiment, self.data, self.model)
     self.fit.connectGui(self._gui)
