@@ -11,8 +11,9 @@ class Model(metaclass=ABCMeta):
   """Abstract class to describe a model.
   Specific models are defined by classes that have to implemented the defined functions here.
   """
-  def __init__(self, experiment):
-    self.ptrExperiment = experiment
+  def __init__(self, experiment=None):
+    if (experiment is not None):
+      self.ptrExperiment = experiment
 
     self.params = Parameters()
     self.initParameters()

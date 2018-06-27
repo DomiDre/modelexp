@@ -19,6 +19,9 @@ class XyeData(Data):
     self.y = np.array(y)
     self.e = np.array(e)
 
+  def getData(self):
+    return self.x, self.y, self.e
+
   def getDomain(self):
     return self.x
 
@@ -38,3 +41,12 @@ class XyeData(Data):
   def plotData(self):
     self.ax.errorbar(self.x, self.y, self.e, ls='None', marker='.', zorder=5)
     self.ptrExperiment.adjustAxToAddedData()
+
+  def sliceDomain(self, minX=-np.inf, maxX=np.inf):
+    slicedDomain = np.logical_and(minX < self.x, self.x < maxX)
+    self.xMask = self.x[~slicedDomain]
+    self.yMask = self.y[~slicedDomain]
+    self.eMask = self.e[~slicedDomain]
+    self.x = self.x[slicedDomain]
+    self.y = self.y[slicedDomain]
+    self.e = self.e[slicedDomain]
