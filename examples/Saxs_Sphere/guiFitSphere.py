@@ -4,6 +4,8 @@ from modelexp.models.sas import Sphere
 from modelexp.data import XyeData
 from modelexp.fit import LevenbergMarquardt
 
+from modelexp.models.sas import InstrumentalResolution
+
 app = modelexp.App()
 
 app.setExperiment(Saxs)
@@ -12,7 +14,7 @@ dataRef = app.setData(XyeData)
 dataRef.loadFromFile('./saxsSphereData.xye')
 dataRef.plotData()
 
-modelRef = app.setModel(Sphere)
+modelRef = app.setModel(Sphere, InstrumentalResolution)
 modelRef.setParam("r", 49.900000000000006,  minVal = 0, maxVal = 100, vary = True)
 modelRef.setParam("sldSphere", 4.5e-05,  minVal = 0, maxVal = 0.00045000000000000004, vary = False)
 modelRef.setParam("sldSolvent", 1e-05,  minVal = 0, maxVal = 0.0001, vary = False)

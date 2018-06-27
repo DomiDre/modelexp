@@ -7,6 +7,8 @@ try:
 except ImportError:
   pass
 
+from ._decoration import Decoration
+
 class Model(metaclass=ABCMeta):
   """Abstract class to describe a model.
   Specific models are defined by classes that have to implemented the defined functions here.
@@ -20,6 +22,8 @@ class Model(metaclass=ABCMeta):
 
     if (hasattr(self.ptrExperiment, 'data')):
       self.defineDomain(self.ptrExperiment.data.getDomain())
+
+    self.decoration = Decoration
 
   def getParameters(self):
     return self.params
@@ -84,6 +88,13 @@ class Model(metaclass=ABCMeta):
     pass
 
   @abstractmethod
+  def calcDecoratedModel(self):
+    """How to treat an additional decoration class to a model
+    """
+
+    pass
+
+  @abstractmethod
   def plotModel(self):
     """Define how to plot the model
 
@@ -132,3 +143,6 @@ class Model(metaclass=ABCMeta):
     script_file.write(script_file_string)
     script_file.close()
     print("Updated script file: " + script_file_name)
+
+  def _setDecoration(self, decoratingClass):
+    self.decoration = decoratingClass(self)

@@ -14,3 +14,7 @@ from ._cube import Cube
 from ._superball import Superball
 
 from._ellipsoid import Ellipsoid
+
+
+# decorating functions
+from ._instrumentalResolution import InstrumentalResolution

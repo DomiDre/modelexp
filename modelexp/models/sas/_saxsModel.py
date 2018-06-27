@@ -1,5 +1,5 @@
 from .._model import Model
-
+from .._decoration import Decoration
 class SAXSModel(Model):
   """Class for models that are defined over one dimension
 
@@ -15,6 +15,7 @@ class SAXSModel(Model):
     self.sld = None
     self.modelPlot = None
     self.sldPlot = None
+
     super().__init__(experiment)
 
   def connectGui(self, gui):
@@ -34,8 +35,13 @@ class SAXSModel(Model):
   def getValues(self, p=None):
     if p is not None:
       self.params = p
-      self.calcModel()
+      self.calcDecoratedModel()
     return self.I
+
+  def calcDecoratedModel(self):
+    self.calcModel()
+    if isinstance(self.decoration, Decoration):
+      self.I = self.decoration.apply()
 
   def getSld(self):
     return self.sld
@@ -62,5 +68,5 @@ class SAXSModel(Model):
     '''
     How to update the model when parameters are changed
     '''
-    self.calcModel()
+    self.calcDecoratedModel()
     self.plotModel()

@@ -1,5 +1,6 @@
 import inspect, sys
 from .models._model import Model
+from .models._decoration import Decoration
 from .data._data import Data
 from .experiments._experiment import Experiment
 from .fit._fit import Fit
@@ -63,7 +64,7 @@ class Cli():
     self._experiment.connectData(self.data)
     return self.data
 
-  def setModel(self, _model):
+  def setModel(self, _model, _decoration=None):
     """Tell the app which kind of model it should treat
 
     Parameters
@@ -81,6 +82,8 @@ class Cli():
 
     # initialize the model and connect it to the gui and the experiment
     self.model = _model(self._experiment)
+    if (_decoration is not None) and (issubclass(_decoration, Decoration)):
+      self.model._setDecoration(_decoration)
     self._experiment.connectModel(self.model)
     return self.model
 

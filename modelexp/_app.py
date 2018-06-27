@@ -2,6 +2,7 @@ import inspect, sys
 import PyQt5.QtWidgets as qt5w
 from .gui._gui import Gui
 from .models._model import Model
+from .models._decoration import Decoration
 from .data._data import Data
 from .experiments._experiment import Experiment
 from .fit._fit import Fit
@@ -80,7 +81,7 @@ class App():
     self._experiment.connectData(self.data)
     return self.data
 
-  def setModel(self, _model):
+  def setModel(self, _model, _decoration=None):
     """Tell the app which kind of model it should treat
 
     Parameters
@@ -99,6 +100,8 @@ class App():
 
     # initialize the model and connect it to the gui and the experiment
     self.model = _model(self._experiment)
+    if (_decoration is not None) and (issubclass(_decoration, Decoration)):
+      self.model._setDecoration(_decoration)
     self.model.connectGui(self._gui)
     self._gui.connectModel(self.model)
     self._experiment.connectModel(self.model)
@@ -126,12 +129,11 @@ class App():
     self.fit = _fit(self._experiment, self.data, self.model)
     self.fit.connectGui(self._gui)
     self._gui.connectFit(self.fit)
-
     return self.fit
 
   def show(self):
     if(self.model):
-      self.model.calcModel()
+      self.model.calcDecoratedModel()
       self.model.plotModel()
     self._gui.setWindowTitle("ModelExp")
     self._gui.show()
