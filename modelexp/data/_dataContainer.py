@@ -13,6 +13,7 @@ class DataContainer():
 
     if (experiment is not None):
       self.ptrExperiment = experiment
+      self.ptrExperiment.connectData(self)
 
   def connectGui(self, gui):
     self.ptrGui = gui

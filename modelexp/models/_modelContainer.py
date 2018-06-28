@@ -21,7 +21,8 @@ class ModelContainer():
     self.modelsets = []
 
     self.decoration = decoration
-
+    self.constantParameters = [] # set by model during initParameters
+    self.datasetSpecificParams = [] # set by experiment during initParameters
     self.params = Parameters() # empty parameter container
 
     if gui is not None:
@@ -29,7 +30,7 @@ class ModelContainer():
 
     if (experiment is not None): #if experiment is defined
       self.ptrExperiment = experiment
-
+      self.ptrExperiment.connectModel(self)
       # check whether data was already loaded
       if (hasattr(self.ptrExperiment, 'data')):
         # add for every loaded dataset a modelset on respective domain
@@ -41,8 +42,16 @@ class ModelContainer():
     newModel = self.modelClass()
     newModel.defineDomain(domain)
     newModel.initParameters()
-    if (self.decoration is not None) and issubclass(self.decoration, Decoration):
-      newModel._setDecoration(self.decoration)
+    if (self.decoration is not None):
+      if isinstance(self.decoration, list):
+        for decoration in self.decoration:
+          assert issubclass(decoration, Decoration),\
+            'Tried to add a decoration that is not derived from Decoration'
+          newModel._addDecoration(decoration)
+      else:
+        assert issubclass(self.decoration, Decoration),\
+          'Tried to add a decoration that is not derived from Decoration'
+        newModel._addDecoration(self.decoration)
     newModel.suffix = suffix
     self.modelsets.append(newModel)
     self.nModelsets += 1
@@ -51,7 +60,7 @@ class ModelContainer():
     # -> initialize the parameters
     if self.nModelsets == self.ptrExperiment.nDatasets:
       self.initParameters()
-
+      self.ptrExperiment.setParameters()
       # if gui is available connect and thereby initialize the parameter sliders
       if hasattr(self, 'ptrGui'):
         self.ptrGui.connectModel(self)
@@ -59,19 +68,41 @@ class ModelContainer():
           self.getModelset(i).connectGui(self.ptrGui)
 
   def initParameters(self):
-    datasetSpecificParams = self.ptrExperiment.datasetSpecificParams
+    self.datasetSpecificParams = self.ptrExperiment.datasetSpecificParams
     addedParams = []
 
     for i in range(self.nModelsets):
       model = self.getModelset(i)
       params = model.params
+
+      for parameter in model.constantParameters:
+        if not parameter in self.constantParameters:
+          self.constantParameters.append(parameter)
+
       for parameter in params:
         p = params[parameter]
-        if parameter in datasetSpecificParams:
-          self.params.add(
-            parameter + '_' + model.suffix, p.value,
-            min=p.min, max=p.max, vary=p.vary
-          )
+        if parameter in self.datasetSpecificParams:
+          # parameter is shared only by datasets with specific tags
+          # these are added to the dataset either as a str or a list of str
+
+          specificTags = self.datasetSpecificParams[parameter]
+          if isinstance(model.suffix, str):
+            if model.suffix in specificTags:
+              suffixedParameter = parameter + '_' + model.suffix
+              if not suffixedParameter in self.params:
+                self.params.add(
+                  suffixedParameter, p.value,
+                  min=p.min, max=p.max, vary=p.vary
+                )
+          elif isinstance(model.suffix, list):
+            for suffix in model.suffix:
+              if suffix in specificTags:
+                suffixedParameter = parameter + '_' + suffix
+                if not suffixedParameter in self.params:
+                  self.params.add(
+                    suffixedParameter, p.value,
+                    min=p.min, max=p.max, vary=p.vary
+                  )
         elif parameter in addedParams:
           continue
         else:
@@ -85,6 +116,14 @@ class ModelContainer():
 
   def getModelset(self, i):
     return self.modelsets[i]
+
+  def getModelsetBySuffix(self, suffix):
+    for i in range(self.nModelsets):
+      model = self.getModelset(i)
+      modelSuffix = model.suffix
+      if modelSuffix == suffix:
+        return model
+    return None
 
   def setParam(self, paramName, paramVal, minVal=-np.inf, maxVal=np.inf, vary=True):
     assert paramName in self.params, (
@@ -107,13 +146,14 @@ class ModelContainer():
 
   def plotModel(self):
     for i in range(self.nModelsets):
-      self.getModelset(i).plotModel()
+      self.getModelset(i).plotDecoratedModel()
 
   def updateModel(self):
     # create a parameter container for each sub model respectively
     p = Parameters()
     for parameter in self.params:
-      if not parameter in self.ptrExperiment.datasetSpecificParams:
+      if not parameter.rsplit('_',1)[0] in self.ptrExperiment.datasetSpecificParams:
+        # parameters that are not dataset specific are shared by all datasets
         p.add(self.params[parameter])
 
     for i in range(self.nModelsets):
@@ -121,13 +161,28 @@ class ModelContainer():
 
       subP = p.copy()
       for parameter in self.ptrExperiment.datasetSpecificParams:
-        suffixParameter = parameter + '_' + subModel.suffix
-        if suffixParameter in self.params:
-          specParam = self.params[suffixParameter]
-          subP.add(
-            parameter, specParam.value,
-            min=specParam.min, max=specParam.max, vary=specParam.vary
-          )
+        specificTags = self.datasetSpecificParams[parameter]
+
+        if isinstance(subModel.suffix, str):
+          if subModel.suffix in specificTags:
+            suffixedParameter = parameter + '_' + subModel.suffix
+
+            if suffixedParameter in self.params:
+              specParam = self.params[suffixedParameter]
+              subP.add(
+                parameter, specParam.value,
+                min=specParam.min, max=specParam.max, vary=specParam.vary
+              )
+        elif isinstance(subModel.suffix, list):
+          for suffix in subModel.suffix:
+            if suffix in specificTags:
+              suffixedParameter = parameter + '_' + suffix
+              if suffixedParameter in self.params:
+                specParam = self.params[suffixedParameter]
+                subP.add(
+                  parameter, specParam.value,
+                  min=specParam.min, max=specParam.max, vary=specParam.vary
+                )
       subModel.params = subP
       subModel.calcDecoratedModel()
 

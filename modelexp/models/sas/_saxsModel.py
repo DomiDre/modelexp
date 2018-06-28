@@ -23,6 +23,9 @@ class SAXSModel(Model):
     self.fig = self.ptrGui.plotWidget.getFig()
     self.ax, self.axInset = self.ptrGui.plotWidget.getAllAx()
 
+  def getAllAx(self):
+    return self.ax, self.axInset
+
   def defineDomain(self, q):
     '''
     On which space should the model be evaluated
@@ -38,13 +41,26 @@ class SAXSModel(Model):
       self.calcDecoratedModel()
     return self.I
 
+  def setValues(self, I):
+    self.I = I
+
   def calcDecoratedModel(self):
-    self.calcModel()
     if isinstance(self.decoration, Decoration):
-      self.I = self.decoration.apply(self.q, self.I)
+      self.decoration.calcModel()
+    else:
+      self.calcModel()
 
   def getSld(self):
     return self.sld
+
+  def plotDecoratedModel(self):
+    '''
+    Define how to plot the model
+    '''
+    if isinstance(self.decoration, Decoration):
+      self.decoration.plotModel()
+    else:
+      self.plotModel()
 
   def plotModel(self):
     '''

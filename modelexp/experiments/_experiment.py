@@ -11,7 +11,7 @@ class Experiment(metaclass=ABCMeta):
     self.plotWidgetClass = None
 
     self.nDatasets = 1
-    self.datasetSpecificParams = []
+    self.datasetSpecificParams = {}
 
   def connectGui(self, gui):
     self.ptrGui = gui
@@ -52,5 +52,11 @@ class Experiment(metaclass=ABCMeta):
   @abstractmethod
   def saveModelDataToFile(self):
     """Define how data and model is stored to file
+    """
+    pass
+
+  def setParameters(self):
+    """Called after initialization of models for datasets. Set experiment specific
+    parameters corresponding to their dataset identifier
     """
     pass

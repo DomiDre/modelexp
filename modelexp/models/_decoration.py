@@ -2,9 +2,28 @@ from abc import ABCMeta, abstractmethod
 
 class Decoration(metaclass=ABCMeta):
 
-  def __init__(self):
-    pass
+  def __init__(self, model):
+    self.ptrModel = model
 
   @abstractmethod
-  def apply(self):
+  def calcModel(self):
     pass
+
+  def plotModel(self):
+    self.ptrModel.plotModel()
+
+  def getParams(self):
+    return self.ptrModel.getParams()
+
+  def getDomain(self):
+    return self.ptrModel.getDomain()
+
+  def getValues(self):
+    return self.ptrModel.getValues()
+
+  def setValues(self, values):
+    self.ptrModel.setValues(values)
+
+  def addConstantParam(self, param):
+    self.ptrModel.addConstantParam(param)
+  

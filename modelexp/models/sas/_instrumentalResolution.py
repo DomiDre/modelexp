@@ -1,4 +1,3 @@
-from .._model import Model
 from .._decoration import Decoration
 
 import numpy as np
@@ -14,19 +13,25 @@ class InstrumentalResolution(Decoration):
     Base Abstract class
   """
   def __init__(self, model):
-    self.ptrModel = Model # define which class ptrModel has
+    super().__init__(model)
+    params = self.getParams()
+    params.add('dTheta', 1e-4, min=0, max=1e-3)
+    params.add('wavelength', 1.34145, min=1, max= 10, vary = False)
+    params.add('dWavelength', 0.05, min=0, max=0.1)
 
-    self.ptrModel = model
-    self.ptrModel.params.add('dTheta', 1e-4, min=0, max=1e-3)
-    self.ptrModel.params.add('wavelength', 1.34145, min=1, max= 10, vary = False)
-    self.ptrModel.params.add('dWavelength', 0.05, min=0, max=0.1)
+    self.ptrModel.addConstantParam('wavelength')
 
-  def apply(self, q, Imodel):
+  def calcModel(self):
     '''
     Define how to modify the
     '''
+    self.ptrModel.calcModel()
+    q = self.ptrModel.getDomain()
+    I = self.ptrModel.getValues()
+    params = self.ptrModel.getParams()
     sigQ = np.sqrt(
-      (self.ptrModel.params['dWavelength'] * q)**2 +
-      (4 * np.pi / self.ptrModel.params['wavelength'] * self.ptrModel.params['dTheta'])**2
+      (params['dWavelength'] * q)**2 +
+      (4 * np.pi / params['wavelength'] * params['dTheta'])**2
     )
-    return math.resolution_smear(q, Imodel, sigQ)
+
+    self.setValues(math.resolution_smear(q, I, sigQ))

@@ -79,7 +79,6 @@ class App():
     self.data = self.data(_data, self._experiment) # initialize
     self.data.connectGui(self._gui)
     self._gui.connectData(self.data)
-    self._experiment.connectData(self.data)
     return self.data
 
   def setModel(self, _model, _decoration=None):
@@ -101,8 +100,6 @@ class App():
 
     # initialize the model and connect it to the gui and the experiment
     self.model = self.model(_model, self._experiment, _decoration, self._gui)
-    self._experiment.connectModel(self.model)
-
     return self.model
 
   def setFit(self, _fit):

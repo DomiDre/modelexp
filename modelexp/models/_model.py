@@ -10,10 +10,24 @@ class Model(metaclass=ABCMeta):
     self.params = Parameters()
     self.decoration = Decoration
     self.suffix = ''
+    self.constantParameters = [] # parameters that dont have a slider Bar
 
-  def _setDecoration(self, decoratingClass):
-    self.decoration = decoratingClass(self)
+  # def _setDecoration(self, decoratingClass):
+  #   self.decoration = decoratingClass(self)
 
+  def _addDecoration(self, decoratingClass):
+    # if decoration is already initialized, create a chain of decorations
+    if isinstance(self.decoration, Decoration):
+      self.decoration = decoratingClass(self.decoration)
+    else:
+      self.decoration = decoratingClass(self)
+
+
+  def addConstantParam(self, param):
+    self.constantParameters.append(param)
+
+  def getParams(self):
+    return self.params
 
   @abstractmethod
   def initParameters(self):
@@ -48,6 +62,13 @@ class Model(metaclass=ABCMeta):
     pass
 
   @abstractmethod
+  def setValues(self):
+    """Define how to set the values by hand
+
+    """
+    pass
+
+  @abstractmethod
   def calcModel(self):
     """How to calculate the model on the defined domain
 
@@ -67,10 +88,20 @@ class Model(metaclass=ABCMeta):
 
     """
     pass
+  @abstractmethod
+  def plotDecoratedModel(self):
+    """Define how to plot the model which has additional decoration class
+
+    """
+    pass
 
   @abstractmethod
   def updateModel(self):
     """How to update the model when parameters are changed
 
     """
+    pass
+
+  @abstractmethod
+  def getAllAx(self):
     pass

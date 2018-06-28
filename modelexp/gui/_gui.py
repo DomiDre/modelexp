@@ -116,7 +116,10 @@ class Gui(qt5w.QMainWindow):
 
     self.sliderNumPts = 1000
     parameters = self.ptrModel.getParameters()
-    for i, parameter in enumerate(parameters):
+    numParameters = 0
+    for parameter in parameters:
+      if parameter.rsplit('_',1)[0] in self.ptrModel.constantParameters:
+        continue
       sliderLabel = qt5w.QLabel(parameter)
       sliderBar = qt5w.QSlider(QtCore.Qt.Horizontal, self)
       checkbox = qt5w.QCheckBox(self)
@@ -162,12 +165,14 @@ class Gui(qt5w.QMainWindow):
       sliderBar.label = qt5w.QLabel(prec.format(newValue))
 
       sliderBar.valueChanged.connect(self.sliderValueChanged)
-      self.parameterLayout.addWidget(sliderLabel, i, 0)
-      self.parameterLayout.addWidget(sliderBar, i, 1)
-      self.parameterLayout.addWidget(sliderBar.label, i, 2)
-      self.parameterLayout.addWidget(checkbox, i, 3)
+      self.parameterLayout.addWidget(sliderLabel, numParameters, 0)
+      self.parameterLayout.addWidget(sliderBar, numParameters, 1)
+      self.parameterLayout.addWidget(sliderBar.label, numParameters, 2)
+      self.parameterLayout.addWidget(checkbox, numParameters, 3)
       self.sliders[parameter] = sliderBar
       self.checkboxes[parameter] = checkbox
+      numParameters += 1
+
     self.sliderInverseDict = dict(zip(self.sliders.values(),self.sliders.keys()))
 
   def sliderValueChanged(self, value):
@@ -199,10 +204,14 @@ class Gui(qt5w.QMainWindow):
 
   def updateSlidersValueFromParams(self):
     for parameter in self.ptrModel.params:
+      if parameter.rsplit('_',1)[0] in self.ptrModel.constantParameters:
+        continue
       self.updateSlider(parameter)
 
   def updateParamsVaryFromCheckbox(self):
     for parameter in self.ptrModel.params:
+      if parameter.rsplit('_',1)[0] in self.ptrModel.constantParameters:
+        continue
       self.ptrModel.params[parameter].vary =\
         self.checkboxes[parameter].isChecked()
 

@@ -62,7 +62,6 @@ class Cli():
     assert issubclass(_data, Data), 'Your data must be a subclass of Data (and not initialized)'
 
     self.data = DataContainer(_data, self._experiment)
-    self._experiment.connectData(self.data)
     return self.data
 
   def setModel(self, _model, _decoration=None):
@@ -83,7 +82,6 @@ class Cli():
 
     # initialize the model and connect it to the gui and the experiment
     self.model = self.model(_model, self._experiment, _decoration)
-    self._experiment.connectModel(self.model)
     return self.model
 
   def setFit(self, _fit):

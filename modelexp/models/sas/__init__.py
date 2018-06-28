@@ -18,3 +18,4 @@ from._ellipsoid import Ellipsoid
 
 # decorating functions
 from ._instrumentalResolution import InstrumentalResolution
+from ._magnetic import Magnetic
