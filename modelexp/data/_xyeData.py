@@ -14,7 +14,6 @@ class XyeData(Data):
     e : :obj: `array_like`
       Errors
     """
-
     self.x = np.array(x)
     self.y = np.array(y)
     self.e = np.array(e)
@@ -38,9 +37,8 @@ class XyeData(Data):
     e = fileData[:,2]
     self.setData(x, y, e)
 
-  def plotData(self):
-    self.ax.errorbar(self.x, self.y, self.e, ls='None', marker='.', zorder=5)
-    self.ptrExperiment.adjustAxToAddedData()
+  def plotData(self, ax):
+    ax.errorbar(self.x, self.y, self.e, ls='None', marker='.', zorder=5)
 
   def sliceDomain(self, minX=-np.inf, maxX=np.inf):
     slicedDomain = np.logical_and(minX < self.x, self.x < maxX)

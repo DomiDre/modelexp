@@ -1,20 +1,23 @@
 import modelexp
-from modelexp.experiments.sas import Saxs
+from modelexp.experiments.sas import Sanspol
 from modelexp.models.sas import Sphere
 from modelexp.data import XyeData
 from modelexp.fit import LevenbergMarquardt
 
-from modelexp.models.sas import InstrumentalResolution
+from modelexp.models.sas import InstrumentalResolution, Magnetic
 
 app = modelexp.App()
 
-app.setExperiment(Saxs)
+app.setExperiment(Sanspol)
 
 dataRef = app.setData(XyeData)
-dataRef.loadFromFile('./saxsSphereData.xye')
+dataRef.loadFromFile('./sansSphereData_sa_p.xye', ['sa', 'p'])
+dataRef.loadFromFile('./sansSphereData_sa_m.xye', ['sa', 'm'])
+dataRef.loadFromFile('./sansSphereData_la_p.xye', ['la', 'p'])
+dataRef.loadFromFile('./sansSphereData_la_m.xye', ['la', 'm'])
 dataRef.plotData()
 
-modelRef = app.setModel(Sphere, InstrumentalResolution)
+modelRef = app.setModel(Sphere, [Magnetic, InstrumentalResolution])
 modelRef.setParam("r", 49.900000000000006,  minVal = 0, maxVal = 100, vary = True)
 modelRef.setParam("sldSphere", 4.5e-05,  minVal = 0, maxVal = 0.00045000000000000004, vary = False)
 modelRef.setParam("sldSolvent", 1e-05,  minVal = 0, maxVal = 0.0001, vary = False)

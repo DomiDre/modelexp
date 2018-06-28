@@ -1,6 +1,4 @@
 from abc import ABCMeta, abstractmethod
-from ..data import Data
-from ..models import Model
 class Experiment(metaclass=ABCMeta):
   """
   Abstract class to describe an experiment.
@@ -12,16 +10,19 @@ class Experiment(metaclass=ABCMeta):
     """
     self.plotWidgetClass = None
 
+    self.nDatasets = 1
+    self.datasetSpecificParams = {}
+
   def connectGui(self, gui):
     self.ptrGui = gui
     self.fig = self.ptrGui.plotWidget.getFig()
     self.ax = self.ptrGui.plotWidget.getDataAx()
 
   def connectData(self, data):
-    self.data: Data = data
+    self.data = data
 
   def connectModel(self, model):
-    self.model: Model = model
+    self.model = model
 
   @abstractmethod
   def setAxProps(self):
@@ -51,5 +52,11 @@ class Experiment(metaclass=ABCMeta):
   @abstractmethod
   def saveModelDataToFile(self):
     """Define how data and model is stored to file
+    """
+    pass
+
+  def setParameters(self):
+    """Called after initialization of models for datasets. Set experiment specific
+    parameters corresponding to their dataset identifier
     """
     pass

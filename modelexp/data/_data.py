@@ -5,14 +5,8 @@ class Data(metaclass=ABCMeta):
   Abstract class to describe a model.
   Specific models are defined by classes that have to implemented the defined functions here.
   '''
-  def __init__(self, experiment=None):
-    if (experiment is not None):
-      self.ptrExperiment = experiment
-
-  def connectGui(self, gui):
-    self.ptrGui = gui
-    self.fig = self.ptrGui.plotWidget.getFig()
-    self.ax = self.ptrGui.plotWidget.getDataAx()
+  def __init__(self):
+    self.suffix = ''
 
   @abstractmethod
   def setData(self):
@@ -52,9 +46,6 @@ class Data(metaclass=ABCMeta):
   @abstractmethod
   def getErrors(self):
     pass
-
-  def draw(self):
-    self.ptrGui.update()
 
   @abstractmethod
   def sliceDomain(self):

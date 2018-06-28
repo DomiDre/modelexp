@@ -1,5 +1,5 @@
 from .._model import Model
-
+from .._decoration import Decoration
 class SAXSModel(Model):
   """Class for models that are defined over one dimension
 
@@ -8,19 +8,23 @@ class SAXSModel(Model):
   Model : Model
     Base Abstract class
   """
-  def __init__(self, experiment):
+  def __init__(self):
     self.q = None
     self.I = None
     self.r = None
     self.sld = None
     self.modelPlot = None
     self.sldPlot = None
-    super().__init__(experiment)
+
+    super().__init__()
 
   def connectGui(self, gui):
     self.ptrGui = gui
     self.fig = self.ptrGui.plotWidget.getFig()
     self.ax, self.axInset = self.ptrGui.plotWidget.getAllAx()
+
+  def getAllAx(self):
+    return self.ax, self.axInset
 
   def defineDomain(self, q):
     '''
@@ -34,11 +38,29 @@ class SAXSModel(Model):
   def getValues(self, p=None):
     if p is not None:
       self.params = p
-      self.calcModel()
+      self.calcDecoratedModel()
     return self.I
+
+  def setValues(self, I):
+    self.I = I
+
+  def calcDecoratedModel(self):
+    if isinstance(self.decoration, Decoration):
+      self.decoration.calcModel()
+    else:
+      self.calcModel()
 
   def getSld(self):
     return self.sld
+
+  def plotDecoratedModel(self):
+    '''
+    Define how to plot the model
+    '''
+    if isinstance(self.decoration, Decoration):
+      self.decoration.plotModel()
+    else:
+      self.plotModel()
 
   def plotModel(self):
     '''
@@ -56,11 +78,10 @@ class SAXSModel(Model):
       self.sldPlot, = self.axInset.plot(
         self.r / 10, self.sld / 1e-6, marker='None', color='black', zorder=10
       )
-      self.ptrExperiment.adjustAxToAddedModel()
 
   def updateModel(self):
     '''
     How to update the model when parameters are changed
     '''
-    self.calcModel()
+    self.calcDecoratedModel()
     self.plotModel()
