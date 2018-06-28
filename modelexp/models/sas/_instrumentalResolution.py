@@ -17,19 +17,16 @@ class InstrumentalResolution(Decoration):
     self.ptrModel = Model # define which class ptrModel has
 
     self.ptrModel = model
-    self.ptrModel.params.add('dTheta', 1e-3, min=0)
-    self.ptrModel.params.add('wavelength', 1.34145, min=0)
-    self.ptrModel.params.add('dWavelengthRelative', 0.05, min=0)
+    self.ptrModel.params.add('dTheta', 1e-4, min=0, max=1e-3)
+    self.ptrModel.params.add('wavelength', 1.34145, min=1, max= 10, vary = False)
+    self.ptrModel.params.add('dWavelength', 0.05, min=0, max=0.1)
 
-  def apply(self):
+  def apply(self, q, Imodel):
     '''
     Define how to modify the
     '''
-    q = self.ptrModel.getDomain()
-    Imodel = self.ptrModel.getValues()
     sigQ = np.sqrt(
-      (self.ptrModel.params['dWavelengthRelative'] * q)**2 +
+      (self.ptrModel.params['dWavelength'] * q)**2 +
       (4 * np.pi / self.ptrModel.params['wavelength'] * self.ptrModel.params['dTheta'])**2
     )
-
     return math.resolution_smear(q, Imodel, sigQ)

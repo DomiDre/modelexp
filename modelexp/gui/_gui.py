@@ -10,8 +10,8 @@ from .plotWidget import PlotWidget
 
 from ..fit import Fit
 from ..experiments import Experiment
-from ..models import Model
-from ..data import Data
+from ..models import ModelContainer
+from ..data import DataContainer
 
 # remove some annoying deprecation warnings
 warnings.filterwarnings("ignore", category=UserWarning, module='matplotlib')
@@ -23,8 +23,8 @@ class Gui(qt5w.QMainWindow):
     Define the menu.
     '''
     self.ptrExperiment = Experiment
-    self.ptrModel = Model
-    self.ptrData = Data
+    self.ptrModel = ModelContainer
+    self.ptrData = DataContainer
     self.ptrFit = Fit
 
 
@@ -188,6 +188,7 @@ class Gui(qt5w.QMainWindow):
     changedSlider.label.setText(prec.format(newValue))
     currentParameter.value = newValue
     self.ptrModel.updateModel()
+    self.ptrModel.plotModel()
     self.update()
 
   def update(self):

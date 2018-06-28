@@ -45,11 +45,10 @@ class XyemData(Data):
     m = fileData[:,2]
     self.setData(x, y, e, m)
 
-  def plotData(self):
-    self.ax.errorbar(
+  def plotData(self, ax):
+    ax.errorbar(
       self.x, self.y, self.e, ls='None', marker='.', zorder=5
     )
-    self.ptrExperiment.adjustAxToAddedData()
 
   def sliceDomain(self, minX=-np.inf, maxX=np.inf):
     slicedDomain = np.logical_and(minX < self.x, self.x < maxX)

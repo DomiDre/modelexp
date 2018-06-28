@@ -34,9 +34,8 @@ class XyData(Data):
     y = fileData[:,1]
     self.setData(x, y)
 
-  def plotData(self):
-    self.ax.plot(self.x, self.y, ls='None', marker='.', zorder=5)
-    self.ptrExperiment.adjustAxToAddedData()
+  def plotData(self, ax):
+    ax.plot(self.x, self.y, ls='None', marker='.', zorder=5)
 
   def sliceDomain(self, minX=-np.inf, maxX=np.inf):
     slicedDomain = np.logical_and(minX < self.x, self.x < maxX)

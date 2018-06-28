@@ -1,5 +1,5 @@
 from .._model import Model
-
+from .._decoration import Decoration
 class GenericModel1d(Model):
   """Class for models that are defined over one dimension
 
@@ -8,11 +8,16 @@ class GenericModel1d(Model):
   Model : Model
     Base Abstract class
   """
-  def __init__(self, experiment):
+  def __init__(self):
     self.x = None
     self.y = None
     self.modelPlot = None
-    super().__init__(experiment)
+    super().__init__()
+
+  def connectGui(self, gui):
+    self.ptrGui = gui
+    self.fig = self.ptrGui.plotWidget.getFig()
+    self.ax = self.ptrGui.plotWidget.getAllAx()
 
   def defineDomain(self, x):
     '''
@@ -26,7 +31,7 @@ class GenericModel1d(Model):
   def getValues(self, p=None):
     if p is not None:
       self.params = p
-      self.calcModel()
+      self.calcDecoratedModel()
     return self.y
 
   def plotModel(self):
@@ -44,6 +49,11 @@ class GenericModel1d(Model):
     '''
     How to update the model when parameters are changed
     '''
-    self.calcModel()
+    self.calcDecoratedModel()
     self.plotModel()
     # self.modelPlot.set_ydata(self.y)
+
+  def calcDecoratedModel(self):
+    self.calcModel()
+    if isinstance(self.decoration, Decoration):
+      self.y = self.decoration.apply(self.x, self.y)

@@ -8,7 +8,7 @@ class SAXSModel(Model):
   Model : Model
     Base Abstract class
   """
-  def __init__(self, experiment):
+  def __init__(self):
     self.q = None
     self.I = None
     self.r = None
@@ -16,7 +16,7 @@ class SAXSModel(Model):
     self.modelPlot = None
     self.sldPlot = None
 
-    super().__init__(experiment)
+    super().__init__()
 
   def connectGui(self, gui):
     self.ptrGui = gui
@@ -41,7 +41,7 @@ class SAXSModel(Model):
   def calcDecoratedModel(self):
     self.calcModel()
     if isinstance(self.decoration, Decoration):
-      self.I = self.decoration.apply()
+      self.I = self.decoration.apply(self.q, self.I)
 
   def getSld(self):
     return self.sld
@@ -62,7 +62,6 @@ class SAXSModel(Model):
       self.sldPlot, = self.axInset.plot(
         self.r / 10, self.sld / 1e-6, marker='None', color='black', zorder=10
       )
-      self.ptrExperiment.adjustAxToAddedModel()
 
   def updateModel(self):
     '''
