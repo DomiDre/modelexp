@@ -15,6 +15,9 @@ class SphereCSSDead(SAXSModel):
     self.params.add('i0', 1)
     self.params.add('bg', 1e-6)
 
+  def initMagneticParameters(self):
+    self.params.add('magSldCore', 1e-6)
+    self.params.add('magSldShell', 2e-6)
 
   def calcModel(self):
     self.I = self.params['i0'] * sphere_css_dead.formfactor(
@@ -39,4 +42,42 @@ class SphereCSSDead(SAXSModel):
       self.params['sldShell'],
       self.params['sldSurfactant'],
       self.params['sldSolvent'],
+    )
+
+  def calcMagneticModel(self):
+    self.I = self.params['i0'] * sphere_css_dead.magnetic_formfactor(
+      self.q,
+      self.params['r'],
+      self.params['dShell'],
+      self.params['dDead'],
+      self.params['dSurfactant'],
+      self.params['sldCore'],
+      self.params['sldShell'],
+      self.params['sldSurfactant'],
+      self.params['sldSolvent'],
+      self.params['sigR'],
+      self.params['magSldCore'],
+      self.params['magSldShell'],
+      self.params['xi'],
+      self.params['sin2alpha'],
+      self.params['polarization']
+    ) + self.params['bg']
+
+    self.r, self.sld = sphere_css_dead.sld(
+      self.params['r'],
+      self.params['dShell'],
+      self.params['dSurfactant'],
+      self.params['sldCore'],
+      self.params['sldShell'],
+      self.params['sldSurfactant'],
+      self.params['sldSolvent'],
+    )
+
+    self.rMag, self.sldMag = sphere_css_dead.magnetic_sld(
+      self.params['r'],
+      self.params['dShell'],
+      self.params['dDead'],
+      self.params['dSurfactant'],
+      self.params['magSldCore'],
+      self.params['magSldShell']
     )

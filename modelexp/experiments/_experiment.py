@@ -24,6 +24,12 @@ class Experiment(metaclass=ABCMeta):
   def connectModel(self, model):
     self.model = model
 
+  def setParameters(self):
+    """Called after initialization of models for datasets. Set experiment specific
+    parameters corresponding to their dataset identifier
+    """
+    pass
+
   @abstractmethod
   def setAxProps(self):
     pass
@@ -52,11 +58,5 @@ class Experiment(metaclass=ABCMeta):
   @abstractmethod
   def saveModelDataToFile(self):
     """Define how data and model is stored to file
-    """
-    pass
-
-  def setParameters(self):
-    """Called after initialization of models for datasets. Set experiment specific
-    parameters corresponding to their dataset identifier
     """
     pass

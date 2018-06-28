@@ -19,6 +19,11 @@ class Superball(SAXSModel):
     self.params.add('i0', 1)
     self.params.add('bg', 1e-6)
 
+  def initMagneticParameters(self):
+    self.params.add('magSldSuperball', 5e-6, min=0)
+    self.params.add('magSldSolvent', 0, vary=False)
+
+    self.addConstantParam('magSldSolvent')
 
   def calcModel(self):
     self.I = self.params['i0'] * superball.formfactor(
@@ -35,4 +40,32 @@ class Superball(SAXSModel):
       self.params['r'],
       self.params['sldSuperball'],
       self.params['sldSolvent']
+    )
+
+  def calcMagneticModel(self):
+    self.I = self.params['i0'] * superball.magnetic_formfactor(
+      self.q,
+      self.params['r'],
+      self.params['pVal'],
+      self.params['sldSuperball'],
+      self.params['sldSolvent'],
+      self.params['sigR'],
+      self.params['magSldSuperball'],
+      self.params['magSldSolvent'],
+      self.params['xi'],
+      self.params['sin2alpha'],
+      self.params['polarization'],
+      self.x_herm, self.w_herm, self.x_leg, self.w_leg
+    ) + self.params['bg']
+
+    self.r, self.sld = superball.sld(
+      self.params['r'],
+      self.params['sldSuperball'],
+      self.params['sldSolvent']
+    )
+
+    self.rMag, self.sldMag = superball.sld(
+      self.params['r'],
+      self.params['magSldSuperball'],
+      self.params['magSldSolvent'],
     )
