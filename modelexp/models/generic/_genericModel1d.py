@@ -19,6 +19,9 @@ class GenericModel1d(Model):
     self.fig = self.ptrGui.plotWidget.getFig()
     self.ax = self.ptrGui.plotWidget.getAllAx()
 
+  def getAllAx(self):
+    return self.ax
+
   def defineDomain(self, x):
     '''
     On which space should the model be evaluated
@@ -45,6 +48,15 @@ class GenericModel1d(Model):
         self.x, self.y, marker='None', color='black', zorder=10
       )
 
+  def plotDecoratedModel(self):
+    '''
+    Define how to plot the model
+    '''
+    if isinstance(self.decoration, Decoration):
+      self.decoration.plotModel()
+    else:
+      self.plotModel()
+
   def updateModel(self):
     '''
     How to update the model when parameters are changed
@@ -54,6 +66,10 @@ class GenericModel1d(Model):
     # self.modelPlot.set_ydata(self.y)
 
   def calcDecoratedModel(self):
-    self.calcModel()
     if isinstance(self.decoration, Decoration):
-      self.y = self.decoration.apply(self.x, self.y)
+      self.decoration.calcModel()
+    else:
+      self.calcModel()
+
+  def setValues(self, I):
+    self.I = I
