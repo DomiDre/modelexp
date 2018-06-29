@@ -7,6 +7,7 @@ class Data(metaclass=ABCMeta):
   '''
   def __init__(self):
     self.suffix = ''
+    self.filename = ''
 
   @abstractmethod
   def setData(self):
