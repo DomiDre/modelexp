@@ -53,7 +53,7 @@ class Gui(qt5w.QMainWindow):
     self.layout = qt5w.QGridLayout(self.mainContainer)
     self.layout.addWidget(self.plotContainer, 0, 0) # upper left
     self.layout.addWidget(self.parameterWidget, 0, 1) # upper right
-    self.layout.addWidget(self.buttonWidget, 1, 1) # lower right
+    self.layout.addWidget(self.buttonWidget, 1, 0, 1, 2) # lower part, span 1 row, 2 cols
 
     # set size of window depending on screen resolution
     screen_resolution = screeninfo.get_monitors()[0]
@@ -250,13 +250,15 @@ class Gui(qt5w.QMainWindow):
         newButton.setToolTip(buttonTooltip)
         newButton.clicked.connect(buttonFunction)
         return newButton
-    self.buttonLayout = qt5w.QVBoxLayout(self.buttonWidget)
+    self.buttonLayout = qt5w.QHBoxLayout(self.buttonWidget)
 
     def guiFit():
       self.updateParamsVaryFromCheckbox()
+      self.statusBar().showMessage("Running Fit...")
       self.ptrFit.fit()
       self.updateSlidersValueFromParams()
       self.update()
+      self.statusBar().showMessage("Finished fitting.")
 
     self.buttonLayout.addWidget(
       addButton(

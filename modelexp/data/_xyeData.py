@@ -31,6 +31,7 @@ class XyeData(Data):
     return self.e
 
   def loadFromFile(self, filename):
+    self.filename = filename
     fileData = np.genfromtxt(filename)
     x = fileData[:,0]
     y = fileData[:,1]

@@ -29,6 +29,7 @@ class XyData(Data):
     return np.zeros(len(self.y))
 
   def loadFromFile(self, filename):
+    self.filename = filename
     fileData = np.genfromtxt(filename)
     x = fileData[:,0]
     y = fileData[:,1]

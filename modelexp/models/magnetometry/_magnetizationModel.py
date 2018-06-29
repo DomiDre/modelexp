@@ -1,7 +1,7 @@
 from .._model import Model
 from .._decoration import Decoration
-class GenericModel1d(Model):
-  """Class for models that are defined over one dimension
+class MagnetizationModel(Model):
+  """Class for magnetization models
 
   Parameters
   ----------
@@ -9,8 +9,8 @@ class GenericModel1d(Model):
     Base Abstract class
   """
   def __init__(self):
-    self.x = None
-    self.y = None
+    self.B = None
+    self.M = None
     self.modelPlot = None
     super().__init__()
 
@@ -26,26 +26,26 @@ class GenericModel1d(Model):
     '''
     On which space should the model be evaluated
     '''
-    self.x = x
+    self.B = x
 
   def getDomain(self):
-    return self.x
+    return self.B
 
   def getValues(self, p=None):
     if p is not None:
       self.params = p
       self.calcDecoratedModel()
-    return self.y
+    return self.M
 
   def plotModel(self):
     '''
     Define how to plot the model
     '''
     if self.modelPlot:
-      self.modelPlot.set_ydata(self.y)
+      self.modelPlot.set_ydata(self.M)
     else:
       self.modelPlot, = self.ax.plot(
-        self.x, self.y, marker='None', color='black', zorder=10
+        self.B, self.M, marker='None', color='black', zorder=10
       )
 
   def plotDecoratedModel(self):
@@ -63,7 +63,7 @@ class GenericModel1d(Model):
     '''
     self.calcDecoratedModel()
     self.plotModel()
-    # self.modelPlot.set_ydata(self.y)
+    # self.modelPlot.set_ydata(self.M)
 
   def calcDecoratedModel(self):
     if isinstance(self.decoration, Decoration):
@@ -71,5 +71,5 @@ class GenericModel1d(Model):
     else:
       self.calcModel()
 
-  def setValues(self, y):
-    self.y = y
+  def setValues(self, M):
+    self.M = M

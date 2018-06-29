@@ -38,6 +38,7 @@ class XyemData(Data):
     return self.m
 
   def loadFromFile(self, filename):
+    self.filename = filename
     fileData = np.genfromtxt(filename)
     x = fileData[:,0]
     y = fileData[:,1]
