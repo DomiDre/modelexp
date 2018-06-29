@@ -71,5 +71,5 @@ class GenericModel1d(Model):
     else:
       self.calcModel()
 
-  def setValues(self, I):
-    self.I = I
+  def setValues(self, y):
+    self.y = y
