@@ -16,8 +16,8 @@ class SphereCS(SAXSModel):
   def initMagneticParameters(self):
     self.params.add('dDead', 5, min=0)
     self.params.add('magSldCore', 1e-6)
-    self.params.add('magSldShell', 0)
-    self.params.add('magSldSolvent', 0)
+    self.params.add('magSldShell', 0, vary=False)
+    self.params.add('magSldSolvent', 0, vary=False)
 
     self.addConstantParam('magSldShell')
     self.addConstantParam('magSldSolvent')

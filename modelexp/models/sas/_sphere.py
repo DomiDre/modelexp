@@ -14,8 +14,10 @@ class Sphere(SAXSModel):
     self.params.add('bg', 1e-6)
 
   def initMagneticParameters(self):
-    self.params.add('magSLDsphere', 1e-6)
-    self.params.add('magSLDmatrix', 0)
+    self.params.add('magSldSphere', 1e-6)
+    self.params.add('magSldSolvent', 0, vary=False)
+
+    self.addConstantParam('magSldSolvent')
 
   def calcModel(self):
     self.I = self.params['i0'] * sphere.formfactor(
@@ -39,8 +41,8 @@ class Sphere(SAXSModel):
       self.params['sldSphere'],
       self.params['sldSolvent'],
       self.params['sigR'],
-      self.params['magSLDsphere'],
-      self.params['magSLDmatrix'],
+      self.params['magSldSphere'],
+      self.params['magSldSolvent'],
       self.params['xi'],
       self.params['sin2alpha'],
       self.params['polarization'],
