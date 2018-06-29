@@ -56,12 +56,12 @@ class Cli():
     Returns
     -------
     data
-      Reference to the Data object
+      Reference to the DataContainer object
     """
     assert isinstance(self._experiment, Experiment), "Set an Experiment first before setting data."
     assert issubclass(_data, Data), 'Your data must be a subclass of Data (and not initialized)'
 
-    self.data = DataContainer(_data, self._experiment)
+    self.data = self.data(_data, self._experiment)
     return self.data
 
   def setModel(self, _model, _decoration=None):
