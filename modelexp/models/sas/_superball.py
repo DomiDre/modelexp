@@ -5,11 +5,6 @@ from numpy.polynomial.hermite import hermgauss
 from numpy.polynomial.legendre import leggauss
 
 class Superball(SAXSModel):
-  def __init__(self):
-    super().__init__()
-    self.x_herm, self.w_herm = hermgauss(15)
-    self.x_leg, self.w_leg = leggauss(10)
-
   def initParameters(self):
     self.params.add('r', 100)
     self.params.add('pVal', 2.3)
@@ -18,6 +13,10 @@ class Superball(SAXSModel):
     self.params.add('sigR', 0.)
     self.params.add('i0', 1)
     self.params.add('bg', 1e-6)
+    self.params.add('orderHermite', 20)
+    self.params.add('orderLegendre', 20)
+    self.addConstantParam('orderHermite')
+    self.addConstantParam('orderLegendre')
 
   def initMagneticParameters(self):
     self.params.add('magSldSuperball', 5e-6, min=0)
@@ -26,6 +25,9 @@ class Superball(SAXSModel):
     self.addConstantParam('magSldSolvent')
 
   def calcModel(self):
+    self.x_herm, self.w_herm = hermgauss(int(self.params['orderHermite']))
+    self.x_leg, self.w_leg = leggauss(int(self.params['orderLegendre']))
+
     self.I = self.params['i0'] * superball.formfactor(
       self.q,
       self.params['r'],
@@ -43,6 +45,9 @@ class Superball(SAXSModel):
     )
 
   def calcMagneticModel(self):
+    self.x_herm, self.w_herm = hermgauss(int(self.params['orderHermite']))
+    self.x_leg, self.w_leg = leggauss(int(self.params['orderLegendre']))
+
     self.I = self.params['i0'] * superball.magnetic_formfactor(
       self.q,
       self.params['r'],

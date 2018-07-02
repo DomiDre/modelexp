@@ -1,5 +1,7 @@
 from ._saxsModel import SAXSModel
 from fortSAS import cube
+from numpy.polynomial.hermite import hermgauss
+from numpy.polynomial.legendre import leggauss
 
 class Cube(SAXSModel):
   def initParameters(self):
@@ -9,6 +11,10 @@ class Cube(SAXSModel):
     self.params.add('sigA', 0.)
     self.params.add('i0', 1)
     self.params.add('bg', 1e-6)
+    self.params.add('orderHermite', 20)
+    self.params.add('orderLegendre', 20)
+    self.addConstantParam('orderHermite')
+    self.addConstantParam('orderLegendre')
 
   def initMagneticParameters(self):
     self.params.add('magSldCube', 5e-6, min=0)
@@ -18,12 +24,16 @@ class Cube(SAXSModel):
 
 
   def calcModel(self):
+    self.x_herm, self.w_herm = hermgauss(int(self.params['orderHermite']))
+    self.x_leg, self.w_leg = leggauss(int(self.params['orderLegendre']))
+
     self.I = self.params['i0'] * cube.formfactor(
       self.q,
       self.params['a'],
       self.params['sldCube'],
       self.params['sldSolvent'],
-      self.params['sigA']
+      self.params['sigA'],
+      self.x_herm, self.w_herm, self.x_leg, self.w_leg
     ) + self.params['bg']
 
     self.r, self.sld = cube.sld(
