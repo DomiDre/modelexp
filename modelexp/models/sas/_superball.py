@@ -8,7 +8,7 @@ class Superball(SAXSModel):
   def initParameters(self):
     self.params.add('r', 100)
     self.params.add('pVal', 2.3)
-    self.params.add('sldSuperball', 40e-6)
+    self.params.add('sldCore', 40e-6)
     self.params.add('sldSolvent', 10e-6)
     self.params.add('sigR', 0.)
     self.params.add('i0', 1)
@@ -19,7 +19,7 @@ class Superball(SAXSModel):
     self.addConstantParam('orderLegendre')
 
   def initMagneticParameters(self):
-    self.params.add('magSldSuperball', 5e-6, min=0)
+    self.params.add('magSldCore', 5e-6, min=0)
     self.params.add('magSldSolvent', 0, vary=False)
 
     self.addConstantParam('magSldSolvent')
@@ -32,7 +32,7 @@ class Superball(SAXSModel):
       self.q,
       self.params['r'],
       self.params['pVal'],
-      self.params['sldSuperball'],
+      self.params['sldCore'],
       self.params['sldSolvent'],
       self.params['sigR'],
       self.x_herm, self.w_herm, self.x_leg, self.w_leg
@@ -40,7 +40,7 @@ class Superball(SAXSModel):
 
     self.r, self.sld = superball.sld(
       self.params['r'],
-      self.params['sldSuperball'],
+      self.params['sldCore'],
       self.params['sldSolvent']
     )
 
@@ -52,10 +52,10 @@ class Superball(SAXSModel):
       self.q,
       self.params['r'],
       self.params['pVal'],
-      self.params['sldSuperball'],
+      self.params['sldCore'],
       self.params['sldSolvent'],
       self.params['sigR'],
-      self.params['magSldSuperball'],
+      self.params['magSldCore'],
       self.params['magSldSolvent'],
       self.params['xi'],
       self.params['sin2alpha'],
@@ -65,12 +65,12 @@ class Superball(SAXSModel):
 
     self.r, self.sld = superball.sld(
       self.params['r'],
-      self.params['sldSuperball'],
+      self.params['sldCore'],
       self.params['sldSolvent']
     )
 
     self.rMag, self.sldMag = superball.sld(
       self.params['r'],
-      self.params['magSldSuperball'],
+      self.params['magSldCore'],
       self.params['magSldSolvent'],
     )
