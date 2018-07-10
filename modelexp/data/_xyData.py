@@ -33,6 +33,9 @@ class XyData(Data):
     fileData = np.genfromtxt(filename)
     x = fileData[:,0]
     y = fileData[:,1]
+    sortedArgs = np.argsort(x)
+    x = x[sortedArgs]
+    y = y[sortedArgs]
     self.setData(x, y)
 
   def plotData(self, ax):

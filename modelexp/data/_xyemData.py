@@ -43,7 +43,12 @@ class XyemData(Data):
     x = fileData[:,0]
     y = fileData[:,1]
     e = fileData[:,2]
-    m = fileData[:,2]
+    m = fileData[:,3]
+    sortedArgs = np.argsort(x)
+    x = x[sortedArgs]
+    y = y[sortedArgs]
+    e = e[sortedArgs]
+    m = m[sortedArgs]
     self.setData(x, y, e, m)
 
   def plotData(self, ax):

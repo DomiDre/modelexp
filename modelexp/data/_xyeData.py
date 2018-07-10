@@ -36,6 +36,10 @@ class XyeData(Data):
     x = fileData[:,0]
     y = fileData[:,1]
     e = fileData[:,2]
+    sortedArgs = np.argsort(x)
+    x = x[sortedArgs]
+    y = y[sortedArgs]
+    e = e[sortedArgs]
     self.setData(x, y, e)
 
   def plotData(self, ax):
