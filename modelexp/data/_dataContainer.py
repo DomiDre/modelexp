@@ -1,4 +1,5 @@
 from ._data import Data
+import numpy as np
 
 class DataContainer():
   '''
@@ -39,3 +40,7 @@ class DataContainer():
 
   def draw(self):
     self.ptrGui.update()
+
+  def sliceDomain(self, minX=-np.inf, maxX=np.inf):
+    for i in range(self.nDatasets):
+      self.getDataset(i).sliceDomain(minX, maxX)
