@@ -112,6 +112,7 @@ class Gui(qt5w.QMainWindow):
     #create the parameter widget
     self.parameterLayout = qt5w.QGridLayout(self.parameterWidget)
     self.sliders = {}
+    self.sliderContainer = {}
     self.checkboxes = {}
 
     self.sliderNumPts = 1000
@@ -171,6 +172,12 @@ class Gui(qt5w.QMainWindow):
       self.parameterLayout.addWidget(checkbox, numParameters, 3)
       self.sliders[parameter] = sliderBar
       self.checkboxes[parameter] = checkbox
+      self.sliderContainer[parameter] = {
+        'label': sliderLabel,
+        'slider': sliderBar,
+        'sliderLabel': sliderBar.label,
+        'checkbox': checkbox
+      }
       numParameters += 1
 
     self.sliderInverseDict = dict(zip(self.sliders.values(),self.sliders.keys()))
@@ -212,37 +219,55 @@ class Gui(qt5w.QMainWindow):
     for parameter in self.ptrModel.params:
       if parameter.rsplit('_',1)[0] in self.ptrModel.constantParameters:
         continue
-      self.ptrModel.params[parameter].vary =\
-        self.checkboxes[parameter].isChecked()
+      if parameter in self.checkboxes:
+        self.ptrModel.params[parameter].vary =\
+          self.checkboxes[parameter].isChecked()
+
+  def removeSlider(self, parameter):
+    if parameter in self.sliders:
+      sliderBar = self.sliders[parameter]
+      self.parameterLayout.removeWidget(sliderBar)
+      self.parameterLayout.removeWidget(self.sliderContainer[parameter]['sliderLabel'])
+      self.parameterLayout.removeWidget(self.sliderContainer[parameter]['label'])
+      self.parameterLayout.removeWidget(self.sliderContainer[parameter]['slider'])
+      self.parameterLayout.removeWidget(self.sliderContainer[parameter]['checkbox'])
+      self.sliderContainer[parameter]['sliderLabel'].deleteLater()
+      self.sliderContainer[parameter]['label'].deleteLater()
+      self.sliderContainer[parameter]['slider'].deleteLater()
+      self.sliderContainer[parameter]['checkbox'].deleteLater()
+      del self.sliderContainer[parameter]
+      del self.checkboxes[parameter]
+      del self.sliders[parameter]
 
   def updateSlider(self, parameter):
-    currentParam = self.ptrModel.params[parameter]
-    sliderBar = self.sliders[parameter]
+    if parameter in self.sliders and parameter in self.ptrModel.params:
+      currentParam = self.ptrModel.params[parameter]
+      sliderBar = self.sliders[parameter]
 
-    curVal = currentParam.value
-    minVal = currentParam.min
-    maxVal = currentParam.max
-    if minVal == -np.inf:
-      if curVal > 0:
-        minVal = 0
-      elif curVal < 0:
-        minVal = 10*curVal
-      else:
-        minVal = -1
-      currentParam.min = minVal
+      curVal = currentParam.value
+      minVal = currentParam.min
+      maxVal = currentParam.max
+      if minVal == -np.inf:
+        if curVal > 0:
+          minVal = 0
+        elif curVal < 0:
+          minVal = 10*curVal
+        else:
+          minVal = -1
+        currentParam.min = minVal
 
-    if maxVal == np.inf:
-      if curVal > 0:
-        maxVal = 10*curVal
-      elif curVal < 0:
-        maxVal = 0
-      else:
-        maxVal = 1
-      currentParam.max = maxVal
-    delta = (maxVal - minVal)/self.sliderNumPts
-    sliderValue = int((curVal-minVal)/delta)
-    sliderBar.setValue(sliderValue)
-    self.checkboxes[parameter].setChecked(currentParam.vary)
+      if maxVal == np.inf:
+        if curVal > 0:
+          maxVal = 10*curVal
+        elif curVal < 0:
+          maxVal = 0
+        else:
+          maxVal = 1
+        currentParam.max = maxVal
+      delta = (maxVal - minVal)/self.sliderNumPts
+      sliderValue = int((curVal-minVal)/delta)
+      sliderBar.setValue(sliderValue)
+      self.checkboxes[parameter].setChecked(currentParam.vary)
 
   def setFitButtons(self):
     def addButton(buttonLabel, buttonTooltip, buttonFunction):
@@ -270,7 +295,7 @@ class Gui(qt5w.QMainWindow):
 
     def exportFit():
       self.ptrFit.exportResult('fit_result.dat')
-
+      self.plotWidget.fig.savefig('fit_plot.png')
     self.buttonLayout.addWidget(
       addButton(
         'Export Fit Result',

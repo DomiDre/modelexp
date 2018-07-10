@@ -29,9 +29,10 @@ class InstrumentalResolution(Decoration):
     q = self.ptrModel.getDomain()
     I = self.ptrModel.getValues()
     params = self.ptrModel.getParams()
-    sigQ = np.sqrt(
-      (params['dWavelength'] * q)**2 +
-      (4 * np.pi / params['wavelength'] * params['dTheta'])**2
-    )
+    if ('dTheta' in params) and ('dWavelength' in params) and ('wavelength' in params):
+      sigQ = np.sqrt(
+        (params['dWavelength'] * q)**2 +
+        (4 * np.pi / params['wavelength'] * params['dTheta'])**2
+      )
 
-    self.setValues(math.resolution_smear(q, I, sigQ))
+      self.setValues(math.resolution_smear(q, I, sigQ))
