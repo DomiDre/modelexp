@@ -143,6 +143,8 @@ class ModelContainer():
       'Please define a new extended model if you wish to add parameters.'
     )
     self.params[paramName].value = paramVal
+    self.params[paramName].min = -np.inf
+    self.params[paramName].max = np.inf
     self.params[paramName].vary = False
     if not paramName in self.constantParameters:
       self.constantParameters.append(paramName)
