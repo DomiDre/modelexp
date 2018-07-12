@@ -45,6 +45,7 @@ class Generic(Experiment):
       x_model = model.getDomain()
       y_model = model.getValues()
       assert(len(x_data) == len(x_model), 'Data and Model do not have the same length.')
+      f.write('#[[Data]]\n')
       f.write('#x\ty\tsy\tymodel\n')
       for i in range(len(x_data)):
         assert(np.isclose(x_data[i], x_model[i]), 'Data and Model arrays are not defined on same domain' )
@@ -54,6 +55,7 @@ class Generic(Experiment):
       x_data = data.getDomain()
       y_data = data.getValues()
       sy_data = data.getErrors()
+      f.write('#[[Data]]\n')
       f.write('#x\ty\tsy\n')
       for i in range(len(x_data)):
         f.write(f'{x_data[i]}\t{y_data[i]}\t{sy_data[i]}\n')
@@ -61,6 +63,7 @@ class Generic(Experiment):
       model = self.model.getModelset(0)
       x_model = model.getDomain()
       y_model = model.getValues()
+      f.write('#[[Data]]\n')
       f.write('#x\tymodel\n')
       for i in range(len(x_model)):
         f.write(f'{x_model[i]}\t{y_model[i]}\n')

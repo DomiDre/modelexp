@@ -2,6 +2,11 @@ import numpy as np
 from ._data import Data
 
 class XyData(Data):
+  def __init__(self):
+    super().__init__()
+    self.x = []
+    self.y = []
+
   def setData(self, x, y):
     """Set the data of an .xy file
 
@@ -47,3 +52,8 @@ class XyData(Data):
     self.yMask = self.y[~slicedDomain]
     self.x = self.x[slicedDomain]
     self.y = self.y[slicedDomain]
+
+  def addDataLine(self, dataline):
+    assert len(dataline) == 2, 'Tried to add a dataline that does not have 2 elements to a XY dataset: ' + str(dataline)
+    self.x.append(dataline[0])
+    self.y.append(dataline[1])

@@ -121,9 +121,9 @@ class Sas(Experiment):
         I_model = model.getValues()
         assert(len(q_data) == len(q_model), 'Data and Model do not have the same length.')
         if isinstance(data.suffix, str):
-          f.write(f'\n#{data.suffix}\n')
+          f.write(f'\n#[[Data]] {data.suffix}\n')
         elif isinstance(data.suffix, list):
-          f.write('\n#'+'_'.join(data.suffix)+'\n')
+          f.write('\n#[[Data]] '+'_'.join(data.suffix)+'\n')
         f.write('#q / A-1\tI / cm-1\tsI / cm-1\tImodel / cm-1\n')
         for i in range(len(q_data)):
           assert(np.isclose(q_data[i], q_model[i]), 'Data and Model arrays are not defined on same domain' )
@@ -135,9 +135,9 @@ class Sas(Experiment):
         I_data = data.getValues()
         sI_data = data.getErrors()
         if isinstance(data.suffix, str):
-          f.write(f'\n#{data.suffix}\n')
+          f.write(f'\n#[[Data]] {data.suffix}\n')
         elif isinstance(data.suffix, list):
-          f.write('\n#'+'_'.join(data.suffix)+'\n')
+          f.write('\n#[[Data]] '+'_'.join(data.suffix)+'\n')
         f.write('#q / A-1\tI / cm-1\tsI / cm-1\n')
         for i in range(len(q_data)):
           f.write(f'{q_data[i]}\t{I_data[i]}\t{sI_data[i]}\n')
@@ -147,9 +147,9 @@ class Sas(Experiment):
         q_model = model.getDomain()
         I_model = model.getValues()
         if isinstance(model.suffix, str):
-          f.write(f'\n#{model.suffix}\n')
+          f.write(f'\n#[[Data]] {model.suffix}\n')
         elif isinstance(model.suffix, list):
-          f.write('\n#'+'_'.join(model.suffix)+'\n')
+          f.write('\n#[[Data]] '+'_'.join(model.suffix)+'\n')
         f.write('#q / A-1\tImodel / cm-1\n')
         for i in range(len(q_model)):
           f.write(f'{q_model[i]}\t{I_model[i]}\n')

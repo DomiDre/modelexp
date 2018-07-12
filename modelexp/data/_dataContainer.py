@@ -24,6 +24,11 @@ class DataContainer():
   def getDataset(self, i):
     return self.datasets[i]
 
+  def getDatasetBySuffix(self, suffix):
+    for dataset in self.datasets:
+      if (dataset.suffix == suffix):
+        return dataset
+
   def loadFromFile(self, filename, suffix=None):
     newData = self.dataClass()
     newData.loadFromFile(filename)
