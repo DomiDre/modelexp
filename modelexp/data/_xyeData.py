@@ -2,6 +2,12 @@ import numpy as np
 from ._data import Data
 
 class XyeData(Data):
+  def __init__(self):
+    super().__init__()
+    self.x = []
+    self.y = []
+    self.e = []
+
   def setData(self, x, y, e):
     """Set the data of an .xye file
 
@@ -36,6 +42,10 @@ class XyeData(Data):
     x = fileData[:,0]
     y = fileData[:,1]
     e = fileData[:,2]
+    sortedArgs = np.argsort(x)
+    x = x[sortedArgs]
+    y = y[sortedArgs]
+    e = e[sortedArgs]
     self.setData(x, y, e)
 
   def plotData(self, ax):
@@ -49,3 +59,9 @@ class XyeData(Data):
     self.x = self.x[slicedDomain]
     self.y = self.y[slicedDomain]
     self.e = self.e[slicedDomain]
+
+  def addDataLine(self, dataline):
+    assert len(dataline) == 3, 'Tried to add a dataline that does not have 3 elements to a XYE dataset: ' + str(dataline)
+    self.x.append(dataline[0])
+    self.y.append(dataline[1])
+    self.e.append(dataline[2])

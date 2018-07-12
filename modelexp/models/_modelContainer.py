@@ -137,6 +137,19 @@ class ModelContainer():
     if (hasattr(self, 'ptrGui')):
       self.ptrGui.updateSlider(paramName)
 
+  def setConstantParam(self, paramName, paramVal):
+    assert paramName in self.params, (
+      'Tried to add a parameter that is not defined in the model. '+
+      'Please define a new extended model if you wish to add parameters.'
+    )
+    self.params[paramName].value = paramVal
+    self.params[paramName].vary = False
+    if not paramName in self.constantParameters:
+      self.constantParameters.append(paramName)
+
+    if (hasattr(self, 'ptrGui')):
+      self.ptrGui.removeSlider(paramName)
+
 
   def setParamLimits(self, paramName, minVal, maxVal):
     self.params[paramName].min = minVal

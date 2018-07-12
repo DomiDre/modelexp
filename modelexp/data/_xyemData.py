@@ -2,6 +2,13 @@ import numpy as np
 from ._data import Data
 
 class XyemData(Data):
+  def __init__(self):
+    super().__init__()
+    self.x = []
+    self.y = []
+    self.e = []
+    self.m = []
+
   def setData(self, x, y, e, m):
     """Set the data of an .xye file
 
@@ -43,8 +50,15 @@ class XyemData(Data):
     x = fileData[:,0]
     y = fileData[:,1]
     e = fileData[:,2]
-    m = fileData[:,2]
+    m = fileData[:,3]
     self.setData(x, y, e, m)
+
+  def sortData(self):
+    sortedArgs = np.argsort(self.x)
+    self.x = self.x[sortedArgs]
+    self.y = self.y[sortedArgs]
+    self.e = self.e[sortedArgs]
+    self.m = self.m[sortedArgs]
 
   def plotData(self, ax):
     ax.errorbar(
@@ -61,3 +75,10 @@ class XyemData(Data):
     self.y = self.y[slicedDomain]
     self.e = self.e[slicedDomain]
     self.m = self.m[slicedDomain]
+
+  def addDataLine(self, dataline):
+    assert len(dataline) == 4, 'Tried to add a dataline that does not have 4 elements to a XYEM dataset: ' + str(dataline)
+    self.x.append(dataline[0])
+    self.y.append(dataline[1])
+    self.e.append(dataline[2])
+    self.m.append(dataline[3])

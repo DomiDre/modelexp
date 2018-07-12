@@ -1,4 +1,5 @@
 from ._data import Data
+import numpy as np
 
 class DataContainer():
   '''
@@ -23,6 +24,11 @@ class DataContainer():
   def getDataset(self, i):
     return self.datasets[i]
 
+  def getDatasetBySuffix(self, suffix):
+    for dataset in self.datasets:
+      if (dataset.suffix == suffix):
+        return dataset
+
   def loadFromFile(self, filename, suffix=None):
     newData = self.dataClass()
     newData.loadFromFile(filename)
@@ -39,3 +45,7 @@ class DataContainer():
 
   def draw(self):
     self.ptrGui.update()
+
+  def sliceDomain(self, minX=-np.inf, maxX=np.inf):
+    for i in range(self.nDatasets):
+      self.getDataset(i).sliceDomain(minX, maxX)
