@@ -9,6 +9,7 @@ from ._sphereCSSCoupled import SphereCSSCoupled
 from ._sphereCSSCoupledDead import SphereCSSCoupledDead
 from ._sphereLinHullS import SphereLinHullS
 from ._sphereCSBimodal import SphereCSBimodal
+from ._sphereCISS import SphereCISS
 
 from ._cube import Cube
 
