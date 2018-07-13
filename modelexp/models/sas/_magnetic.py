@@ -17,7 +17,7 @@ class Magnetic(Decoration):
 
     params = self.ptrModel.getParams()
     params.add('xi', 1, vary = False)
-    params.add('sin2alpha', 1, min=0, max=0.1, vary=False)
+    params.add('sin2alpha', 0.9974654, min=0, max=1, vary=False)
     params.add('polarization', 1, vary = False)
 
     self.ptrModel.addConstantParam('xi')
