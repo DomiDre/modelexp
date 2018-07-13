@@ -43,7 +43,7 @@ class MultiData(DataContainer):
             elif '[[Variables]]' in line:
               fileAtParams = True
               continue
-          elif '[[Data]]' in line:
+          if '[[Data]]' in line:
             # new data set is being started
             if newData is not None: # old dataset in memory? store it
               self.nDatasets += 1
@@ -53,7 +53,6 @@ class MultiData(DataContainer):
             newData = self.dataClass()
             newData.suffix = line.split('[[Data]]',1)[1].strip()
             newData.filename = self.filename
-          else: # commented line
             continue
         else:
           # line is not empty and does not start with '#'
@@ -61,3 +60,5 @@ class MultiData(DataContainer):
           # remove any comments in line, then split by whitespace or tab
           splitLine = [float(x) for x in line.strip().split('#',1)[0].split()]
           newData.addDataLine(splitLine)
+      self.nDatasets += 1
+      self.datasets.append(newData)
