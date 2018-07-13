@@ -1,5 +1,6 @@
 from modelexp.models.sas import SAXSModel
 from fortSAS import sphere_cs
+import numpy as np
 
 class SphereCS_Bimodal(SAXSModel):
   def initParameters(self):
