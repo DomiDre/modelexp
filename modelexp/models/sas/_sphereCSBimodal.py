@@ -2,7 +2,7 @@ from modelexp.models.sas import SAXSModel
 from fortSAS import sphere_cs
 import numpy as np
 
-class SphereCS_Bimodal(SAXSModel):
+class SphereCSBimodal(SAXSModel):
   def initParameters(self):
     self.params.add('r1', 100)
     self.params.add('r2', 70)
