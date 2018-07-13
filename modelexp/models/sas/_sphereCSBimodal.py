@@ -18,7 +18,8 @@ class SphereCSBimodal(SAXSModel):
     self.params.add('bg', 1e-6)
 
   def initMagneticParameters(self):
-    self.params.add('dDead', 5, min=0)
+    self.params.add('dDead1', 5, min=0)
+    self.params.add('dDead2', 5, min=0)
     self.params.add('magSldCore', 1e-6)
     self.params.add('magSldShell', 0, vary=False)
     self.params.add('magSldSolvent', 0, vary=False)
@@ -79,7 +80,7 @@ class SphereCSBimodal(SAXSModel):
         self.params['sldSolvent'],
         self.params['sigR1'],
         self.params['sigD'],
-        self.params['dDead'],
+        self.params['dDead1'],
         self.params['magSldCore'],
         self.params['magSldShell'],
         self.params['magSldSolvent'],
@@ -95,7 +96,7 @@ class SphereCSBimodal(SAXSModel):
         self.params['sldSolvent'],
         self.params['sigR2'],
         self.params['sigD'],
-        self.params['dDead'],
+        self.params['dDead2'],
         self.params['magSldCore'],
         self.params['magSldShell'],
         self.params['magSldSolvent'],
@@ -124,7 +125,7 @@ class SphereCSBimodal(SAXSModel):
     self.sld = np.concatenate([sld1, sld1[::-1], sld2])
 
     rMag1, sldMag1 = sphere_cs.sld(
-      self.params['r1']-self.params['dDead'],
+      self.params['r1']-self.params['dDead1'],
       self.params['d'],
       self.params['magSldCore'],
       self.params['magSldShell'],
@@ -132,7 +133,7 @@ class SphereCSBimodal(SAXSModel):
     )
 
     rMag2, sldMag2 = sphere_cs.sld(
-      self.params['r2']-self.params['dDead'],
+      self.params['r2']-self.params['dDead2'],
       self.params['d'],
       self.params['magSldCore'],
       self.params['magSldShell'],
