@@ -117,7 +117,18 @@ class SphereCSBimodalOA(SAXSModel):
         self.params['xi'],
         self.params['sin2alpha'],
         self.params['polarization'],
-    )) + self.params['bg']
+    )) + self.params['i0Oleic'] * sphere.magnetic_formfactor(
+      self.q,
+      self.params['d'],
+      self.params['sldOleic'],
+      self.params['sldSolvent'],
+      0,
+      0,
+      0,
+      self.params['xi'],
+      self.params['sin2alpha'],
+      self.params['polarization']
+    ) + self.params['bg']
 
     r1, sld1 = sphere_cs.sld(
       self.params['r1'],
@@ -143,8 +154,15 @@ class SphereCSBimodalOA(SAXSModel):
     self.r = np.concatenate([r1, r1[::-1], r2, r2[::-1], r3])
     self.sld = np.concatenate([sld1, sld1[::-1], sld2, sld2[::-1], sld3])
 
+    reducedR1 = self.params['r1']-self.params['dDead1']
+    reducedR2 = self.params['r2']-self.params['dDead2']
+    if reducedR1 < 0:
+      reducedR1 = 0
+    if reducedR2 < 0:
+      reducedR2 = 0
+
     rMag1, sldMag1 = sphere_cs.sld(
-      self.params['r1']-self.params['dDead1'],
+      reducedR1,
       self.params['d'],
       self.params['magSldCore'],
       self.params['magSldShell'],
@@ -152,7 +170,7 @@ class SphereCSBimodalOA(SAXSModel):
     )
 
     rMag2, sldMag2 = sphere_cs.sld(
-      self.params['r2']-self.params['dDead2'],
+      reducedR2,
       self.params['d'],
       self.params['magSldCore'],
       self.params['magSldShell'],
