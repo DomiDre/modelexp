@@ -12,4 +12,5 @@ class SimultaneousSaxsSans(Sas):
       'sldShell': ['saxs', 'sans'],
       'sldSolvent': ['saxs', 'sans'],
       'sldSurfactant': ['saxs', 'sans'],
+      'sldOleic': ['saxs', 'sans'],
       }
