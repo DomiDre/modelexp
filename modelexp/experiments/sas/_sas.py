@@ -30,11 +30,13 @@ class Sas(Experiment):
     resi = []
     for i in range(self.model.nModelsets):
       data = self.data.getDataset(i)
+      weight = self.data.dataWeights[i]
       model = self.model.getModelset(i)
+
       I_data = data.getValues()
       I_error = data.getErrors()
       I_model = model.getValues()
-      addResi = (np.log(I_data) - np.log(I_model)) * I_data / I_error
+      addResi = np.sqrt(weight) * (np.log(I_data) - np.log(I_model)) * I_data / I_error
       resi = np.concatenate([resi, addResi])
     return resi
 
