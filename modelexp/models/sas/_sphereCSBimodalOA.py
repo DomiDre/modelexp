@@ -176,5 +176,11 @@ class SphereCSBimodalOA(SAXSModel):
       self.params['magSldShell'],
       self.params['magSldSolvent']
     )
-    self.rMag = np.concatenate([rMag1, rMag1[::-1], rMag2])
-    self.sldMag = np.concatenate([sldMag1, sldMag1[::-1], sldMag2])
+
+    rMag3, sldMag3 = sphere.sld(
+      self.params['d'],
+      0,
+      0
+    )
+    self.rMag = np.concatenate([rMag1, rMag1[::-1], rMag2, rMag2[::-1], rMag3])
+    self.sldMag = np.concatenate([sldMag1, sldMag1[::-1], sldMag2, sldMag2[::-1], sldMag3])
