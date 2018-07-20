@@ -33,7 +33,7 @@ class SphereCSBimodalOA(SAXSModel):
 
   def calcModel(self):
     self.I = self.params['i0'] * (
-      (1-self.params['fraction']) * sphere_cs.formfactor(
+      self.params['fraction'] * sphere_cs.formfactor(
         self.q,
         self.params['r1'],
         self.params['d'],
@@ -42,7 +42,7 @@ class SphereCSBimodalOA(SAXSModel):
         self.params['sldSolvent'],
         self.params['sigR1'],
         self.params['sigD']
-    ) + self.params['fraction'] * sphere_cs.formfactor(
+    ) + (1-self.params['fraction']) * sphere_cs.formfactor(
         self.q,
         self.params['r2'],
         self.params['d'],
@@ -85,7 +85,7 @@ class SphereCSBimodalOA(SAXSModel):
 
   def calcMagneticModel(self):
     self.I = self.params['i0'] * (
-      (1-self.params['fraction']) * sphere_cs.magnetic_formfactor(
+      self.params['fraction'] * sphere_cs.magnetic_formfactor(
         self.q,
         self.params['r1'],
         self.params['d'],
@@ -101,7 +101,7 @@ class SphereCSBimodalOA(SAXSModel):
         self.params['xi'],
         self.params['sin2alpha'],
         self.params['polarization'],
-    ) + self.params['fraction'] * sphere_cs.magnetic_formfactor(
+    ) + (1 - self.params['fraction']) * sphere_cs.magnetic_formfactor(
         self.q,
         self.params['r2'],
         self.params['d'],
