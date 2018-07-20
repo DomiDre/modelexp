@@ -108,9 +108,9 @@ class Vsm(Experiment):
         M_model = model.getValues()
         assert(len(B_data) == len(B_model), 'Data and Model do not have the same length.')
         if isinstance(data.suffix, str) and not data.suffix == '':
-          f.write(f'\n#{data.suffix}\n')
+          f.write(f'\n#[[Data]] {data.suffix}\n')
         elif isinstance(data.suffix, list):
-          f.write('\n#'+'_'.join(data.suffix)+'\n')
+          f.write('\n#[[Data]] '+'_'.join(data.suffix)+'\n')
         f.write('#B / T\tM / kAm-1\tsM / kAm-1\tMmodel / kAm-1\n')
         for i in range(len(B_data)):
           assert(np.isclose(B_data[i], B_model[i]), 'Data and Model arrays are not defined on same domain' )
@@ -121,10 +121,10 @@ class Vsm(Experiment):
         B_data = data.getDomain()
         M_data = data.getValues()
         sM_data = data.getErrors()
-        if isinstance(data.suffix, str) and not data.suffix == '':
-          f.write(f'\n#{data.suffix}\n')
+        if isinstance(data.suffix, str):
+          f.write(f'\n#[[Data]] {data.suffix}\n')
         elif isinstance(data.suffix, list):
-          f.write('\n#'+'_'.join(data.suffix)+'\n')
+          f.write('\n#[[Data]] '+'_'.join(data.suffix)+'\n')
         f.write('#B / T\tM / kAm-1\tsM / kAm-1\n')
         for i in range(len(B_data)):
           f.write(f'{B_data[i]}\t{M_data[i]}\t{sM_data[i]}\n')
@@ -133,10 +133,10 @@ class Vsm(Experiment):
         model = self.model.getModelset(i)
         B_model = model.getDomain()
         M_model = model.getValues()
-        if isinstance(model.suffix, str) and not model.suffix == '':
-          f.write(f'\n#{model.suffix}\n')
+        if isinstance(model.suffix, str):
+          f.write(f'\n#[[Data]] {model.suffix}\n')
         elif isinstance(model.suffix, list):
-          f.write('\n#'+'_'.join(model.suffix)+'\n')
+          f.write('\n#[[Data]] '+'_'.join(model.suffix)+'\n')
         f.write('#B / T\tMmodel / kAm-1\n')
         for i in range(len(B_model)):
           f.write(f'{B_model[i]}\t{M_model[i]}\n')
