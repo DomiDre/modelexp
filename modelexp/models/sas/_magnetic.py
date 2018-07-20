@@ -30,15 +30,19 @@ class Magnetic(Decoration):
     '''
     Define how to modify the
     '''
-    self.ptrModel.calcMagneticModel()
+    if 'polarization' in self.ptrModel.params:
+      self.ptrModel.calcMagneticModel()
+    else:
+      self.ptrModel.calcModel()
 
   def plotModel(self):
-    if self.sldMagPlot:
-      self.sldMagPlot.set_xdata(self.ptrModel.rMag / 10)
-      self.sldMagPlot.set_ydata(self.ptrModel.sldMag / 1e-6)
-    else:
-      self.sldMagPlot, = self.ptrModel.axInset.plot(
-        self.ptrModel.rMag / 10, self.ptrModel.sldMag / 1e-6,
-        marker='None', color='red', zorder=10
-      )
+    if hasattr(self.plotModel, 'rMag'):
+      if self.sldMagPlot:
+        self.sldMagPlot.set_xdata(self.ptrModel.rMag / 10)
+        self.sldMagPlot.set_ydata(self.ptrModel.sldMag / 1e-6)
+      else:
+        self.sldMagPlot, = self.ptrModel.axInset.plot(
+          self.ptrModel.rMag / 10, self.ptrModel.sldMag / 1e-6,
+          marker='None', color='red', zorder=10
+        )
     self.ptrModel.plotModel()
