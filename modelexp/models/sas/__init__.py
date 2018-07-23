@@ -17,6 +17,7 @@ from ._sphereCISS import SphereCISS
 from ._cube import Cube
 
 from ._superball import Superball
+from ._superballCS import SuperballCS
 
 from._ellipsoid import Ellipsoid
 
