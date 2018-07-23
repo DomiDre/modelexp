@@ -24,6 +24,9 @@ class Experiment(metaclass=ABCMeta):
   def connectModel(self, model):
     self.model = model
 
+  def connectFit(self, fit):
+    self.ptrFit = fit
+
   def setParameters(self):
     """Called after initialization of models for datasets. Set experiment specific
     parameters corresponding to their dataset identifier

@@ -2,7 +2,7 @@ from .._experiment import Experiment
 import numpy as np
 from ...gui.plotWidgetInset import PlotWidgetInset
 import pkg_resources, datetime
-
+import lmfit
 class Sas(Experiment):
   def __init__(self):
     super().__init__()
@@ -26,16 +26,24 @@ class Sas(Experiment):
 
   def residuum(self, p):
     self.model.params = p
+
+    self.ptrFit.iteration += 1
     self.model.updateModel()
     resi = []
     for i in range(self.model.nModelsets):
       data = self.data.getDataset(i)
+      weight = self.data.dataWeights[i]
       model = self.model.getModelset(i)
+
       I_data = data.getValues()
       I_error = data.getErrors()
       I_model = model.getValues()
-      addResi = (np.log(I_data) - np.log(I_model)) * I_data / I_error
+      addResi = np.sqrt(weight) * (np.log(I_data) - np.log(I_model)) * I_data / I_error
       resi = np.concatenate([resi, addResi])
+    if self.ptrFit.printIteration is not None:
+      if self.ptrFit.iteration % self.ptrFit.printIteration == 0:
+        print(f'Iteration: {self.ptrFit.iteration}\tChi2:{np.sum(resi**2)}')
+        print(lmfit.fit_report(p))
     return resi
 
   def getMinMaxDomainData(self):

@@ -62,3 +62,27 @@ class MultiData(DataContainer):
           newData.addDataLine(splitLine)
       self.nDatasets += 1
       self.datasets.append(newData)
+
+  def printParameters(self):
+    if self.params is not None:
+      for param in self.params:
+        val = self.params[param]['value']
+        std = self.params[param]['std']
+        if (std > 0):
+          power = np.floor(np.log10(std))
+          cutted_std = int(np.round(std/(10**power)))
+          cutted_val = np.round(val, int(-power))
+          if power < 0:
+            cutted_val = str(cutted_val).ljust(int(-power)+2,'0')
+          elif power > 0:
+            cutted_val = str(int(cutted_val))
+            cutted_std = str(int(cutted_std * 10**power))
+          print("{:<25}{}({})".format(param, cutted_val, cutted_std))
+        else:
+          print("{:<25}{}".format(param, val))
+        # if power > 0:
+        #   format_power = 0
+        # else:
+        #   format_power = abs(power)
+        # format_power = "{:."+str(format_power)+"f}"
+        # return power, str(cutted_num), format_power

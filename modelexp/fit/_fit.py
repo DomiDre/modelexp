@@ -14,6 +14,11 @@ class Fit(metaclass=ABCMeta):
     self.ptrData = data
     self.ptrModel = model
 
+    self.ptrExperiment.connectFit(self)
+
+    self.printIteration = None
+    self.iteration = 0
+
     self.fit_result = None
 
   def connectGui(self, gui):

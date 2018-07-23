@@ -11,6 +11,7 @@ class DataContainer():
     self.dataClass = dataClass
     self.nDatasets = 0 # number of datasets
     self.datasets = []
+    self.dataWeights = []
 
     if (experiment is not None):
       self.ptrExperiment = experiment
@@ -29,7 +30,7 @@ class DataContainer():
       if (dataset.suffix == suffix):
         return dataset
 
-  def loadFromFile(self, filename, suffix=None):
+  def loadFromFile(self, filename, suffix=None, weight=1):
     newData = self.dataClass()
     newData.loadFromFile(filename)
     if suffix is None:
@@ -37,6 +38,7 @@ class DataContainer():
     newData.suffix = suffix
     self.nDatasets += 1
     self.datasets.append(newData)
+    self.dataWeights.append(weight)
 
   def plotData(self):
     for i in range(self.nDatasets):
