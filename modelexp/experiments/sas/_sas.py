@@ -2,7 +2,7 @@ from .._experiment import Experiment
 import numpy as np
 from ...gui.plotWidgetInset import PlotWidgetInset
 import pkg_resources, datetime
-
+import lmfit
 class Sas(Experiment):
   def __init__(self):
     super().__init__()
@@ -26,6 +26,13 @@ class Sas(Experiment):
 
   def residuum(self, p):
     self.model.params = p
+
+    self.ptrFit.iteration += 1
+    if self.ptrFit.printIteration is not None:
+      if self.ptrFit.iteration % self.ptrFit.printIteration == 0:
+        print(f'Iteration: {self.ptrFit.iteration}')
+        print(lmfit.fit_report(p))
+
     self.model.updateModel()
     resi = []
     for i in range(self.model.nModelsets):

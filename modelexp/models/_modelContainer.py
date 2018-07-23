@@ -140,7 +140,7 @@ class ModelContainer():
   def setConstantParam(self, paramName, paramVal):
     assert paramName in self.params, (
       'Tried to add a parameter that is not defined in the model. '+
-      'Please define a new extended model if you wish to add parameters.'
+      'Please define a new extended model if you wish to add parameters. Check parameter: ' + paramName
     )
     self.params[paramName].value = paramVal
     self.params[paramName].min = -np.inf
