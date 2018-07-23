@@ -28,11 +28,6 @@ class Sas(Experiment):
     self.model.params = p
 
     self.ptrFit.iteration += 1
-    if self.ptrFit.printIteration is not None:
-      if self.ptrFit.iteration % self.ptrFit.printIteration == 0:
-        print(f'Iteration: {self.ptrFit.iteration}')
-        print(lmfit.fit_report(p))
-
     self.model.updateModel()
     resi = []
     for i in range(self.model.nModelsets):
@@ -45,6 +40,10 @@ class Sas(Experiment):
       I_model = model.getValues()
       addResi = np.sqrt(weight) * (np.log(I_data) - np.log(I_model)) * I_data / I_error
       resi = np.concatenate([resi, addResi])
+    if self.ptrFit.printIteration is not None:
+      if self.ptrFit.iteration % self.ptrFit.printIteration == 0:
+        print(f'Iteration: {self.ptrFit.iteration}\tChi2:{np.sum(resi**2)}')
+        print(lmfit.fit_report(p))
     return resi
 
   def getMinMaxDomainData(self):
