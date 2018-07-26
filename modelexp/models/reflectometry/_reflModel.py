@@ -66,7 +66,7 @@ class ReflectometryModel(Model):
       self.modelPlot.set_ydata(self.I)
       self.sldPlot.set_xdata(self.z / 10)
       self.sldPlot.set_ydata(self.sld / 1e-6)
-      self.axInset.set_xlim(0, max(self.z)/10)
+      self.axInset.set_xlim(min(self.z)/10, max(self.z)/10)
     elif self.q is not None and self.I is not None:
       self.modelPlot, = self.ax.plot(
         self.q, self.I, marker='None', color='black', zorder=10
