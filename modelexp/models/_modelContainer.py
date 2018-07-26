@@ -240,3 +240,8 @@ class ModelContainer():
   def calcModel(self):
     for i in range(self.nModelsets):
       self.getModelset(i).calcDecoratedModel()
+
+  def callModelFunctions(self, functionName, *param):
+    for i in range(self.nModelsets):
+      model = self.getModelset(i)
+      getattr(model, functionName)(*param)
