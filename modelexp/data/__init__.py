@@ -4,5 +4,6 @@ from ._xyData import  XyData
 from ._xyeData import  XyeData
 from ._xysData import  XysData
 from ._xyemData import  XyemData
+from ._prfData import  PrfData
 
 from ._multiData import MultiData
