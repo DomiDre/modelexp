@@ -18,6 +18,10 @@ class XysData(XyeData):
         y.append(float(splitLine[1]))
         e.append(float(splitLine[2]))
 
+    x = np.array(x)
+    y = np.array(y)
+    e = np.array(e)
+
     sortedArgs = np.argsort(x)
     x = x[sortedArgs]
     y = y[sortedArgs]
