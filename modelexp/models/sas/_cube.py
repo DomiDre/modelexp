@@ -6,7 +6,7 @@ from numpy.polynomial.legendre import leggauss
 class Cube(SAXSModel):
   def initParameters(self):
     self.params.add('a', 100, min=0)
-    self.params.add('sldCube', 40e-6)
+    self.params.add('sldCore', 40e-6)
     self.params.add('sldSolvent', 10e-6)
     self.params.add('sigA', 0., min=0)
     self.params.add('i0', 1, min=0)
@@ -17,7 +17,7 @@ class Cube(SAXSModel):
     self.addConstantParam('orderLegendre')
 
   def initMagneticParameters(self):
-    self.params.add('magSldCube', 5e-6, min=0)
+    self.params.add('magSldCore', 5e-6, min=0)
     self.params.add('magSldSolvent', 0, vary=False)
 
     self.addConstantParam('magSldSolvent')
@@ -30,7 +30,7 @@ class Cube(SAXSModel):
     self.I = self.params['i0'] * cube.formfactor(
       self.q,
       self.params['a'],
-      self.params['sldCube'],
+      self.params['sldCore'],
       self.params['sldSolvent'],
       self.params['sigA'],
       self.x_herm, self.w_herm, self.x_leg, self.w_leg
@@ -38,7 +38,7 @@ class Cube(SAXSModel):
 
     self.r, self.sld = cube.sld(
       self.params['a'],
-      self.params['sldCube'],
+      self.params['sldCore'],
       self.params['sldSolvent']
     )
 
@@ -49,10 +49,10 @@ class Cube(SAXSModel):
     self.I = self.params['i0'] * cube.magnetic_formfactor(
       self.q,
       self.params['a'],
-      self.params['sldCube'],
+      self.params['sldCore'],
       self.params['sldSolvent'],
       self.params['sigA'],
-      self.params['magSldCube'],
+      self.params['magSldCore'],
       self.params['magSldSolvent'],
       self.params['xi'],
       self.params['sin2alpha'],
@@ -62,12 +62,12 @@ class Cube(SAXSModel):
 
     self.r, self.sld = cube.sld(
       self.params['a'],
-      self.params['sldCube'],
+      self.params['sldCore'],
       self.params['sldSolvent']
     )
 
     self.rMag, self.sldMag = cube.sld(
       self.params['a'],
-      self.params['magSldCube'],
+      self.params['magSldCore'],
       self.params['magSldSolvent']
     )
