@@ -15,6 +15,7 @@ from ._sphereCSBimodalOA import SphereCSBimodalOA
 from ._sphereCISS import SphereCISS
 
 from ._cube import Cube
+from ._cubeCS import CubeCS
 
 from ._superball import Superball
 from ._superballCS import SuperballCS
