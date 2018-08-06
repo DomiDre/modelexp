@@ -14,6 +14,8 @@ from ._sphereCSOA import SphereCSOA
 from ._sphereCSBimodalOA import SphereCSBimodalOA
 from ._sphereCISS import SphereCISS
 
+from ._twoSphereCS import TwoSphereCS
+
 from ._cube import Cube
 from ._cubeCS import CubeCS
 
