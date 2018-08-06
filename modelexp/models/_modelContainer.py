@@ -169,6 +169,10 @@ class ModelContainer():
     self.params[paramName2].vary = False
     self.combinedParameters[paramName2] = paramName1
 
+    if (hasattr(self, 'ptrGui')):
+      self.ptrGui.removeSlider(paramName2)
+
+
   def setParamLimits(self, paramName, minVal, maxVal):
     self.params[paramName].min = minVal
     self.params[paramName].max = maxVal
@@ -218,8 +222,6 @@ class ModelContainer():
       for parameter in self.combinedParameters:
         if parameter in subP and self.combinedParameters[parameter] in subP:
           subP[parameter].value = subP[self.combinedParameters[parameter]].value
-        else:
-          print('Something wrong:', parameter, self.combinedParameters[parameter], subP)
       subModel.params = subP
       subModel.calcDecoratedModel()
 
