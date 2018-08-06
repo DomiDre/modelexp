@@ -23,6 +23,7 @@ class ModelContainer():
     self.decoration = decoration
     self.constantParameters = [] # set by model during initParameters
     self.datasetSpecificParams = [] # set by experiment during initParameters
+    self.combinedParameters = {}
     self.params = Parameters() # empty parameter container
 
     if gui is not None:
@@ -152,6 +153,21 @@ class ModelContainer():
     if (hasattr(self, 'ptrGui')):
       self.ptrGui.removeSlider(paramName)
 
+  def combineParameters(self, paramName1, paramName2):
+    assert paramName1 in self.params, (
+      'Tried to combine parameter ' + paramName1 + ' with ' + paramName2 +
+      '. But could not find ' + paramName1
+    )
+    assert paramName2 in self.params, (
+      'Tried to combine parameter ' + paramName1 + ' with ' + paramName2 +
+      '. But could not find ' + paramName2
+    )
+
+    self.params[paramName2].value = self.params[paramName1].value
+    self.params[paramName2].min = self.params[paramName1].min
+    self.params[paramName2].max = self.params[paramName1].max
+    self.params[paramName2].vary = False
+    self.combinedParameters[paramName2] = paramName1
 
   def setParamLimits(self, paramName, minVal, maxVal):
     self.params[paramName].min = minVal
@@ -198,6 +214,12 @@ class ModelContainer():
                   parameter, specParam.value,
                   min=specParam.min, max=specParam.max, vary=specParam.vary
                 )
+
+      for parameter in self.combinedParameters:
+        if parameter in subP and self.combinedParameters[parameter] in subP:
+          subP[parameter].value = subP[self.combinedParameters[parameter]].value
+        else:
+          print('Something wrong:', parameter, self.combinedParameters[parameter], subP)
       subModel.params = subP
       subModel.calcDecoratedModel()
 
