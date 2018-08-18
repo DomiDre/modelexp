@@ -8,6 +8,9 @@ class PrfData(Data):
     self.y = []
     self.m = []
 
+    self.bg = []
+    self.hkl = {}
+
   def setData(self, x, y, m):
     self.x = np.array(x)
     self.y = np.array(y)
@@ -51,25 +54,44 @@ class PrfData(Data):
     x = []
     y = []
     m = []
+    bg = []
     with open(filename, 'r') as f:
-      next(f)
-      next(f)
-      next(f)
-      next(f)
+      for i in range(4): # skip 4 lines
+        next(f)
+
       for line in f:
-        if line.startswith('#'):
+        if line.startswith('#'): # ignore outcommented lines
           continue
+
         splitLine = line.strip().split()
         x.append(float(splitLine[0]))
         y.append(float(splitLine[1]))
         m.append(float(splitLine[2]))
+        bg.append(float(splitLine[4]))
+        if len(splitLine) > 5:
+          reflex_position = float(splitLine[5])
+          h = splitLine[8]
+          k = splitLine[9]
+          l = splitLine[10].split(')')[0]
+        if len(splitLine) > 11:
+          K = int(splitLine[12])
+        else:
+          K = 1
+        if not h+k+l in self.hkl:
+          self.hkl[h+k+l] = {K: reflex_position}
+        else:
+          self.hkl[h+k+l][K] = reflex_position
+
+
 
     x = np.array(x)
     y = np.array(y)
     m = np.array(m)
+    bg = np.array(bg)
 
     sortedArgs = np.argsort(x)
     x = x[sortedArgs]
     y = y[sortedArgs]
     m = m[sortedArgs]
+    self.bg = bg[sortedArgs]
     self.setData(x, y, m)

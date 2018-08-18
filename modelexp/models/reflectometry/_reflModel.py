@@ -82,5 +82,6 @@ class ReflectometryModel(Model):
     '''
     How to update the model when parameters are changed
     '''
+    print('update')
     self.calcDecoratedModel()
     self.plotModel()

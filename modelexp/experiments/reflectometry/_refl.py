@@ -38,7 +38,7 @@ class Reflectometry(Experiment):
       I_data = data.getValues()
       I_error = data.getErrors()
       I_model = model.getValues()
-      addResi = np.sqrt(weight) * (np.log(I_data) - np.log(I_model)) * I_data / I_error
+      addResi = np.sqrt(weight) * (np.log(I_data) - np.log(I_model)) #* I_data / I_error
       resi = np.concatenate([resi, addResi])
     if self.ptrFit.printIteration is not None:
       if self.ptrFit.iteration % self.ptrFit.printIteration == 0:

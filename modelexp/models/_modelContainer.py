@@ -193,7 +193,6 @@ class ModelContainer():
 
     for i in range(self.nModelsets):
       subModel = self.getModelset(i)
-
       subP = p.copy()
       for parameter in self.ptrExperiment.datasetSpecificParams:
         specificTags = self.datasetSpecificParams[parameter]
