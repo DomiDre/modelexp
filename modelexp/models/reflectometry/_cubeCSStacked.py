@@ -13,11 +13,13 @@ class CubeCSStacked(ReflectometryModel):
     self.params.add("packingDensity", 0.517, min = 0.0, max = 1.0, vary = True)
     self.params.add("a", 50, min = 0, max = 100, vary = True)
     self.params.add("d", 20, min = 0, max = 40, vary = True)
+    self.params.add("bottomThickness", 0, min = 0, max = 40, vary = False)
     self.params.add("nLayers", 5, min= 1, max=10, vary=False)
     self.params.add('sldCore', 8e-6, min= 0, max = 40e-6, vary=False)
     self.params.add('sldShell', 10e-7, min= 0, max = 40e-6, vary=False)
     self.params.add('sldMatrix', 0e-6, min= 0, max = 40e-6, vary=False)
     self.params.add('sldSubstrate', 2e-6, min= 0, max = 40e-6, vary=False)
+    self.params.add('sldBottom', 0e-6, min= 0, max = 40e-6, vary=False)
     self.params.add('coverage', 1, min= 0, max = 1, vary=True)
     self.params.add('roughnessSubstrate', 5, min= 0, max = 20, vary=True)
 
@@ -37,21 +39,16 @@ class CubeCSStacked(ReflectometryModel):
       self.params['sldCore'].value,
       self.params['sldShell'].value,
       self.params['sldMatrix'].value,
+      self.params['sldBottom'].value,
       self.params['sldSubstrate'].value,
       a,
       d,
+      self.params['bottomThickness'].value,
       packing_densities
     )
-    thickness, sld = nanocubes.cube_cs_stacked(
-      self.params['sldCore'].value,
-      self.params['sldShell'].value,
-      self.params['sldMatrix'].value,
-      self.params['sldSubstrate'].value,
-      a,
-      d,
-      packing_densities
-    )
+
     roughness = [self.params["roughness"].value]*len(sld)
+
     Isubstrate = algorithms.parrat(
       self.q,
       [self.params['sldSubstrate'].value, 0],
@@ -67,28 +64,48 @@ class CubeCSStacked(ReflectometryModel):
     self.sld = algorithms.roughsld_thick_layers(self.z, sld, roughness, thickness).real
 
   def calcMagneticModel(self):
-    self.calcModel()
-    # self.I = self.params['i0'] * sphere.magnetic_formfactor(
-    #   self.q,
-    #   self.params['r'],
-    #   self.params['sldCore'],
-    #   self.params['sldSolvent'],
-    #   self.params['sigR'],
-    #   self.params['magSldCore'],
-    #   self.params['magSldSolvent'],
-    #   self.params['xi'],
-    #   self.params['sin2alpha'],
-    #   self.params['polarization'],
-    # ) + self.params['bg']
+    nLayers = int(self.params['nLayers'].value)
+    a = self.params['a'].value
+    d = self.params['d'].value
+    packing_densities = [self.params["packingDensity"].value] * nLayers
 
-    # self.r, self.sld = sphere.sld(
-    #   self.params['r'],
-    #   self.params['sldCore'],
-    #   self.params['sldSolvent']
-    # )
+    thickness, sld = nanocubes.cube_cs_stacked(
+      self.params['sldCore'].value + self.params['polarization']*self.params['magSldCore'].value,
+      self.params['sldShell'].value + self.params['polarization']*self.params['magSldShell'].value,
+      self.params['sldMatrix'].value,
+      self.params['sldBottom'].value,
+      self.params['sldSubstrate'].value,
+      a,
+      d,
+      self.params['bottomThickness'].value,
+      packing_densities
+    )
 
-    # self.rMag, self.sldMag = sphere.sld(
-    #   self.params['r'],
-    #   self.params['magSldCore'],
-    #   self.params['magSldMatrix']
-    # )
+    thicknessMag, sldMag = nanocubes.cube_cs_stacked(
+      self.params['polarization']*self.params['magSldCore'].value,
+      self.params['polarization']*self.params['magSldShell'].value,
+      0,
+      0,
+      0,
+      a,
+      d,
+      self.params['bottomThickness'].value,
+      packing_densities
+    )
+
+    roughness = [self.params["roughness"].value]*len(sld)
+
+    Isubstrate = algorithms.parrat(
+      self.q,
+      [self.params['sldSubstrate'].value, 0],
+      [self.params['roughnessSubstrate'], self.params['roughnessSubstrate']],
+      [0, 0]
+    )
+    IparticleLayer = algorithms.parrat(self.q, sld + sldMag, roughness, thickness)
+
+    self.z = np.linspace(-thickness[0], nLayers*(a+2*d)+a, 100)
+    self.I = self.params["i0"] * (
+      self.params['coverage'] * IparticleLayer + (1-self.params['coverage']) * Isubstrate
+    )  + self.params["bg"]
+    self.sld = algorithms.roughsld_thick_layers(self.z, sld, roughness, thickness).real
+    self.sldMag = algorithms.roughsld_thick_layers(self.z, sldMag, roughness, thickness).real
