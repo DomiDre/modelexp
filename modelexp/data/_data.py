@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+import numpy as np
 
 class Data(metaclass=ABCMeta):
   '''
@@ -51,3 +52,21 @@ class Data(metaclass=ABCMeta):
   @abstractmethod
   def sliceDomain(self):
     pass
+
+  def getClosestIdx(self, array, value):
+    idx_sorted = np.argsort(array)
+    sorted_array = np.array(array[idx_sorted])
+    idx = np.searchsorted(sorted_array, value, side="left")
+    if idx >= len(array):
+        idx_nearest = idx_sorted[len(array)-1]
+        return idx_nearest
+    elif idx == 0:
+        idx_nearest = idx_sorted[0]
+        return idx_nearest
+    else:
+        if abs(value - sorted_array[idx-1]) < abs(value - sorted_array[idx]):
+            idx_nearest = idx_sorted[idx-1]
+            return idx_nearest
+        else:
+            idx_nearest = idx_sorted[idx]
+        return idx_nearest

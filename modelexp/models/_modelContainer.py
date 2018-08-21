@@ -23,6 +23,7 @@ class ModelContainer():
     self.decoration = decoration
     self.constantParameters = [] # set by model during initParameters
     self.datasetSpecificParams = [] # set by experiment during initParameters
+    self.combinedParameters = {}
     self.params = Parameters() # empty parameter container
 
     if gui is not None:
@@ -152,6 +153,25 @@ class ModelContainer():
     if (hasattr(self, 'ptrGui')):
       self.ptrGui.removeSlider(paramName)
 
+  def combineParameters(self, paramName1, paramName2):
+    assert paramName1 in self.params, (
+      'Tried to combine parameter ' + paramName1 + ' with ' + paramName2 +
+      '. But could not find ' + paramName1
+    )
+    assert paramName2 in self.params, (
+      'Tried to combine parameter ' + paramName1 + ' with ' + paramName2 +
+      '. But could not find ' + paramName2
+    )
+
+    self.params[paramName2].value = self.params[paramName1].value
+    self.params[paramName2].min = self.params[paramName1].min
+    self.params[paramName2].max = self.params[paramName1].max
+    self.params[paramName2].vary = False
+    self.combinedParameters[paramName2] = paramName1
+
+    if (hasattr(self, 'ptrGui')):
+      self.ptrGui.removeSlider(paramName2)
+
 
   def setParamLimits(self, paramName, minVal, maxVal):
     self.params[paramName].min = minVal
@@ -173,7 +193,6 @@ class ModelContainer():
 
     for i in range(self.nModelsets):
       subModel = self.getModelset(i)
-
       subP = p.copy()
       for parameter in self.ptrExperiment.datasetSpecificParams:
         specificTags = self.datasetSpecificParams[parameter]
@@ -198,6 +217,10 @@ class ModelContainer():
                   parameter, specParam.value,
                   min=specParam.min, max=specParam.max, vary=specParam.vary
                 )
+
+      for parameter in self.combinedParameters:
+        if parameter in subP and self.combinedParameters[parameter] in subP:
+          subP[parameter].value = subP[self.combinedParameters[parameter]].value
       subModel.params = subP
       subModel.calcDecoratedModel()
 
@@ -240,3 +263,14 @@ class ModelContainer():
   def calcModel(self):
     for i in range(self.nModelsets):
       self.getModelset(i).calcDecoratedModel()
+
+  def callModelFunctions(self, functionName, *param):
+    for i in range(self.nModelsets):
+      model = self.getModelset(i)
+      getattr(model, functionName)(*param)
+
+  def setResolution(self):
+    for i in range(self.nModelsets):
+      data = self.ptrExperiment.data.getDataset(i)
+      model = self.ptrExperiment.model.getModelset(i)
+      model.setResolution(data.getResolution())
