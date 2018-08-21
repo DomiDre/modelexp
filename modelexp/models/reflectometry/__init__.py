@@ -11,4 +11,5 @@ from ._substrate import Substrate
 
 # decorating functions
 from ._instrumentalResolution import InstrumentalResolution
+from ._dataResolution import DataResolution
 from ._magnetic import Magnetic

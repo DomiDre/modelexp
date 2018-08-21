@@ -5,6 +5,7 @@ class ReflectometryModel(Model):
   def __init__(self):
     self.q = None
     self.I = None
+    self.dI = None
 
     self.z = None
     self.sld = None
@@ -39,6 +40,12 @@ class ReflectometryModel(Model):
 
   def setValues(self, I):
     self.I = I
+
+  def setResolution(self, dI):
+    self.dI = dI
+
+  def getResolution(self):
+    return self.dI
 
   def calcDecoratedModel(self):
     if isinstance(self.decoration, Decoration):

@@ -21,6 +21,9 @@ class Decoration(metaclass=ABCMeta):
   def getValues(self):
     return self.ptrModel.getValues()
 
+  def getResolution(self):
+    return self.ptrModel.getResolution()
+
   def setValues(self, values):
     self.ptrModel.setValues(values)
 

@@ -268,3 +268,9 @@ class ModelContainer():
     for i in range(self.nModelsets):
       model = self.getModelset(i)
       getattr(model, functionName)(*param)
+
+  def setResolution(self):
+    for i in range(self.nModelsets):
+      data = self.ptrExperiment.data.getDataset(i)
+      model = self.ptrExperiment.model.getModelset(i)
+      model.setResolution(data.getResolution())
