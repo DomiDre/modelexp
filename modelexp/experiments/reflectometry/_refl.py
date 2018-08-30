@@ -24,6 +24,9 @@ class Reflectometry(Experiment):
 
     self.ptrGui.plotWidget.draw_idle()# .tight_layout()
 
+  def residuumFormula(self, q, I, sI, Imodel):
+    return (np.log(I) - np.log(Imodel)) * I / sI
+
   def residuum(self, p):
     self.model.params = p
 
@@ -35,10 +38,11 @@ class Reflectometry(Experiment):
       weight = self.data.dataWeights[i]
       model = self.model.getModelset(i)
 
+      q_data = data.getDomain()
       I_data = data.getValues()
       I_error = data.getErrors()
       I_model = model.getValues()
-      addResi = np.sqrt(weight) * (np.log(I_data) - np.log(I_model)) #* I_data / I_error
+      addResi = np.sqrt(weight) * self.residuumFormula(q_data, I_data, I_error, I_model)
       resi = np.concatenate([resi, addResi])
     if self.ptrFit.printIteration is not None:
       if self.ptrFit.iteration % self.ptrFit.printIteration == 0:
