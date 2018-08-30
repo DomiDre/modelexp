@@ -36,7 +36,7 @@ class Magnetic(Decoration):
       self.ptrModel.calcModel()
 
   def plotModel(self):
-    if hasattr(self.plotModel, 'rMag'):
+    if hasattr(self.ptrModel, 'rMag'):
       if self.sldMagPlot:
         self.sldMagPlot.set_xdata(self.ptrModel.rMag / 10)
         self.sldMagPlot.set_ydata(self.ptrModel.sldMag / 1e-6)

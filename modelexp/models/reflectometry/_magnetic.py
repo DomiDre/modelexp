@@ -32,7 +32,7 @@ class Magnetic(Decoration):
       self.ptrModel.calcModel()
 
   def plotModel(self):
-    if hasattr(self.plotModel, 'sldMag'):
+    if hasattr(self.ptrModel, 'sldMag'):
       if self.sldMagPlot:
         self.sldMagPlot.set_xdata(self.ptrModel.z / 10)
         self.sldMagPlot.set_ydata(self.ptrModel.sldMag / 1e-6)
@@ -41,4 +41,19 @@ class Magnetic(Decoration):
           self.ptrModel.z / 10, self.ptrModel.sldMag / 1e-6,
           marker='None', color='red', zorder=10
         )
-    self.ptrModel.plotModel()
+
+    if self.ptrModel.modelPlot:
+      self.ptrModel.modelPlot.set_ydata(self.ptrModel.I)
+      self.ptrModel.sldPlot.set_xdata(self.ptrModel.z / 10)
+      self.ptrModel.sldPlot.set_ydata(self.ptrModel.sld / 1e-6)
+      self.ptrModel.axInset.set_xlim(min(self.ptrModel.z)/10, max(self.ptrModel.z)/10)
+    elif self.ptrModel.q is not None and self.ptrModel.I is not None:
+      model_color = '#004279'
+      if self.ptrModel.params['polarization'].value == -1:
+        model_color = '#6F0000'
+      self.ptrModel.modelPlot, = self.ptrModel.ax.plot(
+        self.ptrModel.q, self.ptrModel.I, marker='None', color=model_color, zorder=10
+      )
+      self.ptrModel.sldPlot, = self.ptrModel.axInset.plot(
+        self.ptrModel.z / 10, self.ptrModel.sld / 1e-6, marker='None', color='black', zorder=10
+      )
