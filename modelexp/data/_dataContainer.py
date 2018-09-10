@@ -51,3 +51,7 @@ class DataContainer():
   def sliceDomain(self, minX=-np.inf, maxX=np.inf):
     for i in range(self.nDatasets):
       self.getDataset(i).sliceDomain(minX, maxX)
+
+  def onlyPositiveValues(self):
+    for i in range(self.nDatasets):
+      self.getDataset(i).onlyPositiveValues()

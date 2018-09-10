@@ -90,3 +90,31 @@ class MultiData(DataContainer):
       for param in fixed_params:
         val = self.params[param]['value']
         print("{:<25}{}".format(param, val))
+
+  def printLatexTable(self):
+    if self.params is not None:
+      fixed_params = []
+
+      for param in self.params:
+        val = self.params[param]['value']
+        std = self.params[param]['std']
+        if (std > 0):
+          power = np.floor(np.log10(std))
+          cutted_std = int(np.round(std/(10**power)))
+          cutted_val = np.round(val, int(-power))
+          if power < 0:
+            format_str = '{:.'+str(int(-power))+'f}'
+            cutted_val = format_str.format(cutted_val)
+            # cutted_val = str(cutted_val).ljust(int(-power)+2,'0')
+          elif power >= 0:
+            cutted_val = str(int(cutted_val))
+            cutted_std = str(int(cutted_std * 10**power))
+          print(f"${param}$")
+          print(f"& ${cutted_val}({cutted_std}) " + r"\unit{}$\\")
+        else:
+          fixed_params.append(param)
+      print(r'\hline')
+      for param in fixed_params:
+        val = self.params[param]['value']
+        print(f"${param}$")
+        print(f"& ${val} " + r"\unit{}$\\")

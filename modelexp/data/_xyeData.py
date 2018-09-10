@@ -65,3 +65,9 @@ class XyeData(Data):
     self.x.append(dataline[0])
     self.y.append(dataline[1])
     self.e.append(dataline[2])
+
+  def onlyPositiveValues(self):
+    validValues = self.y > 0
+    self.x = self.x[validValues]
+    self.y = self.y[validValues]
+    self.e = self.e[validValues]
