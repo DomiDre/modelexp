@@ -28,18 +28,21 @@ class MultiData(DataContainer):
                 splitLine = line.split('#')[1].strip()
                 if splitLine != '':
                   paramName, paramData  = splitLine.split(':', 1)
-                  paramValue = float(paramData.strip().split(' ',1)[0])
-                  if ('fixed' in paramData):
-                    paramStd = 0
-                  else:
-                    paramStd = float(
-                      paramData.strip().split('+/-',)[1].strip().split(' ', 1)[0]
-                    )
-                  self.params[paramName] = {
-                    'name': paramName,
-                    'value': paramValue,
-                    'std': paramStd
-                  }
+                  try:
+                    paramValue = float(paramData.strip().split(' ',1)[0])
+                    if ('fixed' in paramData):
+                      paramStd = 0
+                    else:
+                      paramStd = float(
+                        paramData.strip().split('+/-',)[1].strip().split(' ', 1)[0]
+                      )
+                    self.params[paramName] = {
+                      'name': paramName,
+                      'value': paramValue,
+                      'std': paramStd
+                    }
+                  except:
+                    pass
             elif '[[Variables]]' in line:
               fileAtParams = True
               continue
