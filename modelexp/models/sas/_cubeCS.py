@@ -63,6 +63,7 @@ class CubeCS(SAXSModel):
       self.params['sldSolvent'],
       self.params['sigA'],
       self.params['magSldCore'],
+      self.params['magSldShell'],
       self.params['magSldSolvent'],
       self.params['xi'],
       self.params['sin2alpha'],
