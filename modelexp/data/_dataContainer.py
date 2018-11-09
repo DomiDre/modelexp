@@ -55,3 +55,20 @@ class DataContainer():
   def onlyPositiveValues(self):
     for i in range(self.nDatasets):
       self.getDataset(i).onlyPositiveValues()
+
+  def rescaleDomain(self, rescaleFactor):
+    for i in range(self.nDatasets):
+      self.getDataset(i).rescaleDomain(rescaleFactor)
+
+  def transformDomain(self, transformFunction):
+    """Transform function should take as input domain values and give back the new domain
+    Parameters
+    ----------
+    transformFunction : function
+    """
+    for i in range(self.nDatasets):
+      self.getDataset(i).transformDomain(transformFunction)
+
+  def rescaleData(self, rescaleFactor):
+    for i in range(self.nDatasets):
+      self.getDataset(i).rescaleData(rescaleFactor)

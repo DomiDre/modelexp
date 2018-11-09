@@ -71,3 +71,13 @@ class XyeData(Data):
     self.x = self.x[validValues]
     self.y = self.y[validValues]
     self.e = self.e[validValues]
+
+  def rescaleData(self, rescaleFactor):
+    self.y *= rescaleFactor
+    self.e *= rescaleFactor
+
+  def rescaleDomain(self, rescaleFactor):
+    self.x *= rescaleFactor
+
+  def transformDomain(self, transformFunction):
+    self.x = transformFunction(self.x)

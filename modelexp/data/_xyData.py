@@ -57,3 +57,17 @@ class XyData(Data):
     assert len(dataline) == 2, 'Tried to add a dataline that does not have 2 elements to a XY dataset: ' + str(dataline)
     self.x.append(dataline[0])
     self.y.append(dataline[1])
+
+  def onlyPositiveValues(self):
+    validValues = self.y > 0
+    self.x = self.x[validValues]
+    self.y = self.y[validValues]
+
+  def rescaleData(self, rescaleFactor):
+    self.y *= rescaleFactor
+
+  def rescaleDomain(self, rescaleFactor):
+    self.x *= rescaleFactor
+
+  def transformDomain(self, transformFunction):
+    self.x = transformFunction(self.x)
