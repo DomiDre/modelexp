@@ -40,6 +40,14 @@ class DataContainer():
     self.datasets.append(newData)
     self.dataWeights.append(weight)
 
+  def addDataset(self, dataset, suffix=None, weight=1):
+    if suffix is None:
+      suffix = f'{self.nDatasets}'
+    dataset.suffix = suffix
+    self.nDatasets += 1
+    self.datasets.append(dataset)
+    self.dataWeights.append(weight)
+
   def plotData(self):
     for i in range(self.nDatasets):
       self.getDataset(i).plotData(self.ax)
