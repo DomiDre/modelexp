@@ -46,6 +46,9 @@ class MultiData(DataContainer):
             elif '[[Variables]]' in line:
               fileAtParams = True
               continue
+            elif 'reduced chi-square' in line:
+              splitLine = line.split('#')[1].strip()
+              self.chi2 = float(splitLine.split('=', 1)[1])
           if '[[Data]]' in line:
             # new data set is being started
             if newData is not None: # old dataset in memory? store it
