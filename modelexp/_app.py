@@ -126,7 +126,7 @@ class App():
     return self.fit
 
   def show(self):
-    if(self.model):
+    if (isinstance(self.model, ModelContainer)):
       self.model.calcModel()
       self.model.plotModel()
       self._experiment.adjustAxToAddedModel()
