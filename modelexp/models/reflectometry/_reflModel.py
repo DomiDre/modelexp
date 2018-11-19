@@ -32,6 +32,9 @@ class ReflectometryModel(Model):
   def getDomain(self):
     return self.q
 
+  def setDomain(self, q):
+    self.q = q
+
   def getValues(self, p=None):
     if p is not None:
       self.params = p
