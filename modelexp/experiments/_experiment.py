@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+import numpy as np
 class Experiment(metaclass=ABCMeta):
   """
   Abstract class to describe an experiment.
@@ -12,6 +13,8 @@ class Experiment(metaclass=ABCMeta):
 
     self.nDatasets = 1
     self.datasetSpecificParams = {}
+
+    self.fit_range = None
 
   def connectGui(self, gui):
     self.ptrGui = gui
@@ -32,6 +35,12 @@ class Experiment(metaclass=ABCMeta):
     parameters corresponding to their dataset identifier
     """
     pass
+
+  def setFitRange(self, fit_min = -np.inf, fit_max = np.inf):
+    self.fit_range = [fit_min, fit_max]
+    if hasattr(self, 'ptrGui'):
+      self.ax.axvline(fit_min, alpha=0.5, marker='None', color='black', zorder=0)
+      self.ax.axvline(fit_max, alpha=0.5, marker='None', color='black', zorder=0)
 
   @abstractmethod
   def setAxProps(self):
