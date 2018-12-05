@@ -28,6 +28,9 @@ class PrfData(Data):
   def getModel(self):
     return self.m
 
+  def getBackground(self):
+    return self.bg
+
   def getErrors(self):
     return np.sqrt(self.y)
 
@@ -64,23 +67,31 @@ class PrfData(Data):
           continue
 
         splitLine = line.strip().split()
-        x.append(float(splitLine[0]))
-        y.append(float(splitLine[1]))
-        m.append(float(splitLine[2]))
-        bg.append(float(splitLine[4]))
-        if len(splitLine) > 5:
-          reflex_position = float(splitLine[5])
-          h = splitLine[8]
-          k = splitLine[9]
-          l = splitLine[10].split(')')[0]
-        if len(splitLine) > 11:
-          K = int(splitLine[12])
+        h, k, l = None, None, None
+        if len(splitLine) == 8: # LeBail Fit,only contains hkl
+          reflex_position = float(splitLine[0])
+          h = splitLine[3]
+          k = splitLine[4]
+          l = splitLine[5].split(')')[0]
         else:
-          K = 1
-        if not h+k+l in self.hkl:
-          self.hkl[h+k+l] = {K: reflex_position}
-        else:
-          self.hkl[h+k+l][K] = reflex_position
+          x.append(float(splitLine[0]))
+          y.append(float(splitLine[1]))
+          m.append(float(splitLine[2]))
+          bg.append(float(splitLine[4]))
+          if len(splitLine) > 5:
+            reflex_position = float(splitLine[5])
+            h = splitLine[8]
+            k = splitLine[9]
+            l = splitLine[10].split(')')[0]
+          if len(splitLine) > 11:
+            K = int(splitLine[12])
+          else:
+            K = 1
+        if h is not None:
+          if not h+k+l in self.hkl:
+            self.hkl[h+k+l] = {K: reflex_position}
+          else:
+            self.hkl[h+k+l][K] = reflex_position
 
 
 
