@@ -18,9 +18,12 @@ from ._twoSphereCS import TwoSphereCS
 
 from ._cube import Cube
 from ._cubeCS import CubeCS
+from ._cubeCSCoupled import CubeCSCoupled
 
 from ._superball import Superball
 from ._superballCS import SuperballCS
+from ._superballCSCoupled import SuperballCSCoupled
+from ._superballCSSCoupled import SuperballCSSCoupled
 
 from._ellipsoid import Ellipsoid
 
