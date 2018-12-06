@@ -2,21 +2,25 @@ from ._reflModel import ReflectometryModel
 from fortRefl import nanocubes, algorithms
 import numpy as np
 
-class CubeCSStacked(ReflectometryModel):
+class CubeCSDoubleLayer(ReflectometryModel):
   '''
   Model to describe the formfactor of a sphere
   '''
   def initParameters(self):
     self.params.add("i0", 1, min = 0, max = 2, vary = False)
     self.params.add("bg", 2.1e-06, min = 0.0, max = 0.0001, vary = False)
-    self.params.add("roughnessSubstrate", 11.84, min = 0.0, max = 20, vary = True)
-    self.params.add("roughnessPlus1", 11.84, min = 0.0, max = 20, vary = True)
-    self.params.add("packingDensity", 0.517, min = 0.0, max = 1.0, vary = True)
     self.params.add("a", 50, min = 0, max = 100, vary = True)
     self.params.add("d", 20, min = 0, max = 40, vary = True)
+    self.params.add("packingDensity1", 0.517, min = 0.0, max = 1.0, vary = True)
+    self.params.add("packingDensity2", 0.517, min = 0.0, max = 1.0, vary = True)
+    self.params.add('roughnessSubstrate', 5, min= 0, max = 20, vary=True)
+    self.params.add("roughnessPlus1", 0, min = 0.0, max = 20, vary = True)
+    self.params.add("roughnessPlus2", 0, min = 0.0, max = 20, vary = True)
+    self.params.add("spacerThickness", 0, min = 0, max = 40, vary = False)
     self.params.add('sldCore', 8e-6, min= 0, max = 40e-6, vary=False)
     self.params.add('sldShell', 10e-7, min= 0, max = 40e-6, vary=False)
     self.params.add('sldMatrix', 0e-6, min= 0, max = 40e-6, vary=False)
+    self.params.add('sldSpacer', 0e-6, min= 0, max = 40e-6, vary=False)
     self.params.add('sldSubstrate', 2e-6, min= 0, max = 40e-6, vary=False)
     self.params.add('coverage', 1, min= 0, max = 1, vary=True)
 
@@ -29,19 +33,27 @@ class CubeCSStacked(ReflectometryModel):
   def calcModel(self):
     a = self.params['a'].value
     d = self.params['d'].value
-    pDens = self.params["packingDensity"].value
+    pDens1 = self.params["packingDensity1"].value
+    pDens2 = self.params["packingDensity2"].value
     sldSub = self.params['sldSubstrate'].value
     sldShell = self.params['sldShell'].value
     sldCore = self.params['sldCore'].value
+    sldSpacer = self.params['sldSpacer'].value
     coverage = self.params['coverage'].value
     roughSub = self.params['roughnessSubstrate'].value
-    roughLayer = roughSub + self.params["roughnessPlus1"].value
+    roughLayer1 = roughSub + self.params["roughnessPlus1"].value
+    roughLayer2 = roughLayer1 + self.params["roughnessPlus2"].value
+    spacerThickness = self.params['spacerThickness'].value
 
     sld = np.array([
       sldSub,
-      pDens * sldShell,
-      pDens * sldCore,
-      pDens * sldShell,
+      pDens1 * sldShell,
+      pDens1 * sldCore,
+      pDens1 * sldShell,
+      sldSpacer,
+      pDens2 * sldShell,
+      pDens2 * sldCore,
+      pDens2 * sldShell,
       0,
     ])
 
@@ -50,17 +62,31 @@ class CubeCSStacked(ReflectometryModel):
       d,
       a,
       d,
+      spacerThickness,
+      d,
+      a,
+      d,
       2*a
     ]
 
     roughness = [
       roughSub,
-      roughLayer,
-      roughLayer,
-      roughLayer,
-      roughLayer
+      roughLayer1,
+      roughLayer1,
+      roughLayer1,
+      roughLayer1,
+      roughLayer2,
+      roughLayer2,
+      roughLayer2,
+      roughLayer2
     ]
-    z = -thickness[0] + np.sum(thickness)
+
+    IparticleLayer = algorithms.parrat(
+      self.q,
+      sld,
+      roughness,
+      thickness
+    )
 
     Isubstrate = algorithms.parrat(
       self.q,
@@ -68,41 +94,50 @@ class CubeCSStacked(ReflectometryModel):
       [roughSub, roughSub],
       [2*a, 2*a]
     )
-    IparticleLayer = algorithms.parrat(
-      self.q,
-      sld,
-      roughness,
-      thickness)
+    z = -thickness[0] + np.sum(thickness)
 
     self.z = np.linspace(-thickness[0], z, 300)
     self.I = self.params["i0"] * (
-      coverage * IparticleLayer + (1 - coverage) * Isubstrate
+      self.params['coverage'] * IparticleLayer + (1-self.params['coverage']) * Isubstrate
     )  + self.params["bg"]
     self.sld = algorithms.roughsld_thick_layers(self.z, sld, roughness, thickness).real
 
   def calcMagneticModel(self):
     a = self.params['a'].value
     d = self.params['d'].value
-    pDens = self.params["packingDensity"].value
+    pDens1 = self.params["packingDensity1"].value
+    pDens2 = self.params["packingDensity2"].value
     sldSub = self.params['sldSubstrate'].value
     sldShell = self.params['sldShell'].value
     sldCore = self.params['sldCore'].value
+    sldSpacer = self.params['sldSpacer'].value
+    magSldCore = self.params['magSldCore'].value
     coverage = self.params['coverage'].value
     roughSub = self.params['roughnessSubstrate'].value
-    roughLayer = roughSub + self.params["roughnessPlus1"].value
+    roughLayer1 = roughSub + self.params["roughnessPlus1"].value
+    roughLayer2 = roughLayer1 + self.params["roughnessPlus2"].value
+    spacerThickness = self.params['spacerThickness'].value
 
     sld = np.array([
       sldSub,
-      pDens * sldShell,
-      pDens * sldCore,
-      pDens * sldShell,
+      pDens1 * sldShell,
+      pDens1 * sldCore,
+      pDens1 * sldShell,
+      sldSpacer,
+      pDens2 * sldShell,
+      pDens2 * sldCore,
+      pDens2 * sldShell,
       0,
     ])
 
     sldMag = np.array([
       0,
       0,
-      pDens * self.params['magSldCore'].value,
+      pDens1 * magSldCore,
+      0,
+      0,
+      0,
+      pDens2 * magSldCore,
       0,
       0,
     ])
@@ -112,17 +147,31 @@ class CubeCSStacked(ReflectometryModel):
       d,
       a,
       d,
+      spacerThickness,
+      d,
+      a,
+      d,
       2*a
     ]
 
     roughness = [
       roughSub,
-      roughLayer,
-      roughLayer,
-      roughLayer,
-      roughLayer
+      roughLayer1,
+      roughLayer1,
+      roughLayer1,
+      roughLayer1,
+      roughLayer2,
+      roughLayer2,
+      roughLayer2,
+      roughLayer2
     ]
-    z = -thickness[0] + np.sum(thickness)
+
+    IparticleLayer = algorithms.parrat(
+      self.q,
+      sld + self.params['polarization']*sldMag,
+      roughness,
+      thickness
+    )
 
     Isubstrate = algorithms.parrat(
       self.q,
@@ -130,15 +179,12 @@ class CubeCSStacked(ReflectometryModel):
       [roughSub, roughSub],
       [2*a, 2*a]
     )
-    IparticleLayer = algorithms.parrat(
-      self.q,
-      sld + self.params['polarization']*sldMag,
-      roughness,
-      thickness)
+    z = -thickness[0] + np.sum(thickness)
 
     self.z = np.linspace(-thickness[0], z, 300)
     self.I = self.params["i0"] * (
-      coverage * IparticleLayer + (1 - coverage) * Isubstrate
+      self.params['coverage'] * IparticleLayer + (1-self.params['coverage']) * Isubstrate
     )  + self.params["bg"]
     self.sld = algorithms.roughsld_thick_layers(self.z, sld, roughness, thickness).real
+
     self.sldMag = algorithms.roughsld_thick_layers(self.z, sldMag, roughness, thickness).real

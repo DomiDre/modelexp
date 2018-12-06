@@ -40,6 +40,14 @@ class DataContainer():
     self.datasets.append(newData)
     self.dataWeights.append(weight)
 
+  def addDataset(self, dataset, suffix=None, weight=1):
+    if suffix is None:
+      suffix = f'{self.nDatasets}'
+    dataset.suffix = suffix
+    self.nDatasets += 1
+    self.datasets.append(dataset)
+    self.dataWeights.append(weight)
+
   def plotData(self):
     for i in range(self.nDatasets):
       self.getDataset(i).plotData(self.ax)
@@ -51,3 +59,24 @@ class DataContainer():
   def sliceDomain(self, minX=-np.inf, maxX=np.inf):
     for i in range(self.nDatasets):
       self.getDataset(i).sliceDomain(minX, maxX)
+
+  def onlyPositiveValues(self):
+    for i in range(self.nDatasets):
+      self.getDataset(i).onlyPositiveValues()
+
+  def rescaleDomain(self, rescaleFactor):
+    for i in range(self.nDatasets):
+      self.getDataset(i).rescaleDomain(rescaleFactor)
+
+  def transformDomain(self, transformFunction):
+    """Transform function should take as input domain values and give back the new domain
+    Parameters
+    ----------
+    transformFunction : function
+    """
+    for i in range(self.nDatasets):
+      self.getDataset(i).transformDomain(transformFunction)
+
+  def rescaleData(self, rescaleFactor):
+    for i in range(self.nDatasets):
+      self.getDataset(i).rescaleData(rescaleFactor)

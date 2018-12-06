@@ -126,7 +126,7 @@ class ModelContainer():
         return model
     return None
 
-  def setParam(self, paramName, paramVal, minVal=-np.inf, maxVal=np.inf, vary=True):
+  def setParam(self, paramName, paramVal, minVal=-np.inf, maxVal=np.inf, vary=True, min=None, max=None):
     assert paramName in self.params, (
       'Tried to add a parameter that is not defined in the model. '+
       'Please define a new extended model if you wish to add parameters. Check parameter: ' + paramName
@@ -134,6 +134,10 @@ class ModelContainer():
     self.params[paramName].value = paramVal
     self.params[paramName].min = minVal
     self.params[paramName].max = maxVal
+    if min is not None:
+      self.params[paramName].min = min
+    if max is not None:
+      self.params[paramName].max = max
     self.params[paramName].vary = vary
     if (hasattr(self, 'ptrGui')):
       self.ptrGui.updateSlider(paramName)

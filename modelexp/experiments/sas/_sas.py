@@ -24,21 +24,31 @@ class Sas(Experiment):
 
     self.ptrGui.plotWidget.draw_idle()# .tight_layout()
 
+  def residuum_function(self, I_data, I_error, I_model):
+    return (np.log(I_data) - np.log(I_model)) * I_data / I_error
+
   def residuum(self, p):
     self.model.params = p
 
     self.ptrFit.iteration += 1
     self.model.updateModel()
+
     resi = []
     for i in range(self.model.nModelsets):
       data = self.data.getDataset(i)
       weight = self.data.dataWeights[i]
       model = self.model.getModelset(i)
 
+      q_data = data.getDomain()
       I_data = data.getValues()
       I_error = data.getErrors()
       I_model = model.getValues()
-      addResi = np.sqrt(weight) * (np.log(I_data) - np.log(I_model)) * I_data / I_error
+      if self.fit_range is not None:
+        fit_range = np.logical_and(q_data > self.fit_range[0], q_data < self.fit_range[1])
+        I_data = I_data[fit_range]
+        I_error = I_error[fit_range]
+        I_model = I_model[fit_range]
+      addResi = np.sqrt(weight) * self.residuum_function(I_data, I_error, I_model)
       resi = np.concatenate([resi, addResi])
     if self.ptrFit.printIteration is not None:
       if self.ptrFit.iteration % self.ptrFit.printIteration == 0:
@@ -136,9 +146,13 @@ class Sas(Experiment):
           pkg_resources.require('modelexp')[0].version + '\n'
         )
         sldFile.write(f'#Generated at {datetime.datetime.now()}\n')
+        if self.fit_range is not None:
+          sldFile.write(f'#Fit range: {self.fit_range[0]} .. {self.fit_range[1]}\n')
         self.saveSldToFile(sldFile)
 
     if hasattr(self, 'data') and hasattr(self, 'model'):
+      if self.fit_range is not None:
+        f.write(f'#Fit range: {self.fit_range[0]} .. {self.fit_range[1]}\n')
       for i in range(self.model.nModelsets):
         data = self.data.getDataset(i)
         model = self.model.getModelset(i)

@@ -22,9 +22,10 @@ class SuperballCS(SAXSModel):
 
   def initMagneticParameters(self):
     self.params.add('magSldCore', 5e-6, min=0)
-    self.params.add('magSldShell', 0, min=0)
+    self.params.add('magSldShell', 0, min=0, vary=False)
     self.params.add('magSldSolvent', 0, vary=False)
 
+    self.addConstantParam('magSldShell')
     self.addConstantParam('magSldSolvent')
 
   def calcModel(self):

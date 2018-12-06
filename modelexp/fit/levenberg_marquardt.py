@@ -3,6 +3,11 @@ import lmfit, datetime, pkg_resources
 
 class LevenbergMarquardt(Fit):
   def fit(self):
+    # add params before starting to fit
+    self.fit_param_history.append(self.ptrModel.params)
+    if len(self.fit_param_history) > 50:
+      self.fit_param_history.pop(0)
+
     self.startedFit = datetime.datetime.now()
     self.fit_result = lmfit.minimize(
       self.ptrExperiment.residuum, self.ptrModel.params, method='leastsq'
@@ -12,6 +17,12 @@ class LevenbergMarquardt(Fit):
 
     # Update the parameters of model
     self.ptrModel.params = self.fit_result.params
+
+    # add new params
+    self.fit_param_history.append(self.fit_result.params)
+    if len(self.fit_param_history) > 50:
+      self.fit_param_history.pop(0)
+    self.fit_history_idx = len(self.fit_param_history)-1
     return self.fit_result
 
   def exportResult(self, filename):

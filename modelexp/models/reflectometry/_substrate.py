@@ -21,7 +21,7 @@ class Substrate(ReflectometryModel):
       0
     ]
     thickness = [
-      10,
+      10+ 2.5*self.params["roughness"].value,
       0
     ]
     roughness = [
@@ -35,7 +35,7 @@ class Substrate(ReflectometryModel):
       thickness
     )
 
-    self.z = np.linspace(-10, (10+ 2.5*self.params["roughness"].value), 100)
+    self.z = np.linspace(-10- 2.5*self.params["roughness"].value, (10+ 2.5*self.params["roughness"].value), 100)
     self.I = self.params["i0"] * Ilayer + self.params["bg"]
     self.sld = algorithms.roughsld_thick_layers(self.z, sld, roughness, thickness).real
 

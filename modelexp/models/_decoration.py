@@ -18,6 +18,9 @@ class Decoration(metaclass=ABCMeta):
   def getDomain(self):
     return self.ptrModel.getDomain()
 
+  def setDomain(self, x):
+    self.ptrModel.setDomain(x)
+
   def getValues(self):
     return self.ptrModel.getValues()
 

@@ -9,8 +9,8 @@ class OneLayer(ReflectometryModel):
   def initParameters(self):
     self.params.add("i0", 1, min = 0, max = 2, vary = False)
     self.params.add("bg", 2.1e-06, min = 0.0, max = 0.0001, vary = False)
-    self.params.add("roughness", 11.84, min = 0.0, max = 20, vary = True)
     self.params.add("roughnessSubstrate", 11.84, min = 0.0, max = 20, vary = True)
+    self.params.add("roughnessLayer", 11.84, min = 0.0, max = 20, vary = True)
     self.params.add('sldSubstrate', 2e-6, min= 0, max = 40e-6, vary=False)
     self.params.add('sldLayer', 8e-6, min= 0, max = 40e-6, vary=False)
     self.params.add('thickness', 50, min= 0, max = 200, vary=False)
@@ -26,16 +26,19 @@ class OneLayer(ReflectometryModel):
       self.params['sldLayer'].value,
       0
     ]
+
+    sub_thickness = 10+2.5*max(self.params["roughnessSubstrate"].value, self.params["roughnessLayer"].value)
     thickness = [
-      10,
+      sub_thickness,
       self.params['thickness'].value,
       0
     ]
     roughness = [
-      self.params["roughness"].value,
-      self.params["roughness"].value,
-      self.params["roughness"].value
+      self.params["roughnessSubstrate"].value,
+      self.params["roughnessLayer"].value,
+      0
     ]
+
     Ilayer = algorithms.parrat(
       self.q,
       sld,
@@ -45,12 +48,14 @@ class OneLayer(ReflectometryModel):
     Isubstrate = algorithms.parrat(
       self.q,
       [self.params['sldSubstrate'].value, 0],
-      [self.params['roughnessSubstrate'], self.params['roughnessSubstrate']],
+      [self.params['roughnessSubstrate'], 0],
       [0, 0]
     )
 
-    self.z = np.linspace(-10, self.params['thickness'].value*(1.1+ 2.5*
-      self.params["roughness"].value/self.params['thickness'].value), 100)
+    self.z = np.linspace(-sub_thickness,
+      (1.1*self.params['thickness'].value + sub_thickness),
+      100)
+
     self.I = self.params["i0"] * (
       self.params['coverage'] * Ilayer + (1-self.params['coverage']) * Isubstrate
     ) + self.params["bg"]

@@ -269,13 +269,23 @@ class Gui(qt5w.QMainWindow):
       sliderBar.setValue(sliderValue)
       self.checkboxes[parameter].setChecked(currentParam.vary)
 
+  def checkParamHistoryButtonState(self):
+    self.param_backward_button.setEnabled(self.ptrFit.fit_history_idx > 0)
+    self.param_forward_button.setEnabled(self.ptrFit.fit_history_idx < len(self.ptrFit.fit_param_history)-1)
+
   def setFitButtons(self):
     def addButton(buttonLabel, buttonTooltip, buttonFunction):
         newButton = qt5w.QPushButton(buttonLabel, self)
         newButton.setToolTip(buttonTooltip)
         newButton.clicked.connect(buttonFunction)
         return newButton
-    self.buttonLayout = qt5w.QHBoxLayout(self.buttonWidget)
+    self.buttonLayout = qt5w.QVBoxLayout(self.buttonWidget)
+    self.buttonRow1Widget = qt5w.QWidget(self.buttonWidget)
+    self.buttonLayout.addWidget(self.buttonRow1Widget)
+    self.buttonRow2Widget = qt5w.QWidget(self.buttonWidget)
+    self.buttonLayout.addWidget(self.buttonRow2Widget)
+    self.buttonLayout_Row1 = qt5w.QHBoxLayout(self.buttonRow1Widget)
+    self.buttonLayout_Row2 = qt5w.QHBoxLayout(self.buttonRow2Widget)
 
     def guiFit():
       self.updateParamsVaryFromCheckbox()
@@ -284,8 +294,9 @@ class Gui(qt5w.QMainWindow):
       self.updateSlidersValueFromParams()
       self.update()
       self.statusBar().showMessage("Finished fitting.")
+      self.checkParamHistoryButtonState()
 
-    self.buttonLayout.addWidget(
+    self.buttonLayout_Row1.addWidget(
       addButton(
         'Fit',
         'Fit parameters of the model to the data',
@@ -296,7 +307,7 @@ class Gui(qt5w.QMainWindow):
     def exportFit():
       self.ptrFit.exportResult('fit_result.dat')
       self.plotWidget.fig.savefig('fit_plot.png')
-    self.buttonLayout.addWidget(
+    self.buttonLayout_Row1.addWidget(
       addButton(
         'Export Fit Result',
         'Save fit result of model & data to file',
@@ -307,10 +318,44 @@ class Gui(qt5w.QMainWindow):
     def updateParamsInFile():
       self.ptrModel.updateParamsToFile()
 
-    self.buttonLayout.addWidget(
+    self.buttonLayout_Row1.addWidget(
       addButton(
         'Update Parameters in File',
         'Set values in fit file to current parameter values',
         updateParamsInFile
       )
     )
+
+    def goBackParams():
+      if self.ptrFit.fit_history_idx > 0:
+        self.ptrFit.fit_history_idx -= 1
+        self.ptrModel.params = self.ptrFit.fit_param_history[self.ptrFit.fit_history_idx]
+        self.updateSlidersValueFromParams()
+        self.ptrModel.updateModel()
+        self.update()
+        self.checkParamHistoryButtonState()
+
+    self.param_backward_button = addButton(
+      '<-',
+      'Step backward in parameter history',
+      goBackParams
+    )
+    self.param_backward_button.setEnabled(False)
+    self.buttonLayout_Row2.addWidget(self.param_backward_button)
+
+    def goForthParams():
+      if self.ptrFit.fit_history_idx < len(self.ptrFit.fit_param_history)-1:
+        self.ptrFit.fit_history_idx += 1
+        self.ptrModel.params = self.ptrFit.fit_param_history[self.ptrFit.fit_history_idx]
+        self.updateSlidersValueFromParams()
+        self.ptrModel.updateModel()
+        self.update()
+        self.checkParamHistoryButtonState()
+
+    self.param_forward_button = addButton(
+      '->',
+      'Step forward in parameter history',
+      goForthParams
+    )
+    self.param_forward_button.setEnabled(False)
+    self.buttonLayout_Row2.addWidget(self.param_forward_button)
