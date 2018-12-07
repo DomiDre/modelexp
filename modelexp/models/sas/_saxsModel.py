@@ -11,6 +11,7 @@ class SAXSModel(Model):
   def __init__(self):
     self.q = None
     self.I = None
+    self.dI = None
     self.r = None
     self.sld = None
     self.modelPlot = None
@@ -85,3 +86,9 @@ class SAXSModel(Model):
     '''
     self.calcDecoratedModel()
     self.plotModel()
+
+  def setResolution(self, dI):
+    self.dI = dI
+
+  def getResolution(self):
+    return self.dI

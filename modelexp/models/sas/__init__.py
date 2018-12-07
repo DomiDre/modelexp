@@ -31,4 +31,5 @@ from._ellipsoid import Ellipsoid
 
 # decorating functions
 from ._instrumentalResolution import InstrumentalResolution
+from ._dataResolution import DataResolution
 from ._magnetic import Magnetic
