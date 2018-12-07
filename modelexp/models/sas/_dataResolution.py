@@ -1,7 +1,7 @@
 from .._decoration import Decoration
 
 import numpy as np
-from fortRefl import math
+from fortSAS import math
 
 class DataResolution(Decoration):
   """Decorator class that takes the output of a model class and adds parameters
