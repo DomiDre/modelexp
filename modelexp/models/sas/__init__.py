@@ -25,6 +25,7 @@ from ._superballCS import SuperballCS
 from ._superballCSOA import SuperballCSOA
 from ._superballCSCoupled import SuperballCSCoupled
 from ._superballCSSCoupled import SuperballCSSCoupled
+from ._superballCSSCoupledOA import SuperballCSSCoupledOA
 
 from._ellipsoid import Ellipsoid
 
