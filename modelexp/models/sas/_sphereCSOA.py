@@ -16,6 +16,7 @@ class SphereCSOA(SAXSModel):
     self.params.add('i0', 1)
     self.params.add('bg', 1e-6)
     self.params.add('i0Oleic', 1)
+    self.params.add('rOleic', 20)
 
   def initMagneticParameters(self):
     self.params.add('dDead', 5, min=0)
@@ -40,7 +41,7 @@ class SphereCSOA(SAXSModel):
       self.params['sigD']
     ) + self.params['i0Oleic'] * sphere.formfactor(
       self.q,
-      self.params['d'],
+      self.params['rOleic'],
       self.params['sldOleic'],
       self.params['sldSolvent'],
       0
@@ -55,7 +56,7 @@ class SphereCSOA(SAXSModel):
     )
 
     r2, sld2 = sphere.sld(
-      self.params['d'],
+      self.params['rOleic'],
       self.params['sldOleic'],
       self.params['sldSolvent']
     )
@@ -80,9 +81,9 @@ class SphereCSOA(SAXSModel):
       self.params['xi'],
       self.params['sin2alpha'],
       self.params['polarization'],
-    ) + self.params['i0Oleic'] * sphere.formfactor(
+    ) + self.params['i0Oleic'] * sphere.magnetic_formfactor(
       self.q,
-      self.params['d'],
+      self.params['rOleic'],
       self.params['sldOleic'],
       self.params['sldSolvent'],
       0,
@@ -102,7 +103,7 @@ class SphereCSOA(SAXSModel):
     )
 
     r2, sld2 = sphere.sld(
-      self.params['d'],
+      self.params['rOleic'],
       self.params['sldOleic'],
       self.params['sldSolvent']
     )
@@ -121,7 +122,7 @@ class SphereCSOA(SAXSModel):
     )
 
     rMag2, sldMag2 = sphere.sld(
-      self.params['d'],
+      self.params['rOleic'],
       0,
       0
     )

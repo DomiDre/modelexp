@@ -1,10 +1,11 @@
 from modelexp.models.sas import SAXSModel
 from fortSAS import superball_cs, sphere
 
+import numpy as np
 from numpy.polynomial.hermite import hermgauss
 from numpy.polynomial.legendre import leggauss
 
-class SuperballCS(SAXSModel):
+class SuperballCSOA(SAXSModel):
   def initParameters(self):
     self.params.add('r', 100)
     self.params.add('d', 20)
@@ -19,6 +20,8 @@ class SuperballCS(SAXSModel):
     self.params.add('orderLegendre', 20)
     self.addConstantParam('orderHermite')
     self.addConstantParam('orderLegendre')
+    self.params.add('i0Oleic', 1)
+    self.params.add('rOleic', 20)
 
   def initMagneticParameters(self):
     self.params.add('magSldCore', 5e-6, min=0)
@@ -42,15 +45,29 @@ class SuperballCS(SAXSModel):
       self.params['sldSolvent'],
       self.params['sigR'],
       self.x_herm, self.w_herm, self.x_leg, self.w_leg
+    ) + self.params['i0Oleic'] * sphere.formfactor(
+      self.q,
+      self.params['rOleic'],
+      self.params['sldShell'],
+      self.params['sldSolvent'],
+      0
     ) + self.params['bg']
 
-    self.r, self.sld = superball_cs.sld(
+    r1, sld1 = superball_cs.sld(
       self.params['r'],
       self.params['d'],
       self.params['sldCore'],
       self.params['sldShell'],
       self.params['sldSolvent']
     )
+    r2, sld2 = sphere.sld(
+      self.params['rOleic'],
+      self.params['sldShell'],
+      self.params['sldSolvent']
+    )
+    self.r = np.concatenate([r1, r1[::-1], r2])
+    self.sld = np.concatenate([sld1, sld1[::-1], sld2])
+
 
   def calcMagneticModel(self):
     self.x_herm, self.w_herm = hermgauss(int(self.params['orderHermite']))
@@ -72,9 +89,15 @@ class SuperballCS(SAXSModel):
       self.params['sin2alpha'],
       self.params['polarization'],
       self.x_herm, self.w_herm, self.x_leg, self.w_leg
+    ) + self.params['i0Oleic'] * sphere.formfactor(
+      self.q,
+      self.params['rOleic'],
+      self.params['sldShell'],
+      self.params['sldSolvent'],
+      0
     ) + self.params['bg']
 
-    self.r, self.sld = superball_cs.sld(
+    r1, sld1 = superball_cs.sld(
       self.params['r'],
       self.params['d'],
       self.params['sldCore'],
@@ -82,10 +105,26 @@ class SuperballCS(SAXSModel):
       self.params['sldSolvent']
     )
 
-    self.rMag, self.sldMag = superball_cs.sld(
+    r2, sld2 = sphere.sld(
+      self.params['rOleic'],
+      self.params['sldShell'],
+      self.params['sldSolvent']
+    )
+    self.r = np.concatenate([r1, r1[::-1], r2])
+    self.sld = np.concatenate([sld1, sld1[::-1], sld2])
+
+    rMag1, sldMag1 = superball_cs.sld(
       self.params['r'],
       self.params['d'],
       self.params['magSldCore'],
       self.params['magSldShell'],
       self.params['magSldSolvent'],
     )
+
+    rMag2, sldMag2 = sphere.sld(
+      self.params['rOleic'],
+      0,
+      0
+    )
+    self.rMag = np.concatenate([rMag1, rMag1[::-1], rMag2])
+    self.sldMag = np.concatenate([sldMag1, sldMag1[::-1], sldMag2])

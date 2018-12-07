@@ -22,6 +22,7 @@ from ._cubeCSCoupled import CubeCSCoupled
 
 from ._superball import Superball
 from ._superballCS import SuperballCS
+from ._superballCSOA import SuperballCSOA
 from ._superballCSCoupled import SuperballCSCoupled
 from ._superballCSSCoupled import SuperballCSSCoupled
 
