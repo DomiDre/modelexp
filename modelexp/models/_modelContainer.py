@@ -273,8 +273,13 @@ class ModelContainer():
       model = self.getModelset(i)
       getattr(model, functionName)(*param)
 
-  def setResolution(self):
+  def setResolution(self, suffices=None):
     for i in range(self.nModelsets):
       data = self.ptrExperiment.data.getDataset(i)
       model = self.ptrExperiment.model.getModelset(i)
-      model.setResolution(data.getResolution())
+      if suffices is None:
+        model.setResolution(data.getResolution())
+      else:
+        for suffix in suffices:
+          if suffix in model.suffix:
+            model.setResolution(data.getResolution())
