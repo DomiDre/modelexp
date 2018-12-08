@@ -52,7 +52,7 @@ class SuperballCSSCoupledOA(SAXSModel):
     ) + self.params['i0Oleic'] * sphere.formfactor(
       self.q,
       self.params['rOleic'],
-      self.params['sldShell'],
+      self.params['sldSurfactant'],
       self.params['sldSolvent'],
       0
     ) + self.params['bg']
@@ -69,7 +69,7 @@ class SuperballCSSCoupledOA(SAXSModel):
 
     r2, sld2 = sphere.sld(
       self.params['rOleic'],
-      self.params['sldShell'],
+      self.params['sldSurfactant'],
       self.params['sldSolvent']
     )
     self.r = np.concatenate([r1, r1[::-1], r2])
@@ -101,7 +101,7 @@ class SuperballCSSCoupledOA(SAXSModel):
     ) + self.params['i0Oleic'] * sphere.formfactor(
       self.q,
       self.params['rOleic'],
-      self.params['sldShell'],
+      self.params['sldSurfactant'],
       self.params['sldSolvent'],
       0
     ) + self.params['bg']
@@ -118,7 +118,7 @@ class SuperballCSSCoupledOA(SAXSModel):
 
     r2, sld2 = sphere.sld(
       self.params['rOleic'],
-      self.params['sldShell'],
+      self.params['sldSurfactant'],
       self.params['sldSolvent']
     )
     self.r = np.concatenate([r1, r1[::-1], r2])
