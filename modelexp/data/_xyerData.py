@@ -76,3 +76,10 @@ class XyerData(Data):
     sy = sy[sortedArgs]
     dy = dy[sortedArgs]
     self.setData(x, y, sy, dy)
+
+  def reducePointDensity(self, takeEveryNthPoint):
+    self.x = self.x[::takeEveryNthPoint]
+    self.y = self.y[::takeEveryNthPoint]
+    self.sy = self.sy[::takeEveryNthPoint]
+    self.dy = self.dy[::takeEveryNthPoint]
+    

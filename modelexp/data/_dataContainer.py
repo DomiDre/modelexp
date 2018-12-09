@@ -60,6 +60,10 @@ class DataContainer():
     for i in range(self.nDatasets):
       self.getDataset(i).sliceDomain(minX, maxX)
 
+  def reducePointDensity(self, takeEveryNthPoint):
+    for i in range(self.nDatasets):
+      self.getDataset(i).reducePointDensity(takeEveryNthPoint)
+
   def onlyPositiveValues(self):
     for i in range(self.nDatasets):
       self.getDataset(i).onlyPositiveValues()
