@@ -8,7 +8,7 @@ class SAXSModel(Model):
   Model : Model
     Base Abstract class
   """
-  def __init__(self):
+  def __init__(self, parent):
     self.q = None
     self.I = None
     self.dI = None
@@ -17,7 +17,7 @@ class SAXSModel(Model):
     self.modelPlot = None
     self.sldPlot = None
 
-    super().__init__()
+    super().__init__(parent)
 
   def connectGui(self, gui):
     self.ptrGui = gui

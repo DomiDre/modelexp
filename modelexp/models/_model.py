@@ -6,11 +6,12 @@ class Model(metaclass=ABCMeta):
   """Abstract class to describe a model.
   Specific models are defined by classes that have to implemented the defined functions here.
   """
-  def __init__(self):
+  def __init__(self, parent=None):
     self.params = Parameters()
     self.decoration = Decoration
     self.suffix = ''
     self.constantParameters = [] # parameters that dont have a slider Bar
+    self.ptrModelContainer = parent
 
   # def _setDecoration(self, decoratingClass):
   #   self.decoration = decoratingClass(self)

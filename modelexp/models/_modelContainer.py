@@ -40,7 +40,7 @@ class ModelContainer():
           self.addModel(data.getDomain(), data.suffix)
 
   def addModel(self, domain, suffix=''):
-    newModel = self.modelClass()
+    newModel = self.modelClass(self)
     newModel.defineDomain(domain)
     newModel.initParameters()
     if (self.decoration is not None):
