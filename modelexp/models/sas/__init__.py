@@ -6,6 +6,7 @@ from ._sphereCSS import SphereCSS
 from ._sphereCSSDead import SphereCSSDead
 from ._sphereCSCoupled import SphereCSCoupled
 from ._sphereCSSCoupled import SphereCSSCoupled
+from ._sphereCSSCoupledOA import SphereCSSCoupledOA
 from ._sphereCSSCoupledDead import SphereCSSCoupledDead
 from ._sphereLinHullS import SphereLinHullS
 from ._sphereCSBimodal import SphereCSBimodal

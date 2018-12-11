@@ -1,74 +1,67 @@
 from modelexp.models.sas import SAXSModel
-from fortSAS import superball_css_coupled2
+from fortSAS import sphere_css_coupled, sphere
 
-from numpy.polynomial.hermite import hermgauss
-from numpy.polynomial.legendre import leggauss
-
-class SuperballCSSCoupledSigD(SAXSModel):
+class SphereCSSCoupledOA(SAXSModel):
   def initParameters(self):
     self.params.add('particleSize', 100)
-    self.params.add('dShell', 20)
+    self.params.add('dShell', 30)
     self.params.add('dSurfactant', 20)
-    self.params.add('pVal', 2.3)
     self.params.add('sldCore', 40e-6)
-    self.params.add('sldShell', 8e-6)
-    self.params.add('sldSurfactant', 8e-6)
+    self.params.add('sldShell', 30e-6)
+    self.params.add('sldSurfactant', 40e-6)
     self.params.add('sldSolvent', 10e-6)
-    self.params.add('sigParticleSize', 0.)
-    self.params.add('sigD', 0.)
+    self.params.add('sigParticleSize', 0.05)
+    self.params.add('sigD', 0)
     self.params.add('i0', 1)
     self.params.add('bg', 1e-6)
-    self.params.add('orderHermite', 20)
-    self.params.add('orderLegendre', 20)
-    self.addConstantParam('orderHermite')
-    self.addConstantParam('orderLegendre')
+    self.params.add('rOleic', 21)
+    self.params.add('i0Oleic', 1)
 
   def initMagneticParameters(self):
-    self.params.add('magSldCore', 5e-6, min=0)
-    self.params.add('magSldShell', 0, min=0, vary=False)
-    self.params.add('magSldSurfactant', 0, min=0, vary=False)
+    self.params.add('magSldCore', 1e-6)
+    self.params.add('magSldShell', 2e-6)
+    self.params.add('magSldSurfactant', 0, vary=False)
     self.params.add('magSldSolvent', 0, vary=False)
 
     self.addConstantParam('magSldSurfactant')
     self.addConstantParam('magSldSolvent')
 
   def calcModel(self):
-    self.x_herm, self.w_herm = hermgauss(int(self.params['orderHermite']))
-    self.x_leg, self.w_leg = leggauss(int(self.params['orderLegendre']))
-    self.I = self.params['i0'] * superball_css_coupled2.formfactor(
+    self.I = self.params['i0'] * sphere_css_coupled.formfactor(
       self.q,
       self.params['particleSize'],
       self.params['dShell'],
       self.params['dSurfactant'],
-      self.params['pVal'],
+      self.params['sldCore'],
+      self.params['sldShell'],
+      self.params['sldSurfactant'],
+      self.params['sldSolvent'],
+      self.params['sigParticleSize'],
+      self.params['sigD']
+    ) + self.params['i0Oleic'] * sphere.formfactor(
+      self.q,
+      self.params['rOleic'],
+      self.params['sldSurfactant'],
+      self.params['sldSolvent'],
+      0.
+    ) + self.params['bg']
+
+    self.r, self.sld = sphere_css_coupled.sld(
+      self.params['particleSize'],
+      self.params['dShell'],
+      self.params['dSurfactant'],
       self.params['sldCore'],
       self.params['sldShell'],
       self.params['sldSurfactant'],
       self.params['sldSolvent'],
-      self.params['sigParticleSize'],
-      self.params['sigD'],
-      self.x_herm, self.w_herm, self.x_leg, self.w_leg
-    ) + self.params['bg']
-
-    self.r, self.sld = superball_css_coupled2.sld(
-      self.params['particleSize'],
-      self.params['dShell'],
-      self.params['dSurfactant'],
-      self.params['sldCore'],
-      self.params['sldShell'],
-      self.params['sldSurfactant'],
-      self.params['sldSolvent']
     )
 
   def calcMagneticModel(self):
-    self.x_herm, self.w_herm = hermgauss(int(self.params['orderHermite']))
-    self.x_leg, self.w_leg = leggauss(int(self.params['orderLegendre']))
-    self.I = self.params['i0'] * superball_css_coupled2.magnetic_formfactor(
+    self.I = self.params['i0'] * sphere_css_coupled.magnetic_formfactor(
       self.q,
       self.params['particleSize'],
       self.params['dShell'],
       self.params['dSurfactant'],
-      self.params['pVal'],
       self.params['sldCore'],
       self.params['sldShell'],
       self.params['sldSurfactant'],
@@ -81,21 +74,26 @@ class SuperballCSSCoupledSigD(SAXSModel):
       self.params['magSldSolvent'],
       self.params['xi'],
       self.params['sin2alpha'],
-      self.params['polarization'],
-      self.x_herm, self.w_herm, self.x_leg, self.w_leg
+      self.params['polarization']
+    ) + self.params['i0Oleic'] * sphere.formfactor(
+      self.q,
+      self.params['rOleic'],
+      self.params['sldSurfactant'],
+      self.params['sldSolvent'],
+      0.
     ) + self.params['bg']
 
-    self.r, self.sld = superball_css_coupled2.sld(
+    self.r, self.sld = sphere_css_coupled.sld(
       self.params['particleSize'],
       self.params['dShell'],
       self.params['dSurfactant'],
       self.params['sldCore'],
       self.params['sldShell'],
       self.params['sldSurfactant'],
-      self.params['sldSolvent']
+      self.params['sldSolvent'],
     )
 
-    self.rMag, self.sldMag = superball_css_coupled2.sld(
+    self.rMag, self.sldMag = sphere_css_coupled.sld(
       self.params['particleSize'],
       self.params['dShell'],
       self.params['dSurfactant'],
