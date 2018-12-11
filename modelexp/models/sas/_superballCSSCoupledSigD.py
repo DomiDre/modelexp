@@ -1,5 +1,5 @@
 from modelexp.models.sas import SAXSModel
-from fortSAS import superball_css_coupled
+from fortSAS import superball_css_coupled2
 
 from numpy.polynomial.hermite import hermgauss
 from numpy.polynomial.legendre import leggauss
@@ -35,7 +35,7 @@ class SuperballCSSCoupledSigD(SAXSModel):
   def calcModel(self):
     self.x_herm, self.w_herm = hermgauss(int(self.params['orderHermite']))
     self.x_leg, self.w_leg = leggauss(int(self.params['orderLegendre']))
-    self.I = self.params['i0'] * superball_css_coupled.formfactor(
+    self.I = self.params['i0'] * superball_css_coupled2.formfactor(
       self.q,
       self.params['particleSize'],
       self.params['dShell'],
