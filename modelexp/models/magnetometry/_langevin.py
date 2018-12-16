@@ -5,8 +5,8 @@ class Langevin(MagnetizationModel):
   '''
   Model to describe a linear function
   '''
-  def __init__(self):
-    super().__init__()
+  def __init__(self, parent):
+    super().__init__(parent)
     self.kB = 1.3806485e-23 # J/K
     self.muB = 9.274009994e-24 # J/T
 

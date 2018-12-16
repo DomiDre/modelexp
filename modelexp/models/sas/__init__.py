@@ -11,8 +11,11 @@ from ._sphereCSSCoupledDead import SphereCSSCoupledDead
 from ._sphereLinHullS import SphereLinHullS
 from ._sphereCSBimodal import SphereCSBimodal
 
+from ._sphereCSSCoupledHardSphereStructure import SphereCSSCoupledHSStructure
 from ._sphereCSOA import SphereCSOA
 from ._sphereCSBimodalOA import SphereCSBimodalOA
+from ._sphereCSSCoupledBimodal import SphereCSSCoupledBimodal
+from ._sphereCSSCoupledBimodalHardSphereStructure import SphereCSSCoupledBimodalHSStructure
 from ._sphereCISS import SphereCISS
 
 from ._twoSphereCS import TwoSphereCS
