@@ -7,6 +7,7 @@ class Vsm(Experiment):
     self.ptrGui = gui
     self.fig = self.ptrGui.plotWidget.getFig()
     self.ax = self.ptrGui.plotWidget.getAllAx()
+    self.residuumFormula = self.chi2_residuum
 
   def setAxProps(self):
     self.ax.set_xlabel(r'$\mu_0 \mathit{H} \, / \, T$')
@@ -24,7 +25,7 @@ class Vsm(Experiment):
       M_data = data.getValues()
       M_error = data.getErrors()
       M_model = model.getValues()
-      addResi = (M_data - M_model) / M_error
+      addResi = self.residuumFormula(None, M_data, M_error, M_model)
       resi = np.concatenate([resi, addResi])
     return resi
 

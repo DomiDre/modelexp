@@ -8,6 +8,7 @@ class Reflectometry(Experiment):
   def __init__(self):
     super().__init__()
     self.plotWidgetClass = PlotWidgetInset
+    self.residuumFormula = self.log_residuum
 
   def connectGui(self, gui):
     self.ptrGui = gui
@@ -24,9 +25,6 @@ class Reflectometry(Experiment):
 
     self.ptrGui.plotWidget.draw_idle()# .tight_layout()
 
-  def residuumFormula(self, q, I, sI, Imodel):
-    return (np.log(I) - np.log(Imodel)) * I / sI
-
   def residuum(self, p):
     self.model.params = p
 
@@ -42,6 +40,12 @@ class Reflectometry(Experiment):
       I_data = data.getValues()
       I_error = data.getErrors()
       I_model = model.getValues()
+      if self.fit_range is not None:
+        fit_range = np.logical_and(q_data > self.fit_range[0], q_data < self.fit_range[1])
+        q_data = q_data[fit_range]
+        I_data = I_data[fit_range]
+        I_error = I_error[fit_range]
+        I_model = I_model[fit_range]
       addResi = np.sqrt(weight) * self.residuumFormula(q_data, I_data, I_error, I_model)
       resi = np.concatenate([resi, addResi])
     if self.ptrFit.printIteration is not None:
