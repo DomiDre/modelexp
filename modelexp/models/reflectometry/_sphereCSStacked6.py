@@ -25,7 +25,6 @@ class SphereCSStacked6(ReflectometryModel):
     self.params.add("layerDistance6", 0, min = -30, max = 30, vary = True)
     self.params.add("r", 50, min = 0, max = 100, vary = True)
     self.params.add("d", 20, min = 0, max = 40, vary = True)
-    self.params.add("sigR", 0, min = 0, max = 0.20, vary = True)
     self.params.add('sldCore', 8e-6, min= 0, max = 40e-6, vary=False)
     self.params.add('sldShell', 10e-7, min= 0, max = 40e-6, vary=False)
     self.params.add('sldSubstrate', 2e-6, min= 0, max = 40e-6, vary=False)
@@ -56,7 +55,7 @@ class SphereCSStacked6(ReflectometryModel):
 
       sld = nanospheres.sphere_cs_overlapping_stacked(
         self.z, sphere_shifts, packing_densities,
-        self.params['r'].value, self.params['sigR'].value, self.params['d'].value,
+        self.params['r'].value, self.params['d'].value,
         self.params['sldCore'].value, self.params['sldShell'].value, self.params['sldSubstrate'].value,
         self.params['sldBackground'].value)
       roughness = self.params["roughness"]*np.ones(len(sld))

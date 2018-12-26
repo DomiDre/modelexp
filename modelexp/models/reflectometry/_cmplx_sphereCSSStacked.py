@@ -2,7 +2,7 @@ from ._reflModel import ReflectometryModel
 from fortRefl import nanospheres, algorithms
 import numpy as np
 
-class SphereCSSStacked(ReflectometryModel):
+class CmplxSphereCSSStacked(ReflectometryModel):
   '''
   Model to describe the formfactor of a sphere
   '''
@@ -18,12 +18,18 @@ class SphereCSSStacked(ReflectometryModel):
     self.params.add("dSurfactant", 20, min = 0, max = 40, vary = True)
     self.params.add("dSpacer", 20, min = 0, max = 40, vary = True)
     self.params.add("nPeriods", 5, min= 1, max=10, vary=False)
-    self.params.add('sldCore', 8e-6, min= 0, max = 40e-6, vary=False)
-    self.params.add('sldShell', 10e-7, min= 0, max = 40e-6, vary=False)
-    self.params.add('sldSurfactant', 10e-7, min= 0, max = 40e-6, vary=False)
-    self.params.add('sldSpacer', 20e-7, min= 0, max = 40e-6, vary=False)
-    self.params.add('sldSubstrate', 2e-6, min= 0, max = 40e-6, vary=False)
-    self.params.add('sldBackground', 0e-6, min= 0, max = 40e-6, vary=False)
+    self.params.add('reSldCore', 8e-6, min= 0, max = 40e-6, vary=False)
+    self.params.add('reSldShell', 10e-7, min= 0, max = 40e-6, vary=False)
+    self.params.add('reSldSurfactant', 10e-7, min= 0, max = 40e-6, vary=False)
+    self.params.add('reSldSpacer', 20e-7, min= 0, max = 40e-6, vary=False)
+    self.params.add('reSldSubstrate', 2e-6, min= 0, max = 40e-6, vary=False)
+    self.params.add('reSldBackground', 0e-6, min= 0, max = 40e-6, vary=False)
+    self.params.add('imSldCore', 0, min= 0, max = 40e-6, vary=False)
+    self.params.add('imSldShell', 0, min= 0, max = 40e-6, vary=False)
+    self.params.add('imSldSurfactant', 0, min= 0, max = 40e-6, vary=False)
+    self.params.add('imSldSpacer', 0, min= 0, max = 40e-6, vary=False)
+    self.params.add('imSldSubstrate', 0, min= 0, max = 40e-6, vary=False)
+    self.params.add('imSldBackground', 0e-6, min= 0, max = 40e-6, vary=False)
 
     self.addConstantParam('sldBackground')
 
@@ -41,9 +47,12 @@ class SphereCSSStacked(ReflectometryModel):
         self.z, sphere_shifts, packing_densities,
         self.params['r'].value, self.params['dShell'].value,
         self.params['dSurfactant'].value, self.params['dSpacer'].value,
-        self.params['sldCore'].value, self.params['sldShell'].value,
-        self.params['sldSurfactant'].value, self.params['sldSubstrate'].value,
-        self.params['sldSpacer'].value, self.params['sldBackground'].value)
+        (self.params['reSldCore'].value       + 1j*self.params['imSldCore'].value),
+        (self.params['reSldShell'].value      + 1j*self.params['imSldShell'].value),
+        (self.params['reSldSurfactant'].value + 1j*self.params['imSldSurfactant'].value),
+        (self.params['reSldSubstrate'].value  + 1j*self.params['imSldSubstrate'].value),
+        (self.params['reSldSpacer'].value     + 1j*self.params['imSldSpacer'].value),
+        (self.params['reSldBackground'].value + 1j*self.params['imSldBackground'].value))
       roughness = self.params["roughness"].value + self.params['roughnessSlope'].value*self.z
       thickness = (self.z[1] - self.z[0])*np.ones(len(sld))
 

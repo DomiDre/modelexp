@@ -9,8 +9,13 @@ from ._sphereCSStacked5Spacer import SphereCSStacked5Spacer
 from ._sphereCSStacked6 import SphereCSStacked6
 from ._sphereCSStacked6Spacer import SphereCSStacked6Spacer
 from ._sphereCSStacked11Spacer import SphereCSStacked11Spacer
+from ._cmplx_sphereCSStacked import CmplxSphereCSStacked
+from ._cmplx_sphereCSStacked11Spacer import CmplxSphereCSStacked11Spacer
 
 from ._sphereCSSStacked import SphereCSSStacked
+from ._sphereCSSStacked6Spacer import SphereCSSStacked6Spacer
+from ._cmplx_sphereCSSStacked import CmplxSphereCSSStacked
+from ._cmplx_sphereCSSStacked6Spacer import CmplxSphereCSSStacked6Spacer
 
 from ._cubeCSStacked import CubeCSStacked
 from ._cubeCSDoubleLayer import CubeCSDoubleLayer
@@ -18,6 +23,8 @@ from ._oneLayer import OneLayer
 from ._substrate import Substrate
 from ._cubeCSMonolayer import CubeCSMonolayer
 from ._cubeCSMonolayerOnSpacer import CubeCSMonolayerOnSpacer
+
+from ._cmplx_cubeCSMonolayerOnSpacer import CmplxCubeCSMonolayerOnSpacer
 
 # decorating functions
 from ._instrumentalResolution import InstrumentalResolution

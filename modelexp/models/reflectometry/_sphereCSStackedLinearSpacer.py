@@ -18,7 +18,6 @@ class SphereCSStackedLinearSpacer(ReflectometryModel):
     self.params.add("r", 50, min = 0, max = 100, vary = True)
     self.params.add("d", 20, min = 0, max = 40, vary = True)
     self.params.add("dSpacer", 20, min = 0, max = 40, vary = True)
-    self.params.add("sigR", 0, min = 0, max = 0.20, vary = True)
     self.params.add("nPeriods", 5, min= 1, max=10, vary=False)
     self.params.add('sldCore', 8e-6, min= 0, max = 40e-6, vary=False)
     self.params.add('sldShell', 10e-7, min= 0, max = 40e-6, vary=False)
@@ -42,7 +41,7 @@ class SphereCSStackedLinearSpacer(ReflectometryModel):
         self.z,
         self.params['layerDistance'].value, self.params['layerDistanceSlope'].value,
         self.params['packingDensity'].value, self.params['packingDensitySlope'].value,
-        self.params['r'].value, self.params['sigR'].value, self.params['d'].value, self.params['dSpacer'].value,
+        self.params['r'].value, self.params['d'].value, self.params['dSpacer'].value,
         self.params['sldCore'].value, self.params['sldShell'].value, self.params['sldSubstrate'].value,
         self.params['sldSpacer'].value, self.params['sldBackground'].value, int(self.params['nPeriods'].value))
 

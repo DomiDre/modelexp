@@ -6,11 +6,14 @@ class SimultaneousXRNR(Reflectometry):
     self.nDatasets = 2
     self.datasetSpecificParams = {
       'dTheta': ['xrr', 'nr'],
+      'wavelength': ['xrr', 'nr'],
       'dWavelength': ['xrr', 'nr'],
+      'qShift': ['xrr', 'nr'],
       'i0': ['xrr', 'nr'],
       'bg': ['xrr', 'nr'],
       'sldCore': ['xrr', 'nr'],
       'sldShell': ['xrr', 'nr'],
+      'sldSurfactant': ['xrr', 'nr'],
       'sldSubstrate': ['xrr', 'nr'],
       'sldBackground': ['xrr', 'nr'],
       'sldSpacer': ['xrr', 'nr'],

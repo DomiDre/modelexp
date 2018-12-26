@@ -2,7 +2,7 @@ from ._reflModel import ReflectometryModel
 from fortRefl import nanospheres, algorithms
 import numpy as np
 
-class SphereCSStacked6Spacer(ReflectometryModel):
+class CmplxSphereCSSStacked6Spacer(ReflectometryModel):
   '''
   Model to describe the formfactor of a sphere
   '''
@@ -24,13 +24,23 @@ class SphereCSStacked6Spacer(ReflectometryModel):
     self.params.add("layerDistance5", 0, min = -30, max = 30, vary = True)
     self.params.add("layerDistance6", 0, min = -30, max = 30, vary = True)
     self.params.add("r", 50, min = 0, max = 100, vary = True)
-    self.params.add("d", 20, min = 0, max = 40, vary = True)
+    self.params.add("dShell", 20, min = 0, max = 40, vary = True)
+    self.params.add("dSurfactant", 20, min = 0, max = 40, vary = True)
     self.params.add("dSpacer", 20, min = 0, max = 40, vary = True)
-    self.params.add('sldCore', 8e-6, min= 0, max = 40e-6, vary=False)
-    self.params.add('sldShell', 10e-7, min= 0, max = 40e-6, vary=False)
-    self.params.add('sldSubstrate', 2e-6, min= 0, max = 40e-6, vary=False)
-    self.params.add('sldSpacer', 30e-7, min= 0, max = 40e-6, vary=False)
-    self.params.add('sldBackground', 0e-6, min= 0, max = 40e-6, vary=False)
+
+    self.params.add('reSldCore', 8e-6, min= 0, max = 40e-6, vary=False)
+    self.params.add('reSldShell', 10e-7, min= 0, max = 40e-6, vary=False)
+    self.params.add('reSldSurfactant', 10e-7, min= 0, max = 40e-6, vary=False)
+    self.params.add('reSldSpacer', 20e-7, min= 0, max = 40e-6, vary=False)
+    self.params.add('reSldSubstrate', 2e-6, min= 0, max = 40e-6, vary=False)
+    self.params.add('reSldBackground', 0e-6, min= 0, max = 40e-6, vary=False)
+    self.params.add('imSldCore', 0, min= 0, max = 40e-6, vary=False)
+    self.params.add('imSldShell', 0, min= 0, max = 40e-6, vary=False)
+    self.params.add('imSldSurfactant', 0, min= 0, max = 40e-6, vary=False)
+    self.params.add('imSldSpacer', 0, min= 0, max = 40e-6, vary=False)
+    self.params.add('imSldSubstrate', 0, min= 0, max = 40e-6, vary=False)
+    self.params.add('imSldBackground', 0e-6, min= 0, max = 40e-6, vary=False)
+
 
     self.addConstantParam('sldBackground')
 
@@ -55,11 +65,16 @@ class SphereCSStacked6Spacer(ReflectometryModel):
                            self.params["packingDensity5"].value,
                            self.params["packingDensity6"].value]
 
-      sld = nanospheres.sphere_cs_overlapping_stacked_with_spacer(
+      sld = nanospheres.sphere_css_overlapping_stacked_with_spacer(
         self.z, sphere_shifts, packing_densities,
-        self.params['r'].value, self.params['d'].value, self.params['dSpacer'].value,
-        self.params['sldCore'].value, self.params['sldShell'].value, self.params['sldSubstrate'].value,
-        self.params['sldSpacer'].value, self.params['sldBackground'].value)
+        self.params['r'].value, self.params['dShell'].value,
+        self.params['dSurfactant'].value, self.params['dSpacer'].value,
+        (self.params['reSldCore'].value       + 1j*self.params['imSldCore'].value),
+        (self.params['reSldShell'].value      + 1j*self.params['imSldShell'].value),
+        (self.params['reSldSurfactant'].value + 1j*self.params['imSldSurfactant'].value),
+        (self.params['reSldSubstrate'].value  + 1j*self.params['imSldSubstrate'].value),
+        (self.params['reSldSpacer'].value     + 1j*self.params['imSldSpacer'].value),
+        (self.params['reSldBackground'].value + 1j*self.params['imSldBackground'].value))
       # roughness = self.params["roughness"]*np.ones(len(sld))
       thickness = (self.z[1] - self.z[0])*np.ones(len(sld))
       roughness = self.params["roughness"].value + self.z * self.params["roughnessSlope"].value
@@ -82,18 +97,27 @@ class SphereCSStacked6Spacer(ReflectometryModel):
                            self.params["packingDensity5"].value,
                            self.params["packingDensity6"].value]
 
-      sld = nanospheres.sphere_cs_overlapping_stacked_with_spacer(
+      sld = nanospheres.sphere_css_overlapping_stacked_with_spacer(
         self.z, sphere_shifts, packing_densities,
-        self.params['r'].value, self.params['d'].value, self.params['dSpacer'].value,
-        self.params['sldCore'].value, self.params['sldShell'].value, self.params['sldSubstrate'].value,
-        self.params['sldSpacer'].value, self.params['sldBackground'].value)
-      sldMag = nanospheres.sphere_cs_overlapping_stacked_with_spacer(
+        self.params['r'].value, self.params['dShell'].value,
+        self.params['dSurfactant'].value, self.params['dSpacer'].value,
+        (self.params['reSldCore'].value       + 1j*self.params['imSldCore'].value),
+        (self.params['reSldShell'].value      + 1j*self.params['imSldShell'].value),
+        (self.params['reSldSurfactant'].value + 1j*self.params['imSldSurfactant'].value),
+        (self.params['reSldSubstrate'].value  + 1j*self.params['imSldSubstrate'].value),
+        (self.params['reSldSpacer'].value     + 1j*self.params['imSldSpacer'].value),
+        (self.params['reSldBackground'].value + 1j*self.params['imSldBackground'].value))
+      sldMag = nanospheres.sphere_css_overlapping_stacked_with_spacer(
         self.z, sphere_shifts, packing_densities,
-        self.params['r'].value, self.params['d'].value, self.params['dSpacer'].value,
-        self.params['magSldCore'].value, self.params['magSldShell'].value, 0,
-        0, 0)
+        self.params['r'].value, self.params['dShell'].value,
+        self.params['dSurfactant'].value, self.params['dSpacer'].value,
+        (self.params['magSldCore'].value       + 1j*0),
+        (self.params['magSldShell'].value      + 1j*0),
+        (0 + 1j*0),
+        (0 + 1j*0),
+        (0 + 1j*0),
+        (0 + 1j*0))
       polarization = self.params['polarization']
-      # roughness = self.params["roughness"]*np.ones(len(sld))
       thickness = (self.z[1] - self.z[0])*np.ones(len(sld))
       roughness = self.params["roughness"].value + self.z * self.params["roughnessSlope"].value
 
