@@ -17,11 +17,13 @@ class Fit(metaclass=ABCMeta):
     self.ptrExperiment.connectFit(self)
 
     self.printIteration = None
+    self.save_intermediate_results_every = None
     self.iteration = 0
 
     self.fit_result = None
     self.fit_param_history = []
     self.fit_history_idx = 0
+
 
   def connectGui(self, gui):
     self.ptrGui = gui

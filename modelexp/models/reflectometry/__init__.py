@@ -24,10 +24,14 @@ from ._substrate import Substrate
 from ._cubeCSMonolayer import CubeCSMonolayer
 from ._cubeCSMonolayerOnSpacer import CubeCSMonolayerOnSpacer
 
+
+from ._cmplx_cubeCSDoublelayerOnSpacer import CmplxCubeCSDoublelayerOnSpacer
+from ._cmplx_cubeCSDoublelayerOnSpacerNoPMMA import CmplxCubeCSDoublelayerOnSpacerNoPmma
 from ._cmplx_cubeCSMonolayerOnSpacer import CmplxCubeCSMonolayerOnSpacer
 
 # decorating functions
 from ._instrumentalResolution import InstrumentalResolution
 from ._dataResolution import DataResolution
 from ._magnetic import Magnetic
+from ._magneticSF import MagneticSF
 from ._shiftQ import ShiftQ

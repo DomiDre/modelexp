@@ -37,6 +37,12 @@ class SphereCSSStacked6Spacer(ReflectometryModel):
     self.addConstantParam('sldBackground')
 
   def initMagneticParameters(self):
+    self.params.add('magDensity1', 1)
+    self.params.add('magDensity2', 1)
+    self.params.add('magDensity3', 1)
+    self.params.add('magDensity4', 1)
+    self.params.add('magDensity5', 1)
+    self.params.add('magDensity6', 1)
     self.params.add('magSldCore', 1e-6)
     self.params.add('magSldShell', 0, vary=False)
 
@@ -85,6 +91,12 @@ class SphereCSSStacked6Spacer(ReflectometryModel):
                            self.params["packingDensity4"].value,
                            self.params["packingDensity5"].value,
                            self.params["packingDensity6"].value]
+      magPacking_densities = [self.params['magDensity1'].value*self.params["packingDensity1"].value,
+                              self.params['magDensity2'].value*self.params["packingDensity2"].value,
+                              self.params['magDensity3'].value*self.params["packingDensity3"].value,
+                              self.params['magDensity4'].value*self.params["packingDensity4"].value,
+                              self.params['magDensity5'].value*self.params["packingDensity5"].value,
+                              self.params['magDensity6'].value*self.params["packingDensity6"].value]
 
       sld = nanospheres.sphere_css_overlapping_stacked_with_spacer(
         self.z, sphere_shifts, packing_densities,
@@ -94,15 +106,75 @@ class SphereCSSStacked6Spacer(ReflectometryModel):
         self.params['sldSurfactant'].value, self.params['sldSubstrate'].value,
         self.params['sldSpacer'].value, self.params['sldBackground'].value)
       sldMag = nanospheres.sphere_css_overlapping_stacked_with_spacer(
-        self.z, sphere_shifts, packing_densities,
+        self.z, sphere_shifts, magPacking_densities,
         self.params['r'].value, self.params['dShell'].value,
         self.params['dSurfactant'].value, self.params['dSpacer'].value,
         self.params['magSldCore'].value, self.params['magSldShell'].value,
         0, 0, 0, 0)
       polarization = self.params['polarization']
+      P = self.params['polarizationEfficiency']
       thickness = (self.z[1] - self.z[0])*np.ones(len(sld))
       roughness = self.params["roughness"].value + self.z * self.params["roughnessSlope"].value
 
-      self.I = self.params["i0"] * algorithms.parrat(self.q, sld + polarization*sldMag, roughness, thickness)  + self.params["bg"]
+      Rplus = algorithms.parrat(self.q, sld + sldMag, roughness, thickness)
+      Rminus = algorithms.parrat(self.q, sld - sldMag, roughness, thickness)
+      cosGamma = np.cos(self.params['gamma']*np.pi/180)
+      self.I = self.params["i0"] * 0.5 * (Rplus * ( 1 + polarization*P*cosGamma) + Rminus * ( 1 - polarization*P*cosGamma ) )  + self.params["bg"]
+      self.sld = algorithms.roughsld_thick_layers(self.z, sld, roughness, thickness).real
+      self.sldMag = algorithms.roughsld_thick_layers(self.z, sldMag, roughness, thickness).real
+
+
+  def calcMagneticModelWithSpinFlip(self):
+    if (self.z is not None):
+      sphere_shifts = [self.params["layerDistance1"].value,\
+                       self.params["layerDistance2"].value,\
+                       self.params["layerDistance3"].value,\
+                       self.params["layerDistance4"].value,\
+                       self.params["layerDistance5"].value,\
+                       self.params["layerDistance6"].value]
+      packing_densities = [self.params["packingDensity1"].value,
+                           self.params["packingDensity2"].value,
+                           self.params["packingDensity3"].value,
+                           self.params["packingDensity4"].value,
+                           self.params["packingDensity5"].value,
+                           self.params["packingDensity6"].value]
+      magPacking_densities = [self.params['magDensity1'].value*self.params["packingDensity1"].value,
+                              self.params['magDensity2'].value*self.params["packingDensity2"].value,
+                              self.params['magDensity3'].value*self.params["packingDensity3"].value,
+                              self.params['magDensity4'].value*self.params["packingDensity4"].value,
+                              self.params['magDensity5'].value*self.params["packingDensity5"].value,
+                              self.params['magDensity6'].value*self.params["packingDensity6"].value]
+
+      sld = nanospheres.sphere_css_overlapping_stacked_with_spacer(
+        self.z, sphere_shifts, packing_densities,
+        self.params['r'].value, self.params['dShell'].value,
+        self.params['dSurfactant'].value, self.params['dSpacer'].value,
+        self.params['sldCore'].value, self.params['sldShell'].value,
+        self.params['sldSurfactant'].value, self.params['sldSubstrate'].value,
+        self.params['sldSpacer'].value, self.params['sldBackground'].value)
+      sldMag = nanospheres.sphere_css_overlapping_stacked_with_spacer(
+        self.z, sphere_shifts, magPacking_densities,
+        self.params['r'].value, self.params['dShell'].value,
+        self.params['dSurfactant'].value, self.params['dSpacer'].value,
+        self.params['magSldCore'].value, self.params['magSldShell'].value,
+        0, 0, 0, 0)
+      polarization = self.params['polarization']
+      P = self.params['polarizationEfficiency']
+      thickness = (self.z[1] - self.z[0])*np.ones(len(sld))
+      roughness = self.params["roughness"].value + self.z * self.params["roughnessSlope"].value
+
+      Rp = algorithms.parrat_amplitude(self.q, sld + sldMag, roughness, thickness)
+      Rm = algorithms.parrat_amplitude(self.q, sld - sldMag, roughness, thickness)
+
+      cosGamma = np.cos(self.params['gamma']*np.pi/180)
+      Rpp = self.params["i0"] * 0.25 * np.abs(Rp * ( 1 + cosGamma) + Rm * ( 1 - cosGamma ) )**2  + self.params["bg"]
+      Rmm = self.params["i0"] * 0.25 * np.abs(Rp * ( 1 - cosGamma) + Rm * ( 1 + cosGamma ) )**2  + self.params["bg"]
+      Rmp = self.params["i0"] * 0.25 * np.abs(Rp - Rm)**2*(1-cosGamma**2)
+      if polarization == 1:
+        self.I = P*Rpp + (1-P)*Rmp
+      elif polarization == -1:
+        self.I = P*Rmm + (1-P)*Rmp
+      else:
+        self.I = P*Rmp + (1-P)*(Rpp+Rmm)/2
       self.sld = algorithms.roughsld_thick_layers(self.z, sld, roughness, thickness).real
       self.sldMag = algorithms.roughsld_thick_layers(self.z, sldMag, roughness, thickness).real

@@ -12,6 +12,7 @@ class CubeCSMonolayerOnSpacer(ReflectometryModel):
     self.params.add("bg", 2.1e-06, min = 0.0, max = 0.0001, vary = False)
     self.params.add("roughnessSubstrate", 11.84, min = 0.0, max = 20, vary = True)
     self.params.add("roughnessSpacer", 11.84, min = 0.0, max = 20, vary = True)
+    self.params.add("roughnessShellCube", 11.84, min = 0.0, max = 20, vary = True)
     self.params.add("roughnessCubeShell", 11.84, min = 0.0, max = 20, vary = True)
     self.params.add("roughnessShellAir", 11.84, min = 0.0, max = 20, vary = True)
     self.params.add("a", 50, min = 0, max = 100, vary = True)
@@ -49,14 +50,15 @@ class CubeCSMonolayerOnSpacer(ReflectometryModel):
 
     roughSub = self.params['roughnessSubstrate'].value
     roughSpacer = self.params['roughnessSpacer'].value
-    roughNC_Shell = self.params["roughnessCubeShell"].value
+    roughNC_Shell1 = self.params["roughnessShellCube"].value
+    roughNC_Shell2 = self.params["roughnessCubeShell"].value
     if thicknessShellTop > 0:
       roughShell_Air = self.params["roughnessShellAir"].value
     else:
-      roughShell_Air = roughNC_Shell
+      roughShell_Air = roughNC_Shell2
 
 
-    sub_thickness = 10 + 2.5*max(roughSub, roughNC_Shell, roughShell_Air)
+    sub_thickness = 10 + 2.5*max(roughSub, roughNC_Shell2, roughShell_Air)
     sld = np.array([
       sldSub,
       sldSpacer,
@@ -68,8 +70,8 @@ class CubeCSMonolayerOnSpacer(ReflectometryModel):
     roughness = [
       roughSub,
       roughSpacer,
-      roughNC_Shell,
-      roughNC_Shell,
+      roughNC_Shell1,
+      roughNC_Shell2,
       roughShell_Air,
       0
     ]
@@ -143,11 +145,12 @@ class CubeCSMonolayerOnSpacer(ReflectometryModel):
 
     roughSub = self.params['roughnessSubstrate'].value
     roughSpacer = self.params['roughnessSpacer'].value
-    roughNC_Shell = self.params["roughnessCubeShell"].value
+    roughNC_Shell1 = self.params["roughnessShellCube"].value
+    roughNC_Shell2 = self.params["roughnessCubeShell"].value
     roughShell_Air = roughSub + self.params["roughnessShellAir"].value
 
 
-    sub_thickness = 10 + 2.5*max(roughSub, roughNC_Shell, roughShell_Air)
+    sub_thickness = 10 + 2.5*max(roughSub, roughNC_Shell2, roughShell_Air)
     sld = np.array([
       sldSub,
       sldSpacer,
@@ -178,8 +181,8 @@ class CubeCSMonolayerOnSpacer(ReflectometryModel):
     roughness = [
       roughSub,
       roughSpacer,
-      roughNC_Shell,
-      roughNC_Shell,
+      roughNC_Shell1,
+      roughNC_Shell2,
       roughShell_Air,
       0
     ]

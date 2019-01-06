@@ -8,6 +8,7 @@ class Sas(Experiment):
     super().__init__()
     self.plotWidgetClass = PlotWidgetInset
     self.residuumFormula = self.log_residuum
+
   def connectGui(self, gui):
     self.ptrGui = gui
     self.fig = self.ptrGui.plotWidget.getFig()
@@ -47,10 +48,15 @@ class Sas(Experiment):
         I_model = I_model[fit_range]
       addResi = np.sqrt(weight) * self.residuumFormula(None, I_data, I_error, I_model)
       resi = np.concatenate([resi, addResi])
+
     if self.ptrFit.printIteration is not None:
       if self.ptrFit.iteration % self.ptrFit.printIteration == 0:
         print(f'Iteration: {self.ptrFit.iteration}\tChi2:{np.sum(resi**2)}')
         print(lmfit.fit_report(p))
+
+    if self.ptrFit.save_intermediate_results_every is not None:
+      if self.ptrFit.save_intermediate_results_every % self.ptrFit.printIteration == 0:
+        self.ptrFit.exportIntermediateResult('intermediateResult.dat', p)
     return resi
 
   def getMinMaxDomainData(self):

@@ -2,7 +2,7 @@ from .._decoration import Decoration
 
 import numpy as np
 
-class Magnetic(Decoration):
+class MagneticSF(Decoration):
   """Decorator class that takes the output of a model class and adds parameters
   for instrumental resolution and smear it out
 
@@ -29,7 +29,7 @@ class Magnetic(Decoration):
     Define how to modify the
     '''
     if 'polarization' in self.ptrModel.params:
-      self.ptrModel.calcMagneticModel()
+      self.ptrModel.calcMagneticModelWithSpinFlip()
     else:
       self.ptrModel.calcModel()
 
@@ -53,6 +53,8 @@ class Magnetic(Decoration):
       model_color = '#6F0000'
       if self.ptrModel.params['polarization'].value == -1:
         model_color = '#004279'
+      elif self.ptrModel.params['polarization'].value == 0:
+        model_color = '#76C152'
       self.ptrModel.modelPlot, = self.ptrModel.ax.plot(
         self.ptrModel.q, self.ptrModel.I, marker='None', color=model_color, zorder=10
       )
