@@ -3,7 +3,7 @@ from fortRefl import nanocubes, algorithms, math
 import numpy as np
 from numpy.polynomial.hermite import hermgauss
 
-class CmplxCubeCSMonolayerOnSpacer(ReflectometryModel):
+class CmplxCubeCSMonolayerOnSpacerReducedMagnetism(ReflectometryModel):
   '''
   Model to describe a monolayer on a substrate with a potential second island on top
   '''
@@ -16,7 +16,6 @@ class CmplxCubeCSMonolayerOnSpacer(ReflectometryModel):
     self.params.add("roughnessCubeShell", 11.84, min = 0.0, max = 20, vary = True)
     self.params.add("roughnessShellAir", 11.84, min = 0.0, max = 20, vary = True)
     self.params.add("a", 50, min = 0, max = 100, vary = True)
-    self.params.add("sigA", 0.1, min = 0, max = 0.2, vary = True)
     self.params.add("packingDensity", 0.517, min = 0.0, max = 1.0, vary = True)
     self.params.add('reSldSubstrate', 2e-6, min= 0, max = 40e-6, vary=False)
     self.params.add('reSldCore', 8e-6, min= 0, max = 40e-6, vary=False)
@@ -32,14 +31,13 @@ class CmplxCubeCSMonolayerOnSpacer(ReflectometryModel):
     self.params.add("thicknessShellLower", 20, min = 0, max = 40, vary = True)
     self.params.add("thicknessShellTop", 20, min = 0, max = 40, vary = True)
     self.params.add('coverage', 1, min= 0, max = 1, vary=True)
-    self.params.add('orderHermite', 10, min= 0, max = 30, vary=False)
 
   def initMagneticParameters(self):
     self.params.add('magSldCore', 1e-6)
+    self.params.add("dReduced", 10, min = 0, max = 100, vary = True)
 
   def calcModel(self):
     a = self.params['a'].value
-    sigA = self.params['sigA'].value
     pDens = self.params["packingDensity"].value
     thicknessSpacer = self.params['thicknessSpacer'].value
     thicknessShellLower = self.params['thicknessShellLower'].value
@@ -110,37 +108,14 @@ class CmplxCubeCSMonolayerOnSpacer(ReflectometryModel):
       thickness
     )
     self.sld = algorithms.roughsld_thick_layers(self.z, sld, roughness, thickness).real
-    if sigA > 0:
-      x_herm, w_herm = hermgauss(int(self.params['orderHermite']))
-      w_sum = 0
-      a_vals = a*np.exp(np.sqrt(2) * x_herm * sigA)
-      IparticleLayer = np.zeros(len(self.q))
-      rough_sld = np.zeros(len(self.z))
-      for i, w_i in enumerate(w_herm):
-        thickness = [
-          sub_thickness,
-          thicknessSpacer,
-          thicknessShellLower,
-          a_vals[i],
-          thicknessShellTop,
-          0
-        ]
-        IparticleLayer += w_i*algorithms.parrat(
-          self.q,
-          sld,
-          roughness,
-          thickness
-        )
-        rough_sld += w_i*algorithms.roughsld_thick_layers(self.z, sld, roughness, thickness).real
-        w_sum += w_i
-      IparticleLayer /= w_sum
-      self.sld = rough_sld / w_sum
     self.I = self.params["i0"] * (
       coverage * IparticleLayer + (1 - coverage) * Isubstrate
     )  + self.params["bg"]
 
   def calcMagneticModel(self):
     a = self.params['a'].value
+    dReduced = self.params['dReduced'].value
+
     pDens = self.params["packingDensity"].value
     thicknessSpacer = self.params['thicknessSpacer'].value
     thicknessShellLower = self.params['thicknessShellLower'].value
@@ -167,6 +142,8 @@ class CmplxCubeCSMonolayerOnSpacer(ReflectometryModel):
       sldSpacer,
       sldShellLower,
       pDens * sldCore,
+      pDens * sldCore,
+      pDens * sldCore,
       sldShellTop,
       0,
     ])
@@ -175,7 +152,9 @@ class CmplxCubeCSMonolayerOnSpacer(ReflectometryModel):
       0,
       0,
       0,
+      0,
       pDens * self.params['magSldCore'].value,
+      0,
       0,
       0,
     ])
@@ -184,7 +163,9 @@ class CmplxCubeCSMonolayerOnSpacer(ReflectometryModel):
       sub_thickness,
       thicknessSpacer,
       thicknessShellLower,
+      dReduced,
       a,
+      dReduced,
       thicknessShellTop,
       0
     ]
@@ -193,6 +174,8 @@ class CmplxCubeCSMonolayerOnSpacer(ReflectometryModel):
       roughSub,
       roughSpacer,
       roughNC_Shell1,
+      roughNC_Shell1,
+      roughNC_Shell2,
       roughNC_Shell2,
       roughShell_Air,
       0

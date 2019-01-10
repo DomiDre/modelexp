@@ -23,7 +23,8 @@ from ._oneLayer import OneLayer
 from ._substrate import Substrate
 from ._cubeCSMonolayer import CubeCSMonolayer
 from ._cubeCSMonolayerOnSpacer import CubeCSMonolayerOnSpacer
-
+from ._cubeCSMonolayerOnSpacerReducedMagnetism import CubeCSMonolayerOnSpacerReducedMagnetism
+from ._cubeCSMonolayerOnSpacerPartial import CubeCSMonolayerOnSpacerPartial
 
 from ._cmplx_cubeCSDoublelayerOnSpacer import CmplxCubeCSDoublelayerOnSpacer
 from ._cmplx_cubeCSDoublelayerOnSpacerNoPMMA import CmplxCubeCSDoublelayerOnSpacerNoPmma
