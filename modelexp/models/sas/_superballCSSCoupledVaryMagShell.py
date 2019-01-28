@@ -1,5 +1,5 @@
 from modelexp.models.sas import SAXSModel
-from fortSAS import superball_css_coupledVMS
+from fortSAS import superball_css_coupledvms
 
 from numpy.polynomial.hermite import hermgauss
 from numpy.polynomial.legendre import leggauss
@@ -35,7 +35,7 @@ class SuperballCSSCoupledVaryMagShell(SAXSModel):
   def calcModel(self):
     self.x_herm, self.w_herm = hermgauss(int(self.params['orderHermite']))
     self.x_leg, self.w_leg = leggauss(int(self.params['orderLegendre']))
-    self.I = self.params['i0'] * superball_css_coupledVMS.formfactor(
+    self.I = self.params['i0'] * superball_css_coupledvms.formfactor(
       self.q,
       self.params['particleSize'],
       self.params['dShell'],
@@ -49,7 +49,7 @@ class SuperballCSSCoupledVaryMagShell(SAXSModel):
       self.x_herm, self.w_herm, self.x_leg, self.w_leg
     ) + self.params['bg']
 
-    self.r, self.sld = superball_css_coupledVMS.sld(
+    self.r, self.sld = superball_css_coupledvms.sld(
       self.params['particleSize'],
       self.params['dShell'],
       self.params['dSurfactant'],
@@ -62,7 +62,7 @@ class SuperballCSSCoupledVaryMagShell(SAXSModel):
   def calcMagneticModel(self):
     self.x_herm, self.w_herm = hermgauss(int(self.params['orderHermite']))
     self.x_leg, self.w_leg = leggauss(int(self.params['orderLegendre']))
-    self.I = self.params['i0'] * superball_css_coupledVMS.magnetic_formfactor(
+    self.I = self.params['i0'] * superball_css_coupledvms.magnetic_formfactor(
       self.q,
       self.params['particleSize'],
       self.params['dShell'],
@@ -84,7 +84,7 @@ class SuperballCSSCoupledVaryMagShell(SAXSModel):
       self.x_herm, self.w_herm, self.x_leg, self.w_leg
     ) + self.params['bg']
 
-    self.r, self.sld = superball_css_coupledVMS.sld(
+    self.r, self.sld = superball_css_coupledvms.sld(
       self.params['particleSize'],
       self.params['dShell'],
       self.params['dSurfactant'],
@@ -94,7 +94,7 @@ class SuperballCSSCoupledVaryMagShell(SAXSModel):
       self.params['sldSolvent']
     )
 
-    self.rMag, self.sldMag = superball_css_coupledVMS.sld(
+    self.rMag, self.sldMag = superball_css_coupledvms.sld(
       self.params['particleSize'],
       self.params['magDShell'],
       self.params['dSurfactant'],
