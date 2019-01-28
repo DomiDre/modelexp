@@ -19,6 +19,8 @@ from ._cmplx_sphereCSSStacked6Spacer import CmplxSphereCSSStacked6Spacer
 
 from ._cubeCSStacked import CubeCSStacked
 from ._cubeCSDoubleLayer import CubeCSDoubleLayer
+from ._cubeCSDoubleLayerOnSpacer import CubeCSDoubleLayerOnSpacer
+from ._cubeCSDoubleLayerNoSpacer import CubeCSDoubleLayerNoSpacer
 from ._oneLayer import OneLayer
 from ._substrate import Substrate
 from ._cubeCSMonolayer import CubeCSMonolayer

@@ -31,6 +31,7 @@ from ._superballCSOA import SuperballCSOA
 from ._superballCSCoupled import SuperballCSCoupled
 from ._superballCSCoupledSigD import SuperballCSCoupledSigD
 from ._superballCSSCoupled import SuperballCSSCoupled
+from ._superballCSSCoupledVaryMagShell import SuperballCSSCoupledVaryMagShell
 from ._superballCSSCoupledOA import SuperballCSSCoupledOA
 from ._superballCSSCoupledSigD import SuperballCSSCoupledSigD
 from ._superballCSSCoupledSigDOA import SuperballCSSCoupledSigDOA
