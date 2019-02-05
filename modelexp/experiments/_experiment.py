@@ -15,6 +15,7 @@ class Experiment(metaclass=ABCMeta):
     self.datasetSpecificParams = {}
 
     self.fit_range = None
+    self.residuumFormula = self.chi2_residuum
 
   def connectGui(self, gui):
     self.ptrGui = gui
@@ -41,6 +42,28 @@ class Experiment(metaclass=ABCMeta):
     if hasattr(self, 'ptrGui'):
       self.ax.axvline(fit_min, alpha=0.5, marker='None', color='black', zorder=0)
       self.ax.axvline(fit_max, alpha=0.5, marker='None', color='black', zorder=0)
+
+  def chi2_residuum(self, x, I, sI, Imodel):
+    return (I - Imodel) / sI
+
+  def chi2_no_error_residuum(self, x, I, sI, Imodel):
+    return I - Imodel
+
+  def log_no_error_residuum(self, x, I, sI, Imodel):
+    return (np.log(I) - np.log(Imodel))
+
+  def log_residuum(self, x, I, sI, Imodel):
+    return (np.log(I) - np.log(Imodel)) * I / sI
+
+  def setResiduumFormula(self, formula_name):
+    if formula_name == 'chi2':
+      self.residuumFormula = self.chi2_residuum
+    elif formula_name == 'chi2 noError':
+      self.residuumFormula = self.chi2_no_error_residuum
+    elif formula_name == 'log chi2':
+      self.residuumFormula = self.log_residuum
+    elif formula_name == 'log chi2 noError':
+      self.residuumFormula = self.log_no_error_residuum
 
   @abstractmethod
   def setAxProps(self):

@@ -36,16 +36,17 @@ class XyeData(Data):
   def getErrors(self):
     return self.e
 
-  def loadFromFile(self, filename):
+  def loadFromFile(self, filename, sort=True):
     self.filename = filename
     fileData = np.genfromtxt(filename)
     x = fileData[:,0]
     y = fileData[:,1]
     e = fileData[:,2]
-    sortedArgs = np.argsort(x)
-    x = x[sortedArgs]
-    y = y[sortedArgs]
-    e = e[sortedArgs]
+    if sort:
+      sortedArgs = np.argsort(x)
+      x = x[sortedArgs]
+      y = y[sortedArgs]
+      e = e[sortedArgs]
     self.setData(x, y, e)
 
   def plotData(self, ax):

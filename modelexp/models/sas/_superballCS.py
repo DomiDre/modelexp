@@ -1,5 +1,5 @@
 from modelexp.models.sas import SAXSModel
-from fortSAS import superball_cs
+from fortSAS import superball_cs, sphere
 
 from numpy.polynomial.hermite import hermgauss
 from numpy.polynomial.legendre import leggauss

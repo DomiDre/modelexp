@@ -8,15 +8,16 @@ class SAXSModel(Model):
   Model : Model
     Base Abstract class
   """
-  def __init__(self):
+  def __init__(self, parent):
     self.q = None
     self.I = None
+    self.dI = None
     self.r = None
     self.sld = None
     self.modelPlot = None
     self.sldPlot = None
 
-    super().__init__()
+    super().__init__(parent)
 
   def connectGui(self, gui):
     self.ptrGui = gui
@@ -85,3 +86,9 @@ class SAXSModel(Model):
     '''
     self.calcDecoratedModel()
     self.plotModel()
+
+  def setResolution(self, dI):
+    self.dI = dI
+
+  def getResolution(self):
+    return self.dI

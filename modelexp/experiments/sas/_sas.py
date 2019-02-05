@@ -7,6 +7,7 @@ class Sas(Experiment):
   def __init__(self):
     super().__init__()
     self.plotWidgetClass = PlotWidgetInset
+    self.residuumFormula = self.log_residuum
 
   def connectGui(self, gui):
     self.ptrGui = gui
@@ -23,9 +24,6 @@ class Sas(Experiment):
     self.axInset.set_ylabel(r"$SLD$")
 
     self.ptrGui.plotWidget.draw_idle()# .tight_layout()
-
-  def residuum_function(self, I_data, I_error, I_model):
-    return (np.log(I_data) - np.log(I_model)) * I_data / I_error
 
   def residuum(self, p):
     self.model.params = p
@@ -48,12 +46,17 @@ class Sas(Experiment):
         I_data = I_data[fit_range]
         I_error = I_error[fit_range]
         I_model = I_model[fit_range]
-      addResi = np.sqrt(weight) * self.residuum_function(I_data, I_error, I_model)
+      addResi = np.sqrt(weight) * self.residuumFormula(None, I_data, I_error, I_model)
       resi = np.concatenate([resi, addResi])
+
     if self.ptrFit.printIteration is not None:
       if self.ptrFit.iteration % self.ptrFit.printIteration == 0:
         print(f'Iteration: {self.ptrFit.iteration}\tChi2:{np.sum(resi**2)}')
         print(lmfit.fit_report(p))
+
+    if self.ptrFit.save_intermediate_results_every is not None:
+      if self.ptrFit.save_intermediate_results_every % self.ptrFit.printIteration == 0:
+        self.ptrFit.exportIntermediateResult('intermediateResult.dat', p)
     return resi
 
   def getMinMaxDomainData(self):

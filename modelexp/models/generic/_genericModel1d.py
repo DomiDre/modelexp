@@ -8,11 +8,11 @@ class GenericModel1d(Model):
   Model : Model
     Base Abstract class
   """
-  def __init__(self):
+  def __init__(self, parent):
     self.x = None
     self.y = None
     self.modelPlot = None
-    super().__init__()
+    super().__init__(parent)
 
   def connectGui(self, gui):
     self.ptrGui = gui
