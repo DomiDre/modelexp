@@ -37,6 +37,8 @@ from ._superballCSSCoupledSigD import SuperballCSSCoupledSigD
 from ._superballCSSCoupledSigDOA import SuperballCSSCoupledSigDOA
 
 from ._superballOptimized import SuperballOptimized
+from ._superballCSOptimized import SuperballCSOptimized
+from ._superballCSOAOptimized import SuperballCSOAOptimized
 
 from._ellipsoid import Ellipsoid
 
