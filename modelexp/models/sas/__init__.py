@@ -41,7 +41,7 @@ from ._superballCSOptimized import SuperballCSOptimized
 from ._superballCSOAOptimized import SuperballCSOAOptimized
 
 from._ellipsoid import Ellipsoid
-
+from._ellipsoidCS import EllipsoidCS
 
 # decorating functions
 from ._instrumentalResolution import InstrumentalResolution
