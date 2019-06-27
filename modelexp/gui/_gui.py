@@ -56,9 +56,10 @@ class Gui(qt5w.QMainWindow):
     self.layout.addWidget(self.buttonWidget, 1, 0, 1, 2) # lower part, span 1 row, 2 cols
 
     # set size of window depending on screen resolution
-    screen_resolution = screeninfo.get_monitors()[0]
-    self.layout.setColumnMinimumWidth(0, screen_resolution.width/2)
-    self.layout.setRowMinimumHeight(0, screen_resolution.height/2)
+    if len(screeninfo.get_monitors()) > 0:
+      screen_resolution = screeninfo.get_monitors()[0]
+      self.layout.setColumnMinimumWidth(0, screen_resolution.width/2)
+      self.layout.setRowMinimumHeight(0, screen_resolution.height/2)
 
     self.mainContainer.setFocus() # set focus onto the main widget
     self.setCentralWidget(self.mainContainer)
